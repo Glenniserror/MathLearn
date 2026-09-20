@@ -1,0 +1,815 @@
+/* Self-hosted variable font: one file covers weights 400-800 (the only
+   weights this stylesheet actually uses), swapped in for Google Fonts. */
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400 800;
+    /* optional (not swap): the font is preloaded in <head>, so it's almost
+       always ready in time for first paint anyway. With "optional", if it
+       ever isn't, the browser commits to the fallback for that whole page
+       view instead of swapping fonts mid-render later — trading a rare
+       fallback-font render for guaranteeing this can never cause layout
+       shift, which the previous font-display: swap could (a fallback ->
+       Inter swap after paint, however small the metric mismatch). */
+    font-display: optional;
+    src: url('/fonts/inter-latin-400-800.woff2') format('woff2');
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Stop iOS/Safari from inflating text in landscape. */
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
+/* Anchor jumps to #features glide instead of teleporting — suppressed
+   for visitors who ask for reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+    html {
+        scroll-behavior: smooth;
+    }
+}
+
+body {
+    background: #f6f9fc;
+    color: #1f2937;
+    overflow-x: hidden;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* No fixed pixel dimensions on media — always fluid. */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* ================= HERO =================
+   Full-bleed background photo with centered overlay text (unchanged
+   design direction). Mobile-first: comfortable vertical rhythm on
+   phones, a capped height from tablet up. */
+.hero {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    /* 100svh (small viewport height) so the mobile address bar can't
+       clip the bottom of the hero the way 100vh does. */
+    min-height: 100vh;
+    min-height: 100svh;
+    padding: 72px 16px;
+}
+
+@media (min-width: 640px) {
+    .hero {
+        padding: 80px 24px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .hero {
+        padding: 96px 32px;
+    }
+}
+
+/* sharp background photo — a real <img> (see hero markup) instead of a
+   CSS background-image, so it's discoverable/preloadable for LCP */
+.hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    z-index: 0;
+}
+
+/* blurred background */
+.hero-blur {
+    position: absolute;
+    inset: 0;
+    background: url('/image/pexels-photo-6344238-640w.webp') center/cover no-repeat;
+    filter: blur(14px);
+    transform: scale(1.15);
+    opacity: 0.4;
+    z-index: 1;
+}
+
+/* gradient overlay */
+.hero-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        90deg,
+        rgba(0, 70, 160, 0.6) 0%,
+        rgba(0, 120, 185, 0.5) 50%,
+        rgba(0, 175, 165, 0.4) 100%
+    );
+    z-index: 2;
+}
+
+/* Flat dark layer on top of the gradient — the library photo's faces
+   were showing through behind the headline and hurting contrast. */
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.25);
+    z-index: 2;
+}
+
+/* content */
+.hero-content {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    color: #fff;
+    width: 100%;
+    max-width: 46rem;
+    margin: 0 auto;
+    padding: 0 4px;
+}
+
+.hero-content h1 {
+    font-size: 2.25rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    line-height: 1.15;
+}
+
+.hero-content h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 10px 0 16px;
+    line-height: 1.3;
+}
+
+.hero-content p {
+    font-size: 1rem;
+    line-height: 1.65;
+    opacity: 0.95;
+    margin: 0 auto 28px;
+    max-width: 36rem;
+}
+
+@media (min-width: 640px) {
+    .hero-content h1 {
+        font-size: 3rem;
+        letter-spacing: 1px;
+    }
+
+    .hero-content h2 {
+        font-size: 1.5rem;
+    }
+
+    .hero-content p {
+        font-size: 1.125rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .hero-content h1 {
+        font-size: 4.5rem;
+        letter-spacing: 1.5px;
+    }
+}
+
+/* ================= SCROLL INDICATOR =================
+   Pinned bottom-center of the hero, links to #features. */
+.hero-scroll {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    color: rgba(255, 255, 255, 0.75);
+    transition: color 0.25s ease;
+}
+
+.hero-scroll svg {
+    width: 26px;
+    height: 26px;
+    display: block;
+}
+
+.hero-scroll:hover {
+    color: #fff;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .hero-scroll {
+        animation: heroScrollBounce 1.6s infinite;
+    }
+}
+
+@keyframes heroScrollBounce {
+    0%, 100% {
+        transform: translateX(-50%) translateY(0);
+    }
+    50% {
+        transform: translateX(-50%) translateY(-8px);
+    }
+}
+
+/* ================= BUTTONS =================
+   Full-width stacked on phones, inline auto-width from sm up. */
+.hero-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 0 auto;
+}
+
+@media (min-width: 640px) {
+    .hero-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+}
+
+.btn {
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    max-width: 22rem;
+    min-height: 48px;
+}
+
+@media (min-width: 640px) {
+    .btn {
+        width: auto;
+        min-width: 168px;
+    }
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+}
+
+/* icon size */
+.btn i {
+    font-size: 1.1rem;
+}
+
+/* inline SVG icons (replacing Font Awesome) size themselves off the
+   same font-size their containing <i> already had */
+.btn i svg,
+.feature-card i svg {
+    width: 1em;
+    height: 1em;
+    fill: currentColor;
+    display: block;
+}
+
+/* soft glow */
+.btn::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.35), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.btn:hover::after {
+    opacity: 1;
+}
+
+/* realistic press */
+.btn:active {
+    transform: translateY(1px) scale(0.98);
+}
+
+/* ================= BUTTON GRADIENTS ================= */
+
+/* Auth Group Layout */
+.auth-group {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+/* STUDENT BUTTON: darker blue-teal */
+.student {
+    background: linear-gradient(135deg, #1e2d7a, #0a7c8c);
+}
+
+.student:hover {
+    background: linear-gradient(135deg, #2563eb, #06b6d4);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+}
+
+/* STUDENT SIGNUP: lighter variant */
+.student-signup {
+    background: linear-gradient(135deg, #2563eb, #06b6d4);
+    padding: 12px 24px;
+    font-size: 0.85rem;
+}
+
+.student-signup:hover {
+    background: linear-gradient(135deg, #3b82f6, #0891b2);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+}
+
+/* TEACHER BUTTON: darker sky-blue to green */
+.teacher {
+    background: linear-gradient(135deg, #015b8a, #0f6f36);
+}
+
+.teacher:hover {
+    background: linear-gradient(135deg, #0ea5e9, #22c55e);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+}
+
+/* TEACHER SIGNUP: lighter variant */
+.teacher-signup {
+    background: linear-gradient(135deg, #0ea5e9, #22c55e);
+    padding: 12px 24px;
+    font-size: 0.85rem;
+}
+
+.teacher-signup:hover {
+    background: linear-gradient(135deg, #22d3ee, #4ade80);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+}
+
+/* ADMIN BUTTON: darker purple to light blue */
+.admin {
+    background: linear-gradient(135deg, #3a2f9c, #1f8fbf);
+}
+
+.admin:hover {
+    background: linear-gradient(135deg, #6366f1, #60a5fa);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+}
+
+/* ================= FEATURES =================
+   grid-cols-1 -> sm:grid-cols-2 -> lg:grid-cols-3, capped at max-w-7xl. */
+.features {
+    padding: 48px 16px;
+    text-align: center;
+    background: #f8fafc;
+    scroll-margin-top: 5rem;
+}
+
+.features h3 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #1f2937;
+    line-height: 1.2;
+}
+
+.section-desc {
+    font-size: 1.125rem;
+    color: #6b7280;
+    line-height: 1.6;
+    margin: 12px auto 40px;
+    max-width: 42rem;
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    width: 100%;
+    max-width: 72rem;
+    margin: 0 auto;
+}
+
+@media (min-width: 640px) {
+    .features {
+        padding: 56px 24px;
+    }
+
+    .feature-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 768px) {
+    .features {
+        padding: 64px 24px;
+    }
+
+    .features h3 {
+        font-size: 1.875rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .features {
+        padding: 96px 32px;
+    }
+
+    .features h3 {
+        font-size: 2.25rem;
+    }
+
+    .section-desc {
+        margin-bottom: 56px;
+    }
+
+    .feature-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 32px;
+    }
+}
+
+/* Feature Card */
+.feature-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 26px 22px;
+    border: 1.5px solid #e6f0fb;
+    text-align: left;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+    .feature-card {
+        padding: 34px 30px;
+    }
+}
+
+.feature-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(37, 99, 235, 0.15),
+        transparent
+    );
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.feature-card:hover::before {
+    opacity: 1;
+}
+
+.feature-card:hover {
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    border-color: #2563eb;
+}
+
+.feature-card i {
+    font-size: 1.6rem;
+    margin-bottom: 18px;
+    display: inline-block;
+    transition: transform 0.4s ease;
+}
+
+.feature-card:hover i {
+    transform: scale(1.12);
+}
+
+/* ICON COLORS */
+.feature-card:nth-child(1) i { color: #2563eb; }
+.feature-card:nth-child(2) i { color: #14b8a6; }
+.feature-card:nth-child(3) i { color: #f59e0b; }
+.feature-card:nth-child(4) i { color: #22c55e; }
+.feature-card:nth-child(5) i { color: #2563eb; }
+.feature-card:nth-child(6) i { color: #14b8a6; }
+
+/* TEXT */
+.feature-card h4 {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #1f2937;
+    line-height: 1.3;
+}
+
+.feature-card p {
+    font-size: 1rem;
+    color: #94a3b8;
+    line-height: 1.6;
+}
+
+/* ================= TOPICS =================
+   grid-cols-1 -> md:grid-cols-3 (was a fixed-width flex row). */
+.topics {
+    padding: 48px 16px;
+    text-align: center;
+    background: #f8fafc;
+}
+
+.topics h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #1f2937;
+    line-height: 1.2;
+}
+
+.subtitle {
+    margin: 8px auto 0;
+    color: #94a3b8;
+    font-size: 1.125rem;
+    line-height: 1.6;
+    max-width: 40rem;
+}
+
+.topics-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    margin: 36px auto 0;
+    width: 100%;
+    max-width: 60rem;
+}
+
+@media (min-width: 640px) {
+    .topics {
+        padding: 56px 24px;
+    }
+}
+
+@media (min-width: 768px) {
+    .topics {
+        padding: 64px 24px;
+    }
+
+    .topics h2 {
+        font-size: 1.875rem;
+    }
+
+    .topics-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
+        margin-top: 48px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .topics {
+        padding: 96px 32px;
+    }
+
+    .topics h2 {
+        font-size: 2.25rem;
+    }
+}
+
+/* CARD */
+.topic-card {
+    background: #ffffff;
+    width: 100%;
+    padding: 32px 22px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    overflow: hidden;
+}
+
+.topic-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(59, 130, 246, 0.15),
+        transparent
+    );
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.topic-card:hover::before {
+    opacity: 1;
+}
+
+/* HOVER EFFECT */
+.topic-card:hover {
+    transform: translateY(-10px) scale(1.04);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    border-color: #3b82f6;
+}
+
+/* NUMBER CIRCLE */
+.topic-card span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #3b82f6;
+    color: #fff;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    font-weight: 600;
+    margin-bottom: 14px;
+    transition: all 0.4s ease;
+}
+
+/* circle highlight on hover */
+.topic-card:hover span {
+    background: #1d4ed8;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.topic-card p {
+    color: #475569;
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+/* ================= FOOTER ================= */
+.footer {
+    background: #ffffff;
+    padding: 32px 16px;
+    text-align: center;
+    border-top: 1px solid #e5e7eb;
+}
+
+@media (min-width: 1024px) {
+    .footer {
+        padding: 40px 32px;
+    }
+}
+
+.footer p {
+    font-size: 1rem;
+    /* #475569 (already used for .topic-card p above) gives 7.6:1 against
+       the white footer background, vs. 2.6:1 for the previous #94a3b8 —
+       meets WCAG AA's 4.5:1 minimum for normal-size text. */
+    color: #475569;
+    line-height: 1.6;
+}
+
+.footer .footer-sub {
+    font-size: 0.875rem;
+    margin-top: 6px;
+}
+
+/* ================= ANIMATIONS ================= */
+
+/* Slide-up only — deliberately no opacity fade. The hero text is the LCP
+   element; starting it at opacity:0 makes Lighthouse unable to record an
+   LCP on slow loads (NO_LCP). It stays fully painted the whole time. */
+@keyframes fadeUp {
+    from {
+        transform: translateY(24px);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+/* text entrance ('both' holds the offset during the delay so there's no
+   position jump before each starts) */
+.hero-content h1 {
+    animation: fadeUp 0.9s ease both;
+}
+
+.hero-content h2 {
+    animation: fadeUp 0.9s ease 0.2s both;
+}
+
+/* .hero-content p (the subtext under the h2) deliberately has NO entrance
+   animation, unlike h1/h2 above: it's the actual LCP element PageSpeed
+   measures. Chrome defers an element's reported LCP timestamp while it's
+   still the target of a transform animation, so the 0.4s animation-delay
+   this used to have was directly adding ~0.4s to the measured "element
+   render delay" even though the text was already fully painted (opaque)
+   that whole time. Rendering it in its final position immediately removes
+   that measurement delay with no other visible change to the page. */
+
+.hero-actions .btn {
+    animation: fadeUp 0.7s ease both;
+}
+
+.hero-actions .auth-group:nth-child(1) .btn:nth-child(1) {
+    animation-delay: 0.6s;
+}
+
+.hero-actions .auth-group:nth-child(1) .btn:nth-child(2) {
+    animation-delay: 0.7s;
+}
+
+.hero-actions .auth-group:nth-child(2) .btn:nth-child(1) {
+    animation-delay: 0.8s;
+}
+
+.hero-actions .auth-group:nth-child(2) .btn:nth-child(2) {
+    animation-delay: 0.9s;
+}
+
+/* ================= SCROLL REVEAL ================= */
+
+/* Only hidden once JS is confirmed running (html.js, set by an inline
+   script in <head>). Without JS — a failed bundle, a crawler — the
+   sections stay visible instead of being stuck at opacity:0. */
+.reveal {
+    transition: opacity 0.9s ease, transform 0.9s ease;
+}
+
+html.js .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+}
+
+html.js .reveal.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* stagger effect for cards */
+.feature-card,
+.topic-card {
+    transition-delay: 0.15s;
+}
+
+/* ================= VIEWPORT EDGE CASES ================= */
+
+/* Short landscape phones: don't force a tall hero, and drop the scroll
+   cue (it would collide with the buttons at this height). */
+@media (max-height: 667px) and (orientation: landscape) {
+    .hero {
+        min-height: auto;
+        padding: 40px 20px;
+    }
+
+    .hero-scroll {
+        display: none;
+    }
+
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+
+    .hero-content h2 {
+        font-size: 1rem;
+        margin: 6px 0 10px;
+    }
+
+    .hero-content p {
+        margin-bottom: 18px;
+    }
+
+    .hero-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .btn {
+        width: auto;
+        padding: 12px 22px;
+    }
+}
+
+/* Touch devices: swap hover lift for a lighter press response. */
+@media (hover: none) and (pointer: coarse) {
+    .btn:active {
+        transform: scale(0.97);
+    }
+
+    .feature-card:active,
+    .topic-card:active {
+        transform: translateY(-4px) scale(1.02);
+    }
+}

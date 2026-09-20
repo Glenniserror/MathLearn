@@ -1,0 +1,67 @@
+<?php
+
+beforeEach(function () {
+    $this->caddyfile = file_get_contents(base_path('docker/Caddyfile'));
+});
+
+it('compresses responses with zstd and gzip', function () {
+    expect($this->caddyfile)->toContain('encode zstd gzip');
+});
+
+it('emits a permanent marker header identifying the active config', function () {
+    expect($this->caddyfile)->toContain('header X-Config-Source "app-caddyfile"');
+});
+
+it('sends HSTS (with preload) and COOP security headers', function () {
+    expect($this->caddyfile)
+        ->toContain('header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"')
+        ->toContain('header Cross-Origin-Opener-Policy "same-origin"');
+});
+
+it('does not set Content-Security-Policy here — that belongs to the app, which needs the per-request nonce', function () {
+    expect($this->caddyfile)->not->toContain('header Content-Security-Policy');
+});
+
+it('caches Vite build output for a year as immutable', function () {
+    expect($this->caddyfile)
+        ->toContain('@immutable path /build/*')
+        ->toMatch('/header @immutable Cache-Control "public, max-age=31536000, immutable"/');
+});
+
+it('caches fonts for a year without immutable', function () {
+    expect($this->caddyfile)
+        ->toContain('@fonts path /fonts/*')
+        ->toMatch('/header @fonts Cache-Control "public, max-age=31536000"/');
+});
+
+it('caches images for thirty days', function () {
+    expect($this->caddyfile)
+        ->toContain('@images path /image/*')
+        ->toMatch('/header @images Cache-Control "public, max-age=2592000"/');
+});
+
+it('does not attach a long-lived cache header to HTML documents', function () {
+    expect($this->caddyfile)->not->toContain('header Cache-Control');
+});
+
+it('is installed at the path FrankenPHP loads by default', function () {
+    expect(file_get_contents(base_path('Dockerfile')))
+        ->toContain('COPY docker/Caddyfile /etc/frankenphp/Caddyfile');
+});
+
+it('is still loaded explicitly by the entrypoint', function () {
+    expect(file_get_contents(base_path('docker/entrypoint.sh')))
+        ->toContain('--config /app/docker/Caddyfile');
+});
+
+it('runs an explicit command instead of the web server when one is passed', function () {
+    expect(file_get_contents(base_path('docker/entrypoint.sh')))
+        ->toContain('if [ "$#" -gt 0 ]; then')
+        ->toMatch('/if \[ "\$#" -gt 0 \]; then\s+exec "\$@"/');
+});
+
+it('runs the scheduler and exits when RUN_SCHEDULER is set', function () {
+    expect(file_get_contents(base_path('docker/entrypoint.sh')))
+        ->toContain('if [ "${RUN_SCHEDULER:-false}" = "true" ]; then')
+        ->toMatch('/RUN_SCHEDULER:-false.*then\s+exec php artisan schedule:run/s');
+});

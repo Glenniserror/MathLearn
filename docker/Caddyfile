@@ -1,0 +1,56 @@
+{
+	frankenphp
+	auto_https off
+}
+
+:{$PORT:8080} {
+	root * /app/public
+
+	# `route` pins directive order. Caddy's auto directive-sorter reorders
+	# encode/header around php_server (which expands into a handle-like
+	# construct) in a way that silently drops them for served responses —
+	# caddy validate still passes. Wrapping all three forces literal order.
+	route {
+		# Permanent deploy marker: proves this file (not FrankenPHP's
+		# default /etc/frankenphp/Caddyfile) is the config in effect. If
+		# this header is missing from a response, the container isn't
+		# running `frankenphp run --config /app/docker/Caddyfile`.
+		header X-Config-Source "app-caddyfile"
+
+		# Security hardening (applied to every response).
+		# HSTS: force HTTPS for a year, with preload. The `preload` directive
+		# alone does nothing on its own — it only takes effect once this
+		# domain is deliberately submitted to https://hstspreload.org, which
+		# is the actual hard-to-undo step (can take months to remove from
+		# browsers afterward). Adding the directive first lets this ship
+		# safely; submitting to the list is a separate decision.
+		header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+		# COOP: full origin isolation. Safe here — Google OAuth uses the
+		# redirect flow and nothing calls window.open()/window.opener.
+		header Cross-Origin-Opener-Policy "same-origin"
+
+		# Content-Security-Policy is set by app/Http/Middleware/SecurityHeaders.php
+		# instead of here — it needs the per-request nonce Vite::useCspNonce()
+		# stamps on every @vite(...) tag, which only PHP has access to. Setting
+		# it in both places would just create ambiguity about which wins.
+
+		encode zstd gzip
+
+		# Non-hashed but stable — cache a year. No `immutable` so a renamed
+		# replacement is still picked up without a hard reload.
+		@fonts path /fonts/*
+		header @fonts Cache-Control "public, max-age=31536000"
+
+		# Non-hashed, changed more often — 30 days.
+		@images path /image/* *.webp *.png *.jpg *.jpeg *.svg *.ico
+		header @images Cache-Control "public, max-age=2592000"
+
+		# Vite output is content-hashed: safe to cache forever + immutable.
+		# Declared last so it wins if a hashed asset also matches @images
+		# (header ops apply in order, last write wins).
+		@immutable path /build/*
+		header @immutable Cache-Control "public, max-age=31536000, immutable"
+
+		php_server
+	}
+}

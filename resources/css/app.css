@@ -1,0 +1,124 @@
+@import "tailwindcss";
+
+/* ================================================================
+   DESIGN TOKENS — approved design direction (see plan discussion).
+   Single source of truth for color, type, radius, and shadow across
+   the whole app. Tailwind v4's @theme exposes every token below both
+   as a CSS custom property (var(--color-primary)) for the existing
+   hand-written dashboard CSS, and as a Tailwind utility (bg-primary,
+   text-primary, etc.) for new Blade components.
+
+   Spacing intentionally has no override here: Tailwind v4's default
+   spacing scale (0.25rem = 4px per step) already matches the approved
+   4px-based scale (4·8·12·16·24·32·48·64) exactly.
+   ================================================================ */
+@theme {
+    --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+
+    /* Primary — one accent, used only for actions/links/focus/selection */
+    --color-primary: #2563eb;
+    --color-primary-hover: #1d4ed8;
+    --color-primary-tint: #eff6ff;
+
+    /* Neutral ramp (5 steps, cool-toned) */
+    --color-neutral-50: #f7f8fa;
+    --color-neutral-200: #e5e7eb;
+    --color-neutral-500: #6b7280;
+    --color-neutral-700: #374151;
+    --color-neutral-900: #111827;
+
+    /* Semantic — the only other colors in the system */
+    --color-success: #15803d;
+    --color-success-tint: #f0fdf4;
+    --color-warning: #b45309;
+    --color-warning-tint: #fef3c7;
+    --color-error: #dc2626;
+    --color-error-tint: #fef2f2;
+
+    /* Radius */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-pill: 999px;
+
+    /* Elevation — 3 levels: flat (border only, no token needed),
+       raised, and overlay. Navy-tinted, never pure black. */
+    --shadow-raised: 0 1px 2px rgba(16, 24, 40, 0.06);
+    --shadow-overlay: 0 12px 32px rgba(16, 24, 40, 0.16);
+}
+
+/* Login CSS files are defined inline in their respective Blade views */
+/* @import './login/student_login.css'; */
+/* @import './login/teacher_login.css'; */
+/* @import './login/admin_login.css'; */
+
+/* ================================================================
+   SIGN-IN / SIGN-UP — a small, self-contained palette, deliberately
+   kept out of the @theme block above: blue plays a different role
+   here (background/panel identity, not the one global action color)
+   and green appears nowhere else in the app. Mixing either into the
+   sitewide --color-* tokens would leak them onto buttons everywhere.
+
+   The homepage hero already gives blue and green meaning — its Sign
+   In button is blue, its Sign Up button is green — so this backdrop
+   reuses that same gradient family instead of inventing a new one,
+   and the actual color rule is: blue = sign in (returning user),
+   green = sign up (new user), everywhere in the app, not just here.
+
+   1. The background goes blue → teal → green, never straight
+      blue-to-green (that middle would mud out to gray). Teal is the
+      natural bridge between the two, and it's the hero's own bridge
+      color too.
+   2. The background stays deep and desaturated — it recedes behind
+      the white card instead of competing with it.
+   3. Blue = sign in, green = sign up, consistently: the submit
+      button, and whichever link points at that action, always match
+      — "Sign up free" is green even on the (blue-actioned) sign-in
+      page, "Sign in" is blue even on the (green-actioned) sign-up
+      page. Never both colors used for the same action.
+   4. Three depth layers front-to-back: background (darkest) → panel
+      (mid-tone) → card (white). That alone reads as depth, no
+      drop-shadow tricks needed.
+   ================================================================ */
+.auth-gradient-bg {
+    --auth-blue: #1e4e7f;
+    --auth-teal: #197a86;
+    --auth-green: #16906e;
+    --auth-panel-blue: #14375c;
+    --auth-panel-green: #0f5f52;
+    --auth-signin: #1b5384;
+    --auth-signin-hover: #164468;
+    --auth-signup: #0f7355;
+    --auth-signup-hover: #0b5c44;
+    --auth-ink: #0e2e4c;
+    --auth-slate: #4a5f6e;
+    --auth-line: #dde3e8;
+
+    background: linear-gradient(135deg, var(--auth-blue) 0%, var(--auth-teal) 52%, var(--auth-green) 100%);
+    background-attachment: fixed;
+}
+
+.auth-brand-panel {
+    background: linear-gradient(160deg, var(--auth-panel-blue) 0%, var(--auth-panel-green) 100%);
+}
+
+.auth-tab-active {
+    border-color: var(--auth-signin);
+    color: var(--auth-ink);
+    background: #eaf1f7;
+}
+.auth-tab-inactive {
+    border-color: var(--auth-line);
+    color: var(--auth-slate);
+    background: #fff;
+}
+.auth-tab-inactive:hover { border-color: #c5cfd8; color: var(--auth-ink); }
+
+/* Two link colors that carry meaning, not decoration: blue points at
+   the sign-in action, green points at sign-up — same rule the
+   homepage hero buttons already use. */
+.auth-link-signin { color: var(--auth-signin); font-weight: 600; }
+.auth-link-signin:hover { color: var(--auth-ink); text-decoration: underline; }
+
+.auth-link-signup { color: var(--auth-signup); font-weight: 600; }
+.auth-link-signup:hover { color: var(--auth-signup-hover); text-decoration: underline; }
