@@ -748,6 +748,13 @@ h3 {
 
 .tile--big h3 { font-size: 1.5rem; }
 .tile p { margin-top: var(--s-2); color: var(--slate); }
+
+/* Chat bubbles inside tiles: `.tile p` is more specific than `.bubble--user`,
+   so it was turning the white text grey. Restore each bubble's own color. */
+.tile .bubble { margin-top: 0; }
+.tile .bubble--user { color: var(--white); }
+.tile .bubble--ai { color: var(--ink); }
+.tile .mini-quiz__q { color: var(--ink); margin-top: 0; }
 .tile__visual { margin-top: auto; }
 
 /* Hover lift, shared by every interactive-feeling card. */
