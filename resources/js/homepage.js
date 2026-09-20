@@ -1,134 +1,192 @@
-// ================= SCROLL REVEAL =================
-const revealElements = document.querySelectorAll('.reveal');
+/* =====================================================================
+   MathLearn — homepage.js
+   Nav state + mobile menu · scroll reveal (once) · stat counters (once)
+   · hero parallax. Animates transform/opacity only. Every effect is
+   skipped or simplified under prefers-reduced-motion.
+   ===================================================================== */
 
-const observer = new IntersectionObserver(
-    (entries) => {
-        entries.forEach((entry, index) => {
-            if (entry.isIntersecting) {
-                entry.target.style.transitionDelay = `${index * 0.12}s`;
-                entry.target.classList.add('show');
-                observer.unobserve(entry.target); // animate once
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// ================= NAV: SOLID ON SCROLL + MOBILE MENU =================
+const nav = document.querySelector('[data-nav]');
+
+if (nav) {
+    const toggle = nav.querySelector('[data-nav-toggle]');
+    const panel = nav.querySelector('[data-nav-panel]');
+    let ticking = false;
+
+    const syncScrollState = () => {
+        nav.classList.toggle('is-scrolled', window.scrollY > 8);
+        ticking = false;
+    };
+
+    syncScrollState();
+    window.addEventListener(
+        'scroll',
+        () => {
+            if (!ticking) {
+                ticking = true;
+                requestAnimationFrame(syncScrollState);
+            }
+        },
+        { passive: true }
+    );
+
+    if (toggle && panel) {
+        const setOpen = (open) => {
+            toggle.setAttribute('aria-expanded', String(open));
+            toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+            panel.classList.toggle('is-open', open);
+        };
+
+        const isOpen = () => toggle.getAttribute('aria-expanded') === 'true';
+
+        toggle.addEventListener('click', () => setOpen(!isOpen()));
+
+        // Picking a link closes the menu.
+        panel.addEventListener('click', (e) => {
+            if (e.target.closest('a')) setOpen(false);
+        });
+
+        // Escape closes and returns focus to the button.
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && isOpen()) {
+                setOpen(false);
+                toggle.focus();
             }
         });
-    },
-    { threshold: 0.15 }
-);
 
-revealElements.forEach(el => observer.observe(el));
-
-// ================= SMOOTH SCROLL BEHAVIOR =================
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        const href = this.getAttribute('href');
-        if (href === '#') return;
-        
-        e.preventDefault();
-        const target = document.querySelector(href);
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
-    });
-});
-
-// ================= BUTTON HOVER ANIMATIONS =================
-document.querySelectorAll('.btn').forEach(btn => {
-    btn.addEventListener('mouseenter', function() {
-        this.style.transform = 'translateY(-3px)';
-    });
-    
-    btn.addEventListener('mouseleave', function() {
-        this.style.transform = 'translateY(0)';
-    });
-});
-
-// ================= FORM SUBMISSION WITH FEEDBACK =================
-document.querySelectorAll('form').forEach(form => {
-    form.addEventListener('submit', function(e) {
-        const submitBtn = this.querySelector('button[type="submit"]');
-        if (submitBtn) {
-            const originalText = submitBtn.textContent;
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="spinner"></span> Loading...';
-            
-            setTimeout(() => {
-                submitBtn.disabled = false;
-                submitBtn.textContent = originalText;
-            }, 1500);
-        }
-    });
-});
-
-// ================= PARALLAX EFFECT =================
-window.addEventListener('scroll', () => {
-    const parallaxElements = document.querySelectorAll('[data-parallax]');
-    parallaxElements.forEach(el => {
-        const scrollPosition = window.pageYOffset;
-        const offset = scrollPosition * 0.5;
-        el.style.transform = `translateY(${offset}px)`;
-    });
-});
-
-// ================= COUNTER ANIMATIONS =================
-function animateCounter(element, target) {
-    let current = 0;
-    const increment = target / 30;
-    
-    const timer = setInterval(() => {
-        current += increment;
-        if (current >= target) {
-            element.textContent = target;
-            clearInterval(timer);
-        } else {
-            element.textContent = Math.floor(current);
-        }
-    }, 30);
-}
-
-// ================= NOTIFICATIONS FOR USER ACTIONS =================
-document.querySelectorAll('[data-action="copy"]').forEach(btn => {
-    btn.addEventListener('click', async function(e) {
-        e.preventDefault();
-        const text = this.getAttribute('data-copy');
-        if (await Utils.copyToClipboard(text)) {
-            const originalText = this.textContent;
-            this.textContent = '✓ Copied!';
-            setTimeout(() => {
-                this.textContent = originalText;
-            }, 2000);
-        }
-    });
-});
-
-// ================= LAZY LOAD IMAGES =================
-if ('IntersectionObserver' in window) {
-    const imageObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const img = entry.target;
-                if (img.dataset.src) {
-                    img.src = img.dataset.src;
-                    img.classList.add('loaded');
-                    observer.unobserve(img);
-                }
-            }
+        // Tapping outside closes it.
+        document.addEventListener('click', (e) => {
+            if (isOpen() && !nav.contains(e.target)) setOpen(false);
         });
-    });
 
-    document.querySelectorAll('img[data-src]').forEach(img => {
-        imageObserver.observe(img);
-    });
-}
-
-// ================= PAGE VISIBILITY OPTIMIZATION =================
-document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-        // Pause animations when tab is hidden
-        document.body.style.animationPlayState = 'paused';
-    } else {
-        // Resume animations when tab is visible
-        document.body.style.animationPlayState = 'running';
+        // Growing to the desktop layout resets the menu.
+        window.matchMedia('(min-width: 900px)').addEventListener('change', (e) => {
+            if (e.matches) setOpen(false);
+        });
     }
-});
+}
+
+// ================= SCROLL REVEAL (once per element) =================
+// Elements start hidden only when html.js is set (inline script in <head>).
+const revealTargets = Array.from(document.querySelectorAll('.reveal'));
+
+// Drop the reveal classes once the transition ends so hover styles take over.
+const settle = (el) => {
+    let finished = false;
+
+    const finish = () => {
+        if (finished) return;
+        finished = true;
+        el.classList.remove('reveal', 'is-in');
+        el.style.removeProperty('--reveal-delay');
+    };
+
+    el.addEventListener('transitionend', (e) => {
+        if (e.target === el && e.propertyName === 'opacity') finish();
+    });
+    window.setTimeout(finish, 1600); // safety net
+};
+
+if (!('IntersectionObserver' in window)) {
+    revealTargets.forEach((el) => el.classList.remove('reveal'));
+} else {
+    const revealObserver = new IntersectionObserver(
+        (entries) => {
+            let n = 0; // stagger only elements that arrive in the same batch
+            entries.forEach((entry) => {
+                if (!entry.isIntersecting) return;
+                const el = entry.target;
+                revealObserver.unobserve(el);
+
+                if (!reduceMotion) {
+                    el.style.setProperty('--reveal-delay', `${Math.min(n, 5) * 70}ms`);
+                    n += 1;
+                }
+
+                el.classList.add('is-in');
+                settle(el);
+            });
+        },
+        { threshold: 0.15 }
+    );
+
+    revealTargets.forEach((el) => revealObserver.observe(el));
+}
+
+// ================= STAT COUNTERS (count up once) =================
+const counters = Array.from(document.querySelectorAll('[data-count]'));
+
+if (counters.length && 'IntersectionObserver' in window && !reduceMotion) {
+    const format = (el, value) => {
+        const suffix = el.dataset.suffix || '';
+        return `${Math.round(value).toLocaleString('en-PH')}${suffix}`;
+    };
+
+    const run = (el) => {
+        const target = Number(el.dataset.count) || 0;
+        const duration = 1200;
+        const start = performance.now();
+
+        const frame = (now) => {
+            const t = Math.min((now - start) / duration, 1);
+            const eased = 1 - Math.pow(2, -10 * t); // ease-out expo
+            el.textContent = format(el, target * eased);
+            if (t < 1) requestAnimationFrame(frame);
+        };
+
+        requestAnimationFrame(frame);
+    };
+
+    const counterObserver = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                if (!entry.isIntersecting) return;
+                counterObserver.unobserve(entry.target);
+                run(entry.target);
+            });
+        },
+        { threshold: 0.6 }
+    );
+
+    counters.forEach((el) => {
+        el.textContent = format(el, 0);
+        counterObserver.observe(el);
+    });
+}
+
+// ================= HERO PARALLAX (desktop only, tiny) =================
+const hero = document.querySelector('.hero');
+const parallaxEl = document.querySelector('[data-parallax]');
+
+if (hero && parallaxEl && !reduceMotion && 'IntersectionObserver' in window) {
+    const desktop = window.matchMedia('(min-width: 1024px)');
+    let heroVisible = true;
+    let frame = 0;
+
+    const update = () => {
+        frame = 0;
+        if (!desktop.matches) {
+            parallaxEl.style.transform = '';
+            return;
+        }
+        const y = Math.min(window.scrollY, window.innerHeight);
+        parallaxEl.style.transform = `translate3d(0, ${(y * 0.08).toFixed(1)}px, 0)`;
+    };
+
+    new IntersectionObserver(([entry]) => {
+        heroVisible = entry.isIntersecting;
+        if (heroVisible) update();
+    }).observe(hero);
+
+    window.addEventListener(
+        'scroll',
+        () => {
+            if (heroVisible && !frame) frame = requestAnimationFrame(update);
+        },
+        { passive: true }
+    );
+
+    desktop.addEventListener('change', update);
+}
