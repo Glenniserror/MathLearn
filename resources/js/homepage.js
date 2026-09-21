@@ -190,3 +190,32 @@ if (hero && parallaxEl && !reduceMotion && 'IntersectionObserver' in window) {
 
     desktop.addEventListener('change', update);
 }
+
+// ================= DATA-DRIVEN BAR WIDTHS =================
+// Blade prints the real percentage in data-width; setting it here (CSSOM)
+// avoids inline style attributes, which a strict CSP would block.
+document.querySelectorAll('[data-width]').forEach((el) => {
+    const value = Math.max(0, Math.min(100, Number(el.dataset.width) || 0));
+    el.style.width = `${value}%`;
+});
+
+// ================= LEGAL PANELS =================
+// #privacy and #terms (footer, CTA line, sign-up page) open the matching
+// <details> on this page. One panel open at a time keeps the page short.
+const legalPanels = document.querySelectorAll('details[data-legal]');
+
+function openLegalFromHash() {
+    const id = decodeURIComponent(window.location.hash.slice(1));
+    if (!id) return;
+    const target = [...legalPanels].find((panel) => panel.id === id);
+    if (!target) return;
+
+    legalPanels.forEach((panel) => { if (panel !== target) panel.open = false; });
+    target.open = true;
+    target.scrollIntoView({ block: 'start', behavior: reduceMotion ? 'auto' : 'smooth' });
+}
+
+if (legalPanels.length) {
+    window.addEventListener('hashchange', openLegalFromHash);
+    openLegalFromHash();
+}

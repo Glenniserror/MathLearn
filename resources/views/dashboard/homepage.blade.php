@@ -48,6 +48,27 @@
         ['label' => 'Facebook', 'icon' => 'i-facebook', 'url' => null],
         ['label' => 'YouTube',  'icon' => 'i-youtube',  'url' => null],
     ];
+    // Teacher-dashboard preview. Pass $overview from the controller with
+    // AGGREGATE numbers only (no student names or personal progress, this
+    // page is public):
+    //   $overview = [
+    //       'students'         => 15,
+    //       'avg_progress'     => 1,     // percent, 0-100
+    //       'pending_feedback' => 0,
+    //       'modules'          => [['name' => 'Sequences and Series', 'avg' => 20], ...],
+    //   ];
+    // Without $overview the preview falls back to clearly labelled sample data.
+    $isLive = isset($overview);
+    $overview = $overview ?? [
+        'students' => 38,
+        'avg_progress' => 82,
+        'pending_feedback' => 4,
+        'modules' => [
+            ['name' => 'Sequences and Series', 'avg' => 88],
+            ['name' => 'Polynomials and Polynomial Equations', 'avg' => 74],
+            ['name' => 'Advanced Equations and Functions', 'avg' => 61],
+        ],
+    ];
 @endphp
 
 <!-- ================= ICON SPRITE ================= -->
@@ -74,6 +95,7 @@
     <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V4M4 20h16"/><path d="M8 16v-4M12 16V8M16 16v-6"/></symbol>
     <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 5.2a3.2 3.2 0 0 1 0 5.6M18 14.3c2 .8 3.5 2.8 3.5 5.7"/></symbol>
     <symbol id="i-user-plus" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M19 8v6M16 11h6"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
     <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11m0 0-4-4m4 4 4-4"/><path d="M5 19h14"/></symbol>
     <symbol id="i-facebook" viewBox="0 0 24 24"><path d="M14.5 21v-8h2.7l.5-3.2h-3.2V7.9c0-.9.4-1.6 1.7-1.6h1.6V3.4c-.3 0-1.3-.2-2.3-.2-2.4 0-4 1.5-4 4.1v2.5H8.8V13h2.7v8z"/></symbol>
     <symbol id="i-youtube" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="3.5"/><path d="m10.5 9.5 4 2.5-4 2.5z"/></symbol>
@@ -472,54 +494,37 @@
             </a>
         </div>
 
-        <!-- Dashboard preview (sample data for illustration) -->
+        <!-- Dashboard preview: real aggregates when $overview is passed, sample data otherwise -->
         <div class="dash reveal" role="img"
-             aria-label="Preview of the teacher dashboard showing class average, quiz submissions, topic scores, and students who need help.">
+             aria-label="Preview of the teacher dashboard showing total students, average progress, pending feedback, and average progress by module.">
 
             <div class="dash__head" aria-hidden="true">
                 <div>
                     <strong>Class overview</strong>
-                    <span class="sub">Grade 10 · Rizal</span>
+                    <span class="sub">{{ $isLive ? 'Live from the platform' : 'Grade 10 · Rizal' }}</span>
                 </div>
-                <span class="tag">Sample data</span>
+                <span class="tag">{{ $isLive ? 'Live data' : 'Sample data' }}</span>
             </div>
 
             <div class="dash__stats" aria-hidden="true">
-                <div class="dash__stat"><b>38</b><span>TOTAL STUDENTS</span></div>
-                <div class="dash__stat"><b>82%</b><span>AVG. PROGRESS</span></div>
-                <div class="dash__stat"><b>4</b><span>PENDING FEEDBACK</span></div>
+                <div class="dash__stat"><b>{{ number_format($overview['students']) }}</b><span>TOTAL STUDENTS</span></div>
+                <div class="dash__stat"><b>{{ (int) $overview['avg_progress'] }}%</b><span>AVG. PROGRESS</span></div>
+                <div class="dash__stat"><b>{{ number_format($overview['pending_feedback']) }}</b><span>PENDING FEEDBACK</span></div>
             </div>
 
-            <p class="dash__title" aria-hidden="true">Average progress by module</p>
-            <div class="rows" aria-hidden="true">
-                <div>
-                    <div class="row__top"><span>Sequences and Series</span><span>88%</span></div>
-                    <div class="bar"><span class="bar__fill w-88"></span></div>
+            @if (! empty($overview['modules']))
+                <p class="dash__title" aria-hidden="true">Average progress by module</p>
+                <div class="rows" aria-hidden="true">
+                    @foreach ($overview['modules'] as $module)
+                        @php $avg = max(0, min(100, (int) $module['avg'])); @endphp
+                        <div>
+                            <div class="row__top"><span>{{ $module['name'] }}</span><span>{{ $avg }}%</span></div>
+                            {{-- Width is set by homepage.js from data-width (no inline style, CSP-safe). --}}
+                            <div class="bar"><span class="bar__fill{{ $avg < 65 ? ' bar__fill--low' : '' }}" data-width="{{ $avg }}"></span></div>
+                        </div>
+                    @endforeach
                 </div>
-                <div>
-                    <div class="row__top"><span>Polynomials and Polynomial Equations</span><span>74%</span></div>
-                    <div class="bar"><span class="bar__fill w-74"></span></div>
-                </div>
-                <div>
-                    <div class="row__top"><span>Advanced Equations and Functions</span><span>61%</span></div>
-                    <div class="bar"><span class="bar__fill bar__fill--low w-61"></span></div>
-                </div>
-            </div>
-
-            <div class="students" aria-hidden="true">
-                <div class="student">
-                    <span class="avatar">MJ</span>
-                    <span class="name">Mark Joseph T.</span>
-                    <span class="pct">54%</span>
-                    <span class="pill">Send feedback</span>
-                </div>
-                <div class="student">
-                    <span class="avatar">AR</span>
-                    <span class="name">Angela R.</span>
-                    <span class="pct">58%</span>
-                    <span class="pill">Send feedback</span>
-                </div>
-            </div>
+            @endif
 
         </div>
 
@@ -550,6 +555,7 @@
                 <svg class="icon icon--go" aria-hidden="true"><use href="#i-arrow"/></svg>
             </a>
             <p class="cta__alt">Already have an account? <a href="{{ route('signin-signin') }}">Sign in</a></p>
+            <p class="cta__terms">By creating an account you agree to our <a href="#terms">Terms and Conditions</a> and <a href="#privacy">Privacy Policy</a>.</p>
         </div>
     </div>
 
@@ -558,6 +564,192 @@
 </main>
 
 <!-- ================= FOOTER ================= -->
+<!-- ================= LEGAL =================
+     Privacy Policy and Terms live on the homepage for now. #privacy and #terms
+     (footer, CTA, sign-up page) open the matching panel via homepage.js.
+     -->
+@php
+    // Optional: create config/legal.php (or set these keys) to show a real DPO contact.
+    // Without it the text says "the school office".
+    $legal = config('legal', []);
+    $effective = $legal['effective_date'] ?? 'September 21, 2026';
+    $legalEmail = $legal['contact_email'] ?? null;
+    $contact = $legalEmail ? '<a href="mailto:'.e($legalEmail).'">'.e($legalEmail).'</a>' : 'the school office';
+    $dpo = $legal['dpo_name'] ?? null;
+@endphp
+<section class="section legal-home" id="legal" aria-labelledby="legal-title">
+    <div class="container">
+
+        <div class="section__head reveal">
+            <h2 id="legal-title">Privacy Policy and Terms and Conditions</h2>
+            <p>How we handle your data, and the rules for using Math Learning. Select a heading to read it.</p>
+        </div>
+
+        <div class="legal-home__list">
+
+            <details class="legal-doc" id="privacy" data-legal>
+                <summary>
+                    <span>Privacy Policy</span>
+                    <svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg>
+                </summary>
+                <div class="legal legal--inline">
+                    <p class="legal__meta">Effective {{ $effective }}. Applies to the Math Learning platform of Bubog National High School.</p>
+                    <div class="legal__summary">
+                        <strong>In short</strong>
+                        We collect only what we need to run your account and help you learn math. Your teachers and the school's administrators can see your learning progress. We do not sell your personal data. You can ask us to show, correct, or delete your data at any time.
+                    </div>
+                    <h3 id="pp-who-we-are">1. Who we are</h3>
+                    <p>Math Learning is an online math learning platform run by Bubog National High School in San Jose, Occidental Mindoro (the "school", "we", "us"). The school decides why and how personal data on this platform is used. Under the Data Privacy Act of 2012 (Republic Act No. 10173), the school is the personal information controller.</p>
+                    <p>Our Data Protection Officer{{ $dpo ? ' ('.$dpo.')' : '' }} can be reached through {!! $contact !!}.</p>
+
+                    <h3 id="pp-what-we-collect">2. What we collect</h3>
+                    <ul class="legal__list">
+                        <li><strong>Account details:</strong> your name, email address, role (student, teacher, or admin), and a password, which we store in a protected (hashed) form. If you sign in with Google, we receive your name and email address from Google.</li>
+                        <li><strong>Learning data:</strong> the modules and topics you open or finish, your progress, your quiz and test answers and scores, and your learning streak.</li>
+                        <li><strong>AI chatbot conversations:</strong> the questions you type and the answers you receive.</li>
+                        <li><strong>Teacher feedback and class records:</strong> feedback your teachers send you, and the reports and class records they create.</li>
+                        <li><strong>Activity and technical data:</strong> sign-in and activity records (for example, when you log in), basic technical data such as your browser type, and the cookies described below.</li>
+                    </ul>
+                    <p>We do not need sensitive information such as your home address, government ID numbers, or health details. Please do not type them into your profile or the chatbot.</p>
+
+                    <h3 id="pp-why-we-use-it">3. Why we use your data</h3>
+                    <ul class="legal__list">
+                        <li>To create and manage your account and let you sign in.</li>
+                        <li>To give you modules, quizzes, tests, the AI chatbot, and offline materials.</li>
+                        <li>To record your progress and show it to you and your teachers.</li>
+                        <li>To let teachers send feedback, make reports and class records, and generate quizzes.</li>
+                        <li>To keep the platform secure and prevent misuse.</li>
+                        <li>To improve lessons and the platform, using summarized results wherever possible.</li>
+                        <li>To follow the law and school requirements.</li>
+                    </ul>
+                    <p>We rely on your consent (or your parent's or guardian's consent, if you are under 18) and on the school's legitimate educational purposes.</p>
+
+                    <h3 id="pp-students-and-parents">4. Students and parents or guardians</h3>
+                    <p>Many of our students are minors. For students under 18, the school asks for a parent or guardian to agree to the account. Parents and guardians can ask to see, correct, or delete their child's data. If you are a parent or guardian and did not agree to an account made for your child, contact us and we will act on it.</p>
+                    <p>If you are a student and something here is unclear, please ask your teacher or a trusted adult to read it with you.</p>
+
+                    <h3 id="pp-who-can-see-it">5. Who can see your data</h3>
+                    <ul class="legal__list">
+                        <li><strong>You</strong> can see your own account, progress, and results.</li>
+                        <li><strong>Your teachers</strong> can see your progress, test results, and class records so they can guide you.</li>
+                        <li><strong>School administrators</strong> manage accounts and the platform, and can see activity records and platform-level analytics.</li>
+                        <li><strong>Service providers</strong> that help us run the platform, such as Google (if you use Google sign-in), our hosting provider, and the AI service that produces chatbot answers and generated quizzes. They may only use data to provide their service to us.</li>
+                        <li><strong>Authorities</strong>, only when the law requires it or a court or government agency lawfully asks.</li>
+                    </ul>
+                    <p>We do not sell your personal data and we do not use it for advertising.</p>
+
+                    <h3 id="pp-ai-chatbot">6. The AI chatbot</h3>
+                    <p>The chatbot uses an AI service to answer math questions. Your messages are sent to that service so it can reply. AI answers can be wrong, so check important work with your teacher. Never share passwords, your address, phone number, or other private details in the chatbot.</p>
+
+                    <h3 id="pp-cookies">7. Cookies</h3>
+                    <p>We use only the cookies the platform needs to work:</p>
+                    <ul class="legal__list">
+                        <li>a session cookie, which keeps you signed in while you use the platform;</li>
+                        <li>a security token, which protects forms from being sent by someone else; and</li>
+                        <li>a "remember me" cookie, which keeps you signed in on your device for up to 30 days if you tick "Remember me for 30 days".</li>
+                    </ul>
+                    <p>We do not use advertising cookies. You can delete cookies in your browser settings, but you will not be able to sign in without them.</p>
+
+                    <h3 id="pp-how-long">8. How long we keep your data</h3>
+                    <p>We keep your data while your account is active and for as long as the school needs it for its learning records. When it is no longer needed, we delete it or make it anonymous. You can ask us to delete your account (see "Your rights"). We may keep some records where the law or school policy requires it.</p>
+
+                    <h3 id="pp-security">9. How we protect your data</h3>
+                    <p>We use reasonable organizational, physical, and technical safeguards. For example, passwords are stored in hashed form, what you can see depends on your role, and the platform is meant to be used over secure connections. No system is perfectly secure. If a data breach happens that puts you at real risk, we will notify the National Privacy Commission and the people affected as the law requires.</p>
+
+                    <h3 id="pp-your-rights">10. Your rights</h3>
+                    <p>Under the Data Privacy Act, you have the right to:</p>
+                    <ul class="legal__list">
+                        <li>be informed about how your data is used;</li>
+                        <li>access the personal data we hold about you;</li>
+                        <li>object to how your data is used;</li>
+                        <li>correct data that is wrong or out of date;</li>
+                        <li>ask us to delete or block data that is no longer needed or was unlawfully collected;</li>
+                        <li>receive a copy of your data in a common format (data portability);</li>
+                        <li>claim damages if you were harmed by misuse of your data; and</li>
+                        <li>file a complaint with the National Privacy Commission at <a href="https://privacy.gov.ph" rel="noopener noreferrer">privacy.gov.ph</a>.</li>
+                    </ul>
+                    <p>To use any of these rights, contact us using the details below. Parents and guardians may do this for their child.</p>
+
+                    <h3 id="pp-changes">11. Changes to this policy</h3>
+                    <p>We may update this policy. The date at the top shows when it last changed. If the changes are important, we will also tell you on the platform.</p>
+
+                    <h3 id="pp-contact">12. Contact us</h3>
+                    <p>Questions or requests about your data? Contact the Data Protection Officer of Bubog National High School through {!! $contact !!}. Please read our <a href="#terms">Terms and Conditions</a> too.</p>
+                </div>
+            </details>
+
+            <details class="legal-doc" id="terms" data-legal>
+                <summary>
+                    <span>Terms and Conditions</span>
+                    <svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg>
+                </summary>
+                <div class="legal legal--inline">
+                    <p class="legal__meta">Effective {{ $effective }}. Applies to the Math Learning platform of Bubog National High School.</p>
+                    <div class="legal__summary">
+                        <strong>In short</strong>
+                        Use Math Learning to learn, be honest and respectful, and keep your password to yourself. The AI chatbot can make mistakes, so check with your teacher. The school can suspend accounts that break these rules.
+                    </div>
+                    <h3 id="tc-agreeing">1. Agreeing to these terms</h3>
+                    <p>By creating an account or using Math Learning, you agree to these Terms and Conditions. If you are under 18, your parent or guardian must also agree to them for you. If you do not agree, please do not use the platform.</p>
+
+                    <h3 id="tc-the-platform">2. About the platform</h3>
+                    <p>Math Learning is run by Bubog National High School to support Junior High School math. It includes learning modules (Sequences and Series, Polynomials and Polynomial Equations, and Advanced Equations and Functions), quizzes and summative tests, an AI chatbot, progress tracking, offline materials, and tools for teachers and administrators.</p>
+
+                    <h3 id="tc-accounts">3. Your account</h3>
+                    <ul class="legal__list">
+                        <li>Give accurate information when you sign up. Some accounts, such as teacher accounts, may need approval from the school.</li>
+                        <li>Keep your password private. You are responsible for what happens under your account.</li>
+                        <li>One person, one account. Do not share your account or pretend to be someone else.</li>
+                        <li>Tell your teacher or the school right away if you think someone else used your account.</li>
+                    </ul>
+
+                    <h3 id="tc-acceptable-use">4. How to use the platform</h3>
+                    <p>Please use Math Learning for learning, and be honest and respectful. You agree not to:</p>
+                    <ul class="legal__list">
+                        <li>cheat, share test answers, or use the chatbot on any test or assessment your teacher says you must do on your own;</li>
+                        <li>bully, harass, or send harmful or inappropriate content to anyone;</li>
+                        <li>try to break, hack, overload, or copy data from the platform;</li>
+                        <li>look at, change, or collect other people's accounts or data;</li>
+                        <li>upload viruses or anything else meant to cause damage; or</li>
+                        <li>use the platform for anything unlawful or for making money.</li>
+                    </ul>
+
+                    <h3 id="tc-ai-content">5. The AI chatbot and generated content</h3>
+                    <p>The chatbot and the quiz generator use artificial intelligence. They can make mistakes or give incomplete explanations. Treat their answers as help, not as final truth, and check important work with your teacher. Teachers should review AI-generated quizzes before giving them to students. Do not share private information in the chatbot.</p>
+
+                    <h3 id="tc-teachers-admins">6. Teachers and administrators</h3>
+                    <p>If you are a teacher or administrator, you agree to use student information only for teaching and school administration, to keep it confidential, and to follow school rules and the Data Privacy Act of 2012. Give feedback that is fair and respectful. Manage accounts and platform settings responsibly.</p>
+
+                    <h3 id="tc-materials">7. Learning materials and offline downloads</h3>
+                    <p>The lessons, quizzes, and other materials belong to the school or the people who made them. You may use them for your own learning, including offline. Please do not copy, sell, or post them publicly. The work you create, such as your answers and messages, stays yours. You allow the school to use it to run the platform, show your progress, and (without your name) improve lessons.</p>
+
+                    <h3 id="tc-privacy">8. Privacy</h3>
+                    <p>Our <a href="#privacy">Privacy Policy</a> explains what personal data we collect, how we use it, and your rights. It is part of these terms.</p>
+
+                    <h3 id="tc-availability">9. Availability and changes to the platform</h3>
+                    <p>We try to keep Math Learning working, but we cannot promise it will always be available or error-free. Maintenance or internet problems can interrupt it. Offline downloads may not include the latest updates. We may add, change, or remove features.</p>
+
+                    <h3 id="tc-suspension">10. Suspension and closing accounts</h3>
+                    <p>The school may suspend or remove an account that breaks these terms or school rules. You can ask to close your account at any time by contacting us.</p>
+
+                    <h3 id="tc-liability">11. Limits of responsibility</h3>
+                    <p>Math Learning is an educational support tool, provided "as is". To the extent the law allows, the school is not responsible for indirect losses that come from using the platform, not being able to use it, or relying on AI-generated content. Nothing in these terms limits any right you have under Philippine law, including the Data Privacy Act of 2012.</p>
+
+                    <h3 id="tc-governing-law">12. Governing law</h3>
+                    <p>These terms are governed by the laws of the Republic of the Philippines.</p>
+
+                    <h3 id="tc-changes">13. Changes to these terms</h3>
+                    <p>We may update these terms. The date at the top shows when they last changed. If you keep using the platform after an update, you agree to the new terms. If the changes are important, we will tell you on the platform.</p>
+
+                    <h3 id="tc-contact">14. Contact us</h3>
+                    <p>Questions about these terms? Contact Bubog National High School through {!! $contact !!}.</p>
+                </div>
+            </details>
+
+        </div>
+    </div>
+</section>
+
 <footer class="footer">
     <div class="container">
 
@@ -569,6 +761,20 @@
                     <span>Math Learning</span>
                 </a>
                 <p>Empowering students through interactive mathematics education.</p>
+
+                @if (collect($socials)->contains(fn ($s) => ! empty($s['url'])))
+                    <ul class="socials">
+                        @foreach ($socials as $social)
+                            @if (! empty($social['url']))
+                                <li>
+                                    <a href="{{ $social['url'] }}" target="_blank" rel="noopener noreferrer" aria-label="{{ $social['label'] }}">
+                                        <svg class="icon" aria-hidden="true"><use href="#{{ $social['icon'] }}"/></svg>
+                                    </a>
+                                </li>
+                            @endif
+                        @endforeach
+                    </ul>
+                @endif
             </div>
 
             <nav aria-label="Explore">
@@ -589,22 +795,14 @@
                 </ul>
             </nav>
 
-            @if (collect($socials)->contains(fn ($s) => ! empty($s['url'])))
-                <div>
-                    <h3>Follow us</h3>
-                    <ul class="socials">
-                        @foreach ($socials as $social)
-                            @if (! empty($social['url']))
-                                <li>
-                                    <a href="{{ $social['url'] }}" target="_blank" rel="noopener noreferrer" aria-label="{{ $social['label'] }}">
-                                        <svg class="icon" aria-hidden="true"><use href="#{{ $social['icon'] }}"/></svg>
-                                    </a>
-                                </li>
-                            @endif
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+            <nav aria-label="Legal">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="#privacy">Privacy Policy</a></li>
+                    <li><a href="#terms">Terms and Conditions</a></li>
+                </ul>
+            </nav>
+
 
         </div>
 
