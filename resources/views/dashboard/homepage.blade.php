@@ -531,39 +531,48 @@
     </div>
 </section>
 
-<!-- ================= FINAL CTA ================= -->
+<!-- ================= FINAL CTA =================
+     An inset gradient panel with the same plotted curve as the hero, so it
+     sits on the light page instead of cutting it with a full-bleed band. -->
 <section class="cta" aria-labelledby="cta-title">
+    <div class="container">
+        <div class="cta__panel reveal">
 
-    <picture>
-        <source type="image/webp"
-                srcset="/image/pexels-photo-6344238-640w.webp 640w,
-                        /image/pexels-photo-6344238-1280w.webp 1280w,
-                        /image/pexels-photo-6344238-1440w.webp 1440w,
-                        /image/pexels-photo-6344238-1920w.webp 1920w"
-                sizes="100vw">
-        <img class="cta__photo" src="/image/pexels-photo-6344238.jpeg" alt=""
-             width="1920" height="1280" loading="lazy" decoding="async">
-    </picture>
+            <div class="cta__copy">
+                <h2 id="cta-title">Ready for your first lesson?</h2>
+                <p>Join Math Learning and take math one step at a time.</p>
 
-    <div class="container reveal">
-        <h2 id="cta-title">Ready for your first lesson?</h2>
-        <p>Join Math Learning and take math one step at a time.</p>
+                <div class="cta__actions">
+                    <a href="{{ route('signin-signup') }}" class="btn btn--white">
+                        Create your account
+                        <svg class="icon icon--go" aria-hidden="true"><use href="#i-arrow"/></svg>
+                    </a>
+                    <a href="{{ route('signin-signin') }}" class="btn btn--outline-light">Sign in</a>
+                </div>
 
-        <div class="cta__actions">
-            <a href="{{ route('signin-signup') }}" class="btn btn--white">
-                Create your account
-                <svg class="icon icon--go" aria-hidden="true"><use href="#i-arrow"/></svg>
-            </a>
-            <p class="cta__alt">Already have an account? <a href="{{ route('signin-signin') }}">Sign in</a></p>
-            <p class="cta__terms">By creating an account you agree to our <a href="#terms">Terms and Conditions</a> and <a href="#privacy">Privacy Policy</a>.</p>
+                <p class="cta__terms">By creating an account you agree to our <a href="#terms">Terms and Conditions</a> and <a href="#privacy">Privacy Policy</a>.</p>
+            </div>
+
+            <div class="cta__art" aria-hidden="true">
+                <svg viewBox="0 0 360 260" focusable="false">
+                    <defs>
+                        <pattern id="ctaGrid" width="30" height="30" x="0" y="20" patternUnits="userSpaceOnUse">
+                            <path d="M30 0V30M0 30H30"/>
+                        </pattern>
+                    </defs>
+                    <rect class="cta__grid" width="360" height="260" fill="url(#ctaGrid)"/>
+                    <path class="cta__axis" d="M180 20V250M20 230H340"/>
+                    <path class="cta__curve" d="M28 36Q180 424 332 36"/>
+                    <circle class="cta__dot" cx="104" cy="181.5" r="6"/>
+                    <circle class="cta__dot" cx="256" cy="181.5" r="6"/>
+                    <circle class="cta__dot" cx="180" cy="230" r="6"/>
+                </svg>
+            </div>
+
         </div>
     </div>
-
 </section>
 
-</main>
-
-<!-- ================= FOOTER ================= -->
 <!-- ================= LEGAL =================
      Privacy Policy and Terms live on the homepage for now. #privacy and #terms
      (footer, CTA, sign-up page) open the matching panel via homepage.js.
@@ -750,6 +759,9 @@
     </div>
 </section>
 
+</main>
+
+<!-- ================= FOOTER ================= -->
 <footer class="footer">
     <div class="container">
 
