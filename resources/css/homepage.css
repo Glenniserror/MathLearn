@@ -1133,25 +1133,24 @@ h3 {
     white-space: nowrap;
 }
 
-/* ================= 13. CTA PANEL =================
-   Inset gradient panel (not a full-bleed band): it sits on the same light
-   page as the cards above and the legal panels below. */
-.cta { padding-block: var(--s-16) var(--s-4); }
-
+/* ================= 13. CTA BAND =================
+   Full-bleed, flush on every side: no side margins, no rounded corners,
+   no gap above or below. Only the content sits inside the container. */
 .cta__panel {
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    display: grid;
-    gap: var(--s-8);
-    align-items: center;
-    padding: var(--s-10) var(--s-6);
-    border-radius: var(--radius-xl);
+    padding-block: var(--s-16);
     background:
         radial-gradient(60% 90% at 0% 0%, rgb(255 255 255 / 0.16), transparent 60%),
         linear-gradient(120deg, var(--grad-a) 0%, #06767a 48%, var(--grad-b) 100%);
     color: var(--white);
-    box-shadow: var(--shadow-lg);
+}
+
+.cta__inner {
+    display: grid;
+    gap: var(--s-8);
+    align-items: center;
 }
 
 /* graph-paper grid, fading out toward the copy */
@@ -1222,10 +1221,8 @@ h3 {
 }
 
 @media (min-width: 900px) {
-    .cta__panel {
-        grid-template-columns: 1.1fr 0.9fr;
-        padding: var(--s-16) var(--s-12);
-    }
+    .cta__panel { padding-block: var(--s-24); }
+    .cta__inner { grid-template-columns: 1.1fr 0.9fr; gap: var(--s-12); }
     .cta__art { display: block; justify-self: end; width: min(100%, 26rem); }
 }
 

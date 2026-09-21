@@ -532,11 +532,11 @@
 </section>
 
 <!-- ================= FINAL CTA =================
-     An inset gradient panel with the same plotted curve as the hero, so it
-     sits on the light page instead of cutting it with a full-bleed band. -->
+     Full-bleed gradient band, flush on every side (edge to edge, no gap above
+     or below). Only the content sits in the container. -->
 <section class="cta" aria-labelledby="cta-title">
-    <div class="container">
-        <div class="cta__panel reveal">
+    <div class="cta__panel">
+        <div class="container cta__inner reveal">
 
             <div class="cta__copy">
                 <h2 id="cta-title">Ready for your first lesson?</h2>
