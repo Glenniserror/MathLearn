@@ -20,44 +20,42 @@
 }
 
 /* ================= 2. TOKENS =================
-   Palette matched to the teacher/admin/student dashboards: solid blue
-   (#2563eb) as the brand color instead of the old teal-to-green
-   gradient, and the same neutral/background/chip values the
-   dashboards use, so the marketing site and the app feel like one
-   product. */
+   Palette matches the login/sign-up page: a teal-to-green brand
+   gradient, with a teal accent scale for tints, links, and icons. */
 :root {
-    /* Brand gradient — same blue-mid → blue gradient the dashboards use
-       on logo icons, avatars, and primary buttons. */
-    --grad-a: #60a5fa;
-    --grad-b: #2563eb;
+    /* Brand gradient (blue to green, the Sign Up button). Every solid
+       "blue" surface uses it; tints and text use the teal scale below,
+       which is the gradient's midpoint hue. */
+    --grad-a: #015b8a;
+    --grad-b: #0f6f36;
     --grad: linear-gradient(135deg, var(--grad-a), var(--grad-b));
-    --grad-hover: linear-gradient(135deg, #2563eb, #1d4ed8);
+    --grad-hover: linear-gradient(135deg, #014a70, #0b5a2b);
 
-    /* Accent tints and text, 50-900, built around the dashboards' blue. */
-    --accent-50: #eff6ff;
-    --accent-100: #dbeafe;
-    --accent-200: #bfdbfe;
-    --accent-300: #93c5fd;
-    --accent-400: #60a5fa;
-    --accent-500: #3b82f6;
-    --accent-600: #2563eb;
-    --accent-700: #1d4ed8;
-    --accent-800: #1e40af;
-    --accent-900: #1e3a8a;
-    --accent-rgb: 37 99 235; /* = accent-600, for alpha shadows */
+    /* Accent tints and text, 50-900. */
+    --accent-50: #f0f9f8;
+    --accent-100: #d7efed;
+    --accent-200: #b0e0dc;
+    --accent-300: #7dc8c3;
+    --accent-400: #45aaa5;
+    --accent-500: #1f8c88;
+    --accent-600: #0a6f70;
+    --accent-700: #085e63;
+    --accent-800: #0a4d55;
+    --accent-900: #0b3d46;
+    --accent-rgb: 10 111 112; /* = accent-600, for alpha shadows */
 
-    /* Neutrals (3) + white surface — same values as the dashboards. */
-    --ink: #111827;
-    --ink-rgb: 17 24 39;
-    --slate: #6b7280;
-    --paper: #f4f6fb;
+    /* Neutrals (3) + white surface. */
+    --ink: #0f172a;
+    --ink-rgb: 15 23 42;
+    --slate: #55627a;
+    --paper: #f8fafc;
     --white: #ffffff;
     --line: rgb(var(--ink-rgb) / 0.08);
 
     /* Icon-chip tints, the same four the dashboards use. Chips only. */
-    --green-50: #f0fdf4;  --green-600: #10b981;
-    --orange-50: #fff7ed; --orange-600: #f97316;
-    --purple-50: #faf5ff; --purple-600: #a855f7;
+    --green-50: #f0fdf4;  --green-600: #16a34a;
+    --orange-50: #fff7ed; --orange-600: #ea580c;
+    --purple-50: #faf5ff; --purple-600: #9333ea;
 
 
     /* Type */
@@ -454,7 +452,7 @@ h3 {
     border-radius: 50%;
     background:
         radial-gradient(circle at 30% 30%, var(--accent-200), transparent 62%),
-        radial-gradient(circle at 72% 74%, rgb(37 99 235 / 0.28), transparent 60%);
+        radial-gradient(circle at 72% 74%, rgb(20 150 115 / 0.28), transparent 60%);
     opacity: 0.75;
 }
 
@@ -1147,7 +1145,7 @@ h3 {
     padding-block: var(--s-16);
     background:
         radial-gradient(60% 90% at 0% 0%, rgb(255 255 255 / 0.16), transparent 60%),
-        linear-gradient(120deg, var(--grad-a) 0%, #3b82f6 48%, var(--grad-b) 100%);
+        linear-gradient(120deg, var(--grad-a) 0%, #06767a 48%, var(--grad-b) 100%);
     color: var(--white);
 }
 
