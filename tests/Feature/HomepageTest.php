@@ -23,8 +23,11 @@ it('renders the hero visual inline so no network image delays first paint', func
 
     preg_match('/<section class="hero".*?<\/section>/s', $html, $hero);
 
+    // The hero visual is the student dashboard preview, built from HTML and
+    // inline SVG icons rather than a screenshot.
     expect($hero[0] ?? '')
-        ->toContain('<svg class="plane"')
+        ->toContain('<div class="preview"')
+        ->toContain('<div class="chat-card"')
         ->not->toContain('<img')
         ->not->toContain('loading="lazy"');
 });
@@ -33,18 +36,21 @@ it('preloads the self-hosted font in the head without a stale hero image preload
     $html = get('/')->getContent();
 
     expect($html)
-        ->toContain('rel="preload" href="/fonts/inter-latin-400-800.woff2" as="font" type="font/woff2" crossorigin')
+        ->toContain('rel="preload" href="/fonts/plus-jakarta-sans-latin-400-800.woff2" as="font" type="font/woff2" crossorigin')
         ->not->toContain('rel="preload" as="image"');
 
-    expect(file_exists(public_path('fonts/inter-latin-400-800.woff2')))->toBeTrue();
+    expect(file_exists(public_path('fonts/plus-jakarta-sans-latin-400-800.woff2')))->toBeTrue();
 });
 
-it('declares font-display: optional for the self-hosted Inter face', function () {
+it('declares font-display: optional for the self-hosted Plus Jakarta Sans face', function () {
     // "optional" (not "swap"): the font is preloaded, so it's normally ready
     // for first paint anyway; if it ever isn't, the browser commits to the
     // fallback for that whole render instead of swapping fonts in later —
     // guaranteeing the font can never cause a layout shift.
-    expect(file_get_contents(resource_path('css/homepage.css')))
+    preg_match('/@font-face\s*\{[^}]*\}/', file_get_contents(resource_path('css/homepage.css')), $face);
+
+    expect($face[0] ?? '')
+        ->toContain("font-family: 'Plus Jakarta Sans'")
         ->toContain('font-display: optional');
 });
 

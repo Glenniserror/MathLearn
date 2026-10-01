@@ -7,14 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="description" content="Math Learning is an AI-powered math learning platform for junior high school students, featuring interactive modules, quizzes, and progress tracking.">
-    <meta name="theme-color" content="#f8fafc">
+    <meta name="theme-color" content="#1e4e7f">
 
     <title>Math Learning Assistant</title>
 
     <link rel="icon" type="image/png" href="{{ asset('image/587572187-777024998723535-6772324307557000990-n-fotor-20260519155328.png') }}">
 
-    <!-- ================= SELF-HOSTED FONT (Inter, same as the app) ================= -->
-    <link rel="preload" href="/fonts/inter-latin-400-800.woff2" as="font" type="font/woff2" crossorigin>
+    <!-- ================= SELF-HOSTED FONT (Plus Jakarta Sans, same as the dashboards and sign-in) ================= -->
+    <link rel="preload" href="/fonts/plus-jakarta-sans-latin-400-800.woff2" as="font" type="font/woff2" crossorigin>
 
     <!-- ================= CSS / JS =================
          The hero no longer uses a photo, so the old image preload is gone.
@@ -75,15 +75,25 @@
 <svg class="sprite" aria-hidden="true" focusable="false">
     <defs>
         <linearGradient id="brand-grad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#015b8a"/>
-            <stop offset="1" stop-color="#0f6f36"/>
+            <stop offset="0" stop-color="#60a5fa"/>
+            <stop offset="1" stop-color="#2563eb"/>
         </linearGradient>
     </defs>
+    {{-- Same mark as the dashboards' .logo-icon: a book on the AI Chat blue gradient. --}}
     <symbol id="logo-mark" viewBox="0 0 32 32">
         <rect width="32" height="32" rx="8" fill="url(#brand-grad)"/>
-        <rect x="10" y="7.5" width="12" height="17" rx="2.5" fill="none" stroke="#fff" stroke-width="2"/>
-        <path d="M14.5 21h3" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+        <g transform="translate(8 8) scale(0.6667)" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+        </g>
     </symbol>
+    <symbol id="i-trend" viewBox="0 0 24 24"><path d="M23 6l-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/></symbol>
+    <symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.5 12.9 17 22l-5-3-5 3 1.5-9.1"/></symbol>
+    <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+    <symbol id="i-clipboard" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8"/></symbol>
+    <symbol id="i-bot" viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 4v4M9 13v1M15 13v1M2 13v2M22 13v2"/></symbol>
     <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
     <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
     <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m0 0-6-6m6 6-6 6"/></symbol>
@@ -151,9 +161,14 @@
 
         <div class="hero__copy">
 
+            <p class="hero__eyebrow" data-enter="1">
+                <span class="hero__eyebrow-dot" aria-hidden="true"></span>
+                Bubog National High School · Junior High Math
+            </p>
+
             <h1 class="hero__title" id="hero-title">
                 <span data-enter="1">Every problem</span>
-                <span data-enter="2">has a next step.</span>
+                <span data-enter="2">has a <em>next step.</em></span>
             </h1>
 
             <p class="hero__sub">
@@ -165,7 +180,7 @@
                     Create your account
                     <svg class="icon icon--go" aria-hidden="true"><use href="#i-arrow"/></svg>
                 </a>
-                <a href="{{ route('signin-signin') }}" class="btn btn--ghost">Sign in</a>
+                <a href="{{ route('signin-signin') }}" class="btn btn--ghost-light">Sign in</a>
             </div>
 
             <p class="hero__note" data-enter="4">
@@ -175,58 +190,81 @@
 
         </div>
 
-        <!-- Hero visual: a lesson graph that draws itself while the AI tutor explains -->
+        <!-- Hero visual: the student dashboard itself, the same cards students see after signing in -->
         <div class="hero__visual" data-parallax>
 
-            <div class="solver" data-enter="5" role="img"
-                 aria-label="Preview of a Math Learning lesson: a parabola is graphed while the AI tutor explains how to factor x squared minus 4x plus 3.">
+            <div class="preview" data-enter="5" role="img"
+                 aria-label="Preview of the student dashboard: overall progress 76 percent, 9 of 12 topics done, a 5-day streak, and progress in each of the three modules.">
 
-                <div class="solver__bar" aria-hidden="true">
-                    <span class="solver__title">Quadratic functions</span>
-                    <span class="tag">Algebra</span>
+                <div class="preview__bar" aria-hidden="true">
+                    <span class="preview__dots"><i></i><i></i><i></i></span>
+                    <span class="preview__url">Student dashboard</span>
                 </div>
 
-                <svg class="plane" viewBox="0 0 360 260" aria-hidden="true" focusable="false">
-                    <defs>
-                        <pattern id="plane-grid" width="25" height="25" patternUnits="userSpaceOnUse" x="5" y="15">
-                            <path class="plane__grid" d="M25 0H0V25"/>
-                        </pattern>
-                    </defs>
-                    <rect width="360" height="260" fill="url(#plane-grid)"/>
+                <div class="preview__body" aria-hidden="true">
+                    <p class="preview__hello">Welcome back, Student!</p>
+                    <p class="preview__sub">Continue your mathematics learning journey</p>
 
-                    <line class="plane__axis" x1="16" y1="190" x2="344" y2="190"/>
-                    <line class="plane__axis" x1="80" y1="16" x2="80" y2="244"/>
-                    <text class="plane__txt" x="334" y="182">x</text>
-                    <text class="plane__txt" x="90" y="28">y</text>
+                    <div class="preview__metrics">
+                        <div class="metric">
+                            <div class="metric__head">
+                                <span class="metric__label">Overall progress</span>
+                                <span class="metric__icon metric__icon--green"><svg class="icon"><use href="#i-trend"/></svg></span>
+                            </div>
+                            <b class="metric__value">76%</b>
+                            <span class="metric__sub">across all modules</span>
+                        </div>
+                        <div class="metric">
+                            <div class="metric__head">
+                                <span class="metric__label">Topics done</span>
+                                <span class="metric__icon metric__icon--orange"><svg class="icon"><use href="#i-award"/></svg></span>
+                            </div>
+                            <b class="metric__value">9/12</b>
+                            <span class="metric__sub">keep going!</span>
+                        </div>
+                        <div class="metric">
+                            <div class="metric__head">
+                                <span class="metric__label">Streak</span>
+                                <span class="metric__icon metric__icon--blue"><svg class="icon"><use href="#i-target"/></svg></span>
+                            </div>
+                            <b class="metric__value">5</b>
+                            <span class="metric__sub">days in a row</span>
+                        </div>
+                    </div>
 
-                    <line class="plane__sym" x1="180" y1="34" x2="180" y2="215"/>
+                    <div class="preview__modules">
+                        <p class="preview__label">Learning Modules</p>
+                        <div class="pmod">
+                            <div class="pmod__top"><span>Sequences and Series</span><span class="pmod__pct pmod__pct--done">100%</span></div>
+                            <div class="bar"><span class="bar__fill bar__fill--done" data-width="100"></span></div>
+                        </div>
+                        <div class="pmod">
+                            <div class="pmod__top"><span>Polynomials and Polynomial Equations</span><span class="pmod__pct">67%</span></div>
+                            <div class="bar"><span class="bar__fill" data-width="67"></span></div>
+                        </div>
+                        <div class="pmod pmod--locked">
+                            <div class="pmod__top"><span>Advanced Equations and Functions</span><span class="pmod__lock"><svg class="icon"><use href="#i-lock"/></svg>Locked</span></div>
+                            <div class="bar"></div>
+                        </div>
+                    </div>
+                </div>
 
-                    <!-- y = x^2 - 4x + 3 (exact parabola as a quadratic Bezier) -->
-                    <path class="plane__curve" pathLength="1" d="M55 59Q180 371 305 59"/>
+            </div>
 
-                    <circle class="plane__dot plane__dot--r1" cx="130" cy="190" r="5.5"/>
-                    <circle class="plane__dot plane__dot--r2" cx="230" cy="190" r="5.5"/>
-                    <circle class="plane__dot plane__dot--vertex" cx="180" cy="215" r="5.5"/>
-                    <text class="plane__lbl plane__lbl--r1" x="118" y="209" text-anchor="end">(1, 0)</text>
-                    <text class="plane__lbl plane__lbl--r2" x="242" y="209">(3, 0)</text>
-                    <text class="plane__lbl plane__lbl--vertex" x="180" y="240" text-anchor="middle">(2, −1)</text>
-                </svg>
-
-                <div class="solver__chat" aria-hidden="true">
+            <div class="chat-card" data-enter="6" aria-hidden="true">
+                <div class="chat-card__head">
+                    <span class="chat-card__avatar"><svg class="icon"><use href="#i-bot"/></svg></span>
+                    <span><strong>Math AI Assistant</strong><span class="sub">Online</span></span>
+                </div>
+                <div class="chat-card__body">
                     <p class="bubble bubble--user">Paano hanapin ang roots ng x² − 4x + 3?</p>
-                    <p class="bubble bubble--ai">Kaya natin 'to! I-factor muna: <b>(x − 1)(x − 3) = 0</b>, kaya x = 1 o x = 3.</p>
+                    <p class="bubble bubble--ai">I-factor muna: <b>(x − 1)(x − 3) = 0</b>, kaya x = 1 o x = 3.</p>
                 </div>
-
             </div>
 
-            <div class="chip-card chip-card--quiz" data-enter="6" aria-hidden="true">
-                <span class="chip-card__icon"><svg class="icon" aria-hidden="true"><use href="#i-quiz"/></svg></span>
+            <div class="chip-card" data-enter="7" aria-hidden="true">
+                <span class="chip-card__icon"><svg class="icon"><use href="#i-clipboard"/></svg></span>
                 <span><strong>Summative Test: 9 of 10</strong><span class="sub">Instant feedback</span></span>
-            </div>
-
-            <div class="chip-card chip-card--offline" data-enter="7" aria-hidden="true">
-                <span class="chip-card__icon"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg></span>
-                <span><strong>Offline Materials</strong><span class="sub">Study without data</span></span>
             </div>
 
         </div>
@@ -244,22 +282,34 @@
     <div class="container stats__grid">
 
         <div class="stat">
-            <p class="stat__num" data-count="{{ $stats['modules'] }}">{{ $stats['modules'] }}</p>
-            <p class="stat__label">learning modules</p>
+            <span class="stat__icon stat__icon--blue" aria-hidden="true"><svg class="icon"><use href="#i-book"/></svg></span>
+            <div>
+                <p class="stat__num" data-count="{{ $stats['modules'] }}">{{ $stats['modules'] }}</p>
+                <p class="stat__label">learning modules</p>
+            </div>
         </div>
 
         <div class="stat">
-            <p class="stat__num" data-count="{{ $stats['topics'] }}">{{ $stats['topics'] }}</p>
-            <p class="stat__label">topics to master</p>
+            <span class="stat__icon stat__icon--orange" aria-hidden="true"><svg class="icon"><use href="#i-target"/></svg></span>
+            <div>
+                <p class="stat__num" data-count="{{ $stats['topics'] }}">{{ $stats['topics'] }}</p>
+                <p class="stat__label">topics to master</p>
+            </div>
         </div>
 
         <div class="stat">
             @if (! empty($stats['students']))
-                <p class="stat__num" data-count="{{ $stats['students'] }}">{{ number_format($stats['students']) }}</p>
-                <p class="stat__label">students learning</p>
+                <span class="stat__icon stat__icon--green" aria-hidden="true"><svg class="icon"><use href="#i-users"/></svg></span>
+                <div>
+                    <p class="stat__num" data-count="{{ $stats['students'] }}">{{ number_format($stats['students']) }}</p>
+                    <p class="stat__label">students learning</p>
+                </div>
             @else
-                <p class="stat__num">24/7</p>
-                <p class="stat__label">AI tutor help</p>
+                <span class="stat__icon stat__icon--purple" aria-hidden="true"><svg class="icon"><use href="#i-chat"/></svg></span>
+                <div>
+                    <p class="stat__num">24/7</p>
+                    <p class="stat__label">AI tutor help</p>
+                </div>
             @endif
         </div>
 
@@ -285,8 +335,14 @@
                     <p>Stuck on a problem at home? Ask the chatbot and get the steps, not only the answer, any time of day.</p>
                 </div>
                 <div class="tile__visual mini-chat" aria-hidden="true">
-                    <p class="bubble bubble--user">Give me a hint for 3, 7, 11, …</p>
-                    <p class="bubble bubble--ai">Look at the gap between each term. What do you notice?</p>
+                    <div class="mini-chat__head">
+                        <span class="chat-card__avatar"><svg class="icon"><use href="#i-bot"/></svg></span>
+                        <span><strong>Math AI Assistant</strong><span class="sub">Online</span></span>
+                    </div>
+                    <div class="mini-chat__body">
+                        <p class="bubble bubble--user">Give me a hint for 3, 7, 11, …</p>
+                        <p class="bubble bubble--ai">Look at the gap between each term. What do you notice?</p>
+                    </div>
                     <ul class="chips">
                         <li class="chip">Explain factoring</li>
                         <li class="chip">Check my answer</li>
@@ -377,17 +433,17 @@
         <div class="steps-panel reveal">
             <ol class="steps">
                 <li class="step">
-                    <span class="step__num" aria-hidden="true">1</span>
+                    <span class="step__num step__num--blue" aria-hidden="true">1</span>
                     <h3>Create your account</h3>
                     <p>Sign up as a student or a teacher, then sign in from any device.</p>
                 </li>
                 <li class="step">
-                    <span class="step__num" aria-hidden="true">2</span>
+                    <span class="step__num step__num--green" aria-hidden="true">2</span>
                     <h3>Learn and practice</h3>
                     <p>Open a module, work through the lessons, and ask the AI tutor when you get stuck.</p>
                 </li>
                 <li class="step">
-                    <span class="step__num" aria-hidden="true">3</span>
+                    <span class="step__num step__num--orange" aria-hidden="true">3</span>
                     <h3>Check your progress</h3>
                     <p>Take quizzes, get instant feedback, and watch your scores grow. Teachers see it too.</p>
                 </li>
@@ -409,7 +465,7 @@
 
         <div class="modules">
 
-            <a href="{{ route('signin-signin') }}" class="module lift reveal">
+            <a href="{{ route('signin-signin') }}" class="module module--blue lift reveal">
                 <div class="module__art">
                     <svg viewBox="0 0 200 125" aria-hidden="true" focusable="false">
                         <line class="art-axis" x1="16" y1="88" x2="184" y2="88"/>
@@ -430,13 +486,17 @@
                     </svg>
                 </div>
                 <div class="module__body">
+                    <span class="module__label">Module 1 · 5 topics</span>
                     <h3>Sequences and Series</h3>
                     <p>Spot the pattern, find the next term, and add up a series.</p>
+                    <ul class="module__topics" aria-label="Topics">
+                        <li>Arithmetic</li><li>Geometric</li><li>Harmonic</li><li>Fibonacci</li><li>Finite and Infinite</li>
+                    </ul>
                     <span class="module__go">Sign in to start <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></span>
                 </div>
             </a>
 
-            <a href="{{ route('signin-signin') }}" class="module lift reveal">
+            <a href="{{ route('signin-signin') }}" class="module module--green lift reveal">
                 <div class="module__art">
                     <svg viewBox="0 0 200 125" aria-hidden="true" focusable="false">
                         <line class="art-axis" x1="16" y1="68" x2="184" y2="68"/>
@@ -446,13 +506,17 @@
                     </svg>
                 </div>
                 <div class="module__body">
+                    <span class="module__label">Module 2 · 3 topics</span>
                     <h3>Polynomials and Polynomial Equations</h3>
                     <p>Work with polynomial expressions and solve polynomial equations step by step.</p>
+                    <ul class="module__topics" aria-label="Topics">
+                        <li>Division of Polynomials</li><li>Remainder and Factor Theorem</li><li>Polynomial Equations</li>
+                    </ul>
                     <span class="module__go">Sign in to start <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></span>
                 </div>
             </a>
 
-            <a href="{{ route('signin-signin') }}" class="module lift reveal">
+            <a href="{{ route('signin-signin') }}" class="module module--orange lift reveal">
                 <div class="module__art">
                     <svg viewBox="0 0 200 125" aria-hidden="true" focusable="false">
                         <line class="art-axis" x1="16" y1="90" x2="184" y2="90"/>
@@ -463,8 +527,12 @@
                     </svg>
                 </div>
                 <div class="module__body">
+                    <span class="module__label">Module 3 · 4 topics</span>
                     <h3>Advanced Equations and Functions</h3>
                     <p>Take on harder equations and see how functions behave on a graph.</p>
+                    <ul class="module__topics" aria-label="Topics">
+                        <li>Rational Functions</li><li>Radical Equations</li><li>Exponential Functions</li><li>Logarithmic Functions</li>
+                    </ul>
                     <span class="module__go">Sign in to start <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></span>
                 </div>
             </a>
@@ -507,9 +575,27 @@
             </div>
 
             <div class="dash__stats" aria-hidden="true">
-                <div class="dash__stat"><b>{{ number_format($overview['students']) }}</b><span>TOTAL STUDENTS</span></div>
-                <div class="dash__stat"><b>{{ (int) $overview['avg_progress'] }}%</b><span>AVG. PROGRESS</span></div>
-                <div class="dash__stat"><b>{{ number_format($overview['pending_feedback']) }}</b><span>PENDING FEEDBACK</span></div>
+                <div class="metric">
+                    <div class="metric__head">
+                        <span class="metric__label">Total students</span>
+                        <span class="metric__icon metric__icon--blue"><svg class="icon"><use href="#i-users"/></svg></span>
+                    </div>
+                    <b class="metric__value">{{ number_format($overview['students']) }}</b>
+                </div>
+                <div class="metric">
+                    <div class="metric__head">
+                        <span class="metric__label">Avg. progress</span>
+                        <span class="metric__icon metric__icon--green"><svg class="icon"><use href="#i-trend"/></svg></span>
+                    </div>
+                    <b class="metric__value">{{ (int) $overview['avg_progress'] }}%</b>
+                </div>
+                <div class="metric">
+                    <div class="metric__head">
+                        <span class="metric__label">Pending feedback</span>
+                        <span class="metric__icon metric__icon--orange"><svg class="icon"><use href="#i-file"/></svg></span>
+                    </div>
+                    <b class="metric__value">{{ number_format($overview['pending_feedback']) }}</b>
+                </div>
             </div>
 
             @if (! empty($overview['modules']))
@@ -518,7 +604,7 @@
                     @foreach ($overview['modules'] as $module)
                         @php $avg = max(0, min(100, (int) $module['avg'])); @endphp
                         <div>
-                            <div class="row__top"><span>{{ $module['name'] }}</span><span>{{ $avg }}%</span></div>
+                            <div class="row__top"><span>{{ $module['name'] }}</span><span class="row__pct{{ $avg < 65 ? ' row__pct--low' : '' }}">{{ $avg }}%</span></div>
                             {{-- Width is set by homepage.js from data-width (no inline style, CSP-safe). --}}
                             <div class="bar"><span class="bar__fill{{ $avg < 65 ? ' bar__fill--low' : '' }}" data-width="{{ $avg }}"></span></div>
                         </div>
@@ -543,30 +629,24 @@
                 <p>Join Math Learning and take math one step at a time.</p>
 
                 <div class="cta__actions">
-                    <a href="{{ route('signin-signup') }}" class="btn btn--white">
+                    <a href="{{ route('signin-signup') }}" class="btn btn--primary">
                         Create your account
                         <svg class="icon icon--go" aria-hidden="true"><use href="#i-arrow"/></svg>
                     </a>
-                    <a href="{{ route('signin-signin') }}" class="btn btn--outline-light">Sign in</a>
+                    <a href="{{ route('signin-signin') }}" class="btn btn--ghost-light">Sign in</a>
                 </div>
 
                 <p class="cta__terms">By creating an account you agree to our <a href="#terms">Terms and Conditions</a> and <a href="#privacy">Privacy Policy</a>.</p>
             </div>
 
-            <div class="cta__art" aria-hidden="true">
-                <svg viewBox="0 0 360 260" focusable="false">
-                    <defs>
-                        <pattern id="ctaGrid" width="30" height="30" x="0" y="20" patternUnits="userSpaceOnUse">
-                            <path d="M30 0V30M0 30H30"/>
-                        </pattern>
-                    </defs>
-                    <rect class="cta__grid" width="360" height="260" fill="url(#ctaGrid)"/>
-                    <path class="cta__axis" d="M180 20V250M20 230H340"/>
-                    <path class="cta__curve" d="M28 36Q180 424 332 36"/>
-                    <circle class="cta__dot" cx="104" cy="181.5" r="6"/>
-                    <circle class="cta__dot" cx="256" cy="181.5" r="6"/>
-                    <circle class="cta__dot" cx="180" cy="230" r="6"/>
-                </svg>
+            {{-- Same brand panel as the sign-in page: the school seal on deep navy. --}}
+            <div class="cta__brand">
+                <div class="cta__seal">
+                    <img src="{{ asset('image/587572187-777024998723535-6772324307557000990-n-fotor-20260519155328.png') }}"
+                         alt="Bubog National High School seal" width="354" height="354" loading="lazy" decoding="async">
+                </div>
+                <p class="cta__school">Bubog National High School</p>
+                <span class="cta__dots" aria-hidden="true"><i></i><i></i><i></i></span>
             </div>
 
         </div>
