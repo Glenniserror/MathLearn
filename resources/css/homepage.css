@@ -7,9 +7,9 @@
      white bordered cards on #f4f6fb
    - the sign-in page's muted navy for the hero, CTA band, and footer
    Order: 1 Fonts · 2 Tokens · 3 Base · 4 Layout · 5 Buttons · 6 Nav
-          7 Hero · 8 Dashboard cards · 9 Stats · 10 Features
-          11 How it works · 12 Modules · 13 Teachers · 14 CTA · 15 Legal
-          16 Footer · 17 Motion
+          7 Hero · 8 Dashboard cards · 9 Stats · 10 Features (+ Dashboards)
+          11 How it works · 12 Modules · 13 Teachers (+ FAQ) · 14 CTA
+          15 Legal · 16 Footer · 17 Motion
    Motion rule: only transform + opacity are animated.
    ===================================================================== */
 
@@ -400,7 +400,8 @@ h3 {
     color: var(--text-3);
     transition: background-color 200ms var(--ease-std), color 200ms var(--ease-std);
 }
-.nav__links a:hover { background: var(--blue-light); color: var(--blue); }
+.nav__links a:hover,
+.nav__links a.is-active { background: var(--blue-light); color: var(--blue); }
 
 .nav__actions {
     display: flex;
@@ -436,9 +437,11 @@ h3 {
         font-size: 0.9375rem;
         color: rgb(255 255 255 / 0.82);
     }
-    .nav__links a:hover { background: rgb(255 255 255 / 0.12); color: #fff; }
+    .nav__links a:hover,
+    .nav__links a.is-active { background: rgb(255 255 255 / 0.12); color: #fff; }
     .nav.is-scrolled .nav__links a { color: var(--text-3); }
-    .nav.is-scrolled .nav__links a:hover { background: var(--blue-light); color: var(--blue); }
+    .nav.is-scrolled .nav__links a:hover,
+    .nav.is-scrolled .nav__links a.is-active { background: var(--blue-light); color: var(--blue); }
 
     .nav__actions { flex-direction: row; padding: 0; border: 0; }
     .nav__actions .btn { width: auto; }
@@ -460,7 +463,8 @@ h3 {
     align-items: center;
     min-height: 100vh;
     min-height: 100dvh;
-    padding: calc(var(--nav-h) + var(--s-8)) 0 var(--s-24);
+    /* Extra room at the bottom: the stats cards overlap it by --s-12. */
+    padding: calc(var(--nav-h) + var(--s-8)) 0 calc(var(--s-24) + var(--s-12));
     overflow: hidden;
     background: var(--navy-grad);
     color: #fff;
@@ -502,8 +506,11 @@ h3 {
     to { transform: translate3d(-70px, 50px, 0) scale(1.08); }
 }
 
+/* minmax(0, 1fr): the preview's no-wrap module names must truncate, not
+   widen the column past a phone's screen. */
 .hero__inner {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     align-items: center;
     gap: var(--s-12);
 }
@@ -655,13 +662,33 @@ h3 {
 .pmod__lock .icon { width: 13px; height: 13px; }
 .pmod--locked .pmod__top span:first-child { color: var(--text-4); }
 
-/* Floating cards: desktop only, so nothing can overflow small screens. */
-.chat-card,
-.chip-card { display: none; }
+/* Floating cards: desktop only, so nothing can overflow small screens.
+   The wrapper takes the entrance animation and the position; the card
+   inside floats, so the two animations never share one element. */
+.hero__float {
+    display: none;
+    position: absolute;
+    z-index: 1;
+}
+
+@media (min-width: 1024px) {
+    .hero__float { display: block; }
+    .hero__float--chat { right: -32px; bottom: -40px; }
+    .hero__float--chip { left: -32px; top: -22px; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .chat-card { animation: float 7s ease-in-out infinite; }
+    .chip-card { animation: float 6s ease-in-out -2s infinite; }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
 
 /* The Math AI Assistant window, open over the dashboard like in the app. */
 .chat-card {
-    position: absolute;
     width: 17.5rem;
     overflow: hidden;
     border-radius: var(--radius);
@@ -735,7 +762,7 @@ h3 {
 .bubble b { font-weight: 700; color: var(--blue-dark); }
 
 .chip-card {
-    position: absolute;
+    display: flex;
     align-items: center;
     gap: var(--s-3);
     padding: var(--s-3) var(--s-4);
@@ -761,16 +788,11 @@ h3 {
     color: var(--purple);
 }
 
-@media (min-width: 1024px) {
-    .chat-card { display: block; right: -32px; bottom: -40px; }
-    .chip-card { display: flex; left: -32px; top: -22px; }
-}
-
-/* Scroll cue */
+/* Scroll cue: sits above the band the stats cards overlap. */
 .scroll-cue {
     position: absolute;
     left: 50%;
-    bottom: var(--s-6);
+    bottom: calc(var(--s-12) + var(--s-4));
     display: grid;
     place-items: center;
     width: 48px;
@@ -794,7 +816,7 @@ h3 {
 
 /* Short landscape phones: don't force a tall hero, drop the cue. */
 @media (max-height: 520px) and (orientation: landscape) {
-    .hero { min-height: auto; padding-bottom: var(--s-12); }
+    .hero { min-height: auto; padding-bottom: var(--s-24); }
     .scroll-cue { display: none; }
 }
 
@@ -868,8 +890,13 @@ h3 {
 .bar__fill--done { background: var(--green); }
 .bar__fill--low { background: var(--orange); }
 
-/* ================= 9. STATS ================= */
-.stats { padding-top: var(--s-10); }
+/* ================= 9. STATS =================
+   The cards float over the bottom edge of the hero. */
+.stats {
+    position: relative;
+    z-index: 1;
+    margin-top: calc(-1 * var(--s-12));
+}
 
 .stats__grid {
     display: grid;
@@ -889,7 +916,7 @@ h3 {
     border: 1px solid var(--border);
     border-radius: var(--radius);
     background: var(--card);
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-md);
 }
 
 /* Gradient icon tiles: the dashboards' action-card icons. */
@@ -1084,12 +1111,96 @@ h3 {
     font-weight: 700;
 }
 
+/* Topics unlocking in order: done, current, locked. */
+.topic-list { display: grid; gap: 6px; }
+
+.topic {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    padding: 7px 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-2);
+}
+
+.topic .icon { width: 16px; height: 16px; stroke-width: 2.25; }
+.topic--done .icon { color: var(--green); }
+.topic--current { border-color: var(--blue-mid); background: var(--blue-light); color: var(--blue-dark); }
+.topic--current .icon { color: var(--blue); }
+.topic--locked,
+.topic--locked .icon { color: var(--text-4); }
+
+/* ================= DASHBOARDS (one card per role) =================
+   Each card's top edge carries its role color, like the dashboards'
+   colored section cards. */
+.roles {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--s-4);
+}
+
+@media (min-width: 900px) {
+    .roles { grid-template-columns: repeat(3, 1fr); gap: var(--s-6); }
+}
+
+.role {
+    --role: var(--blue);
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+    padding: var(--s-6);
+    border: 1px solid var(--border);
+    border-top: 4px solid var(--role);
+    border-radius: var(--radius);
+    background: var(--card);
+    box-shadow: var(--shadow);
+}
+
+.role--green { --role: var(--green); }
+.role--purple { --role: var(--purple); }
+.role.lift:hover { border-top-color: var(--role); }
+
+.role .tile__icon { margin-bottom: var(--s-1); }
+.role h3 { font-size: 1.25rem; }
+.role > p { color: var(--text-3); }
+
+.role__list { display: grid; gap: 10px; margin: var(--s-2) 0 var(--s-3); }
+
+.role__list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    line-height: 1.45;
+    color: var(--text-2);
+}
+
+.role__list .icon { width: 18px; height: 18px; margin-top: 1px; stroke-width: 2.5; color: var(--role); }
+
+.role__go {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    margin-top: auto;
+    padding-top: var(--s-2);
+    font-weight: 700;
+    color: var(--blue);
+}
+.role__go .icon { transition: transform 200ms var(--ease-out); }
+.role__go:hover .icon { transform: translateX(3px); }
+
 /* ================= 11. HOW IT WORKS ================= */
 .steps-panel {
     padding: var(--s-6);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    background: var(--bg);
+    background: var(--card);
+    box-shadow: var(--shadow);
 }
 
 @media (min-width: 900px) {
@@ -1343,6 +1454,58 @@ h3 {
 }
 .row__pct { font-weight: 800; color: var(--blue); font-variant-numeric: tabular-nums; }
 .row__pct--low { color: var(--orange); }
+
+/* ================= FAQ =================
+   Same card and chevron as the legal accordions. On wide screens the
+   heading stays in view beside the questions. */
+.faq { display: grid; gap: var(--s-2); }
+
+@media (min-width: 1024px) {
+    .faq {
+        grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+        align-items: start;
+        gap: var(--s-16);
+    }
+
+    .faq .section__head {
+        position: sticky;
+        top: calc(var(--nav-h) + var(--s-6));
+        margin-bottom: 0;
+    }
+}
+
+.faq__list { display: grid; gap: var(--s-3); }
+
+.faq__item {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--card);
+    box-shadow: var(--shadow);
+    transition: border-color 200ms var(--ease-std);
+}
+
+.faq__item[open] { border-color: var(--blue-mid); }
+
+.faq__item > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-4);
+    min-height: 60px;
+    padding: var(--s-4) var(--s-5);
+    border-radius: var(--radius);
+    font-weight: 700;
+    cursor: pointer;
+    list-style: none;
+    transition: color 200ms var(--ease-std);
+}
+.faq__item > summary::-webkit-details-marker { display: none; }
+.faq__item > summary:hover { color: var(--blue); }
+.faq__item > summary .icon { color: var(--blue); transition: transform 200ms var(--ease-out); }
+.faq__item[open] > summary .icon { transform: rotate(180deg); }
+
+.faq__item p { padding: 0 var(--s-5) var(--s-5); color: var(--text-3); }
+.faq__item a { color: var(--blue); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 
 /* ================= 14. CTA BAND =================
    Full-bleed, flush on every side: the sign-in page's navy, with its
@@ -1631,7 +1794,9 @@ html.js .reveal.is-in {
     .socials a:active,
     .nav__toggle:active { transform: none; }
     .btn:hover .icon--go,
-    .module:hover .module__go .icon { transform: none; }
+    .module:hover .module__go .icon,
+    .role__go:hover .icon { transform: none; }
     .nav__panel { transform: none; }
     .legal-doc[open] > summary .icon { transform: none; }
+    .faq__item > summary .icon { transition: none; }
 }

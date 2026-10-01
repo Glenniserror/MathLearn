@@ -93,6 +93,70 @@ it('shows each module in its dashboard color with all twelve topics', function (
         ->and(substr_count(implode('', $topicLists[1]), '<li>'))->toBe(12);
 });
 
+it('introduces each role dashboard with its own sign-in link', function () {
+    $html = get('/')->getContent();
+
+    preg_match('/<section[^>]+id="dashboards".*?<\/section>/s', $html, $section);
+    $dashboards = $section[0] ?? '';
+
+    expect($dashboards)
+        ->toContain('class="role role--blue lift reveal"')
+        ->toContain('class="role role--green lift reveal"')
+        ->toContain('class="role role--purple lift reveal"')
+        ->toContain('href="'.route('student.login').'"')
+        ->toContain('href="'.route('teacher.login').'"')
+        ->toContain('href="'.route('admin.login').'"');
+
+    expect(substr_count($dashboards, '<li>'))->toBe(12);
+});
+
+it('answers common questions in an accordion that matches how sign-up works', function () {
+    $html = get('/')->getContent();
+
+    preg_match('/<section[^>]+id="faq".*?<\/section>/s', $html, $section);
+    $faq = $section[0] ?? '';
+
+    expect(substr_count($faq, '<details class="faq__item">'))->toBe(6)
+        ->and(substr_count($faq, '<summary>'))->toBe(6)
+        ->and($faq)
+        ->toContain('The teacher of the section you picked approves student accounts, and an administrator approves teacher accounts.')
+        ->toContain('Continue with Google')
+        ->toContain('href="#privacy"');
+});
+
+it('highlights the nav link for the section in view', function () {
+    $html = get('/')->getContent();
+
+    preg_match('/<ul class="nav__links">.*?<\/ul>/s', $html, $links);
+
+    expect(substr_count($links[0] ?? '', 'data-spy'))->toBe(4)
+        ->and($links[0] ?? '')->toContain('href="#dashboards"')->toContain('href="#faq"');
+
+    expect(file_get_contents(resource_path('js/homepage.js')))
+        ->toContain("document.querySelectorAll('[data-spy]')")
+        ->toContain("link.setAttribute('aria-current', 'location')");
+
+    expect(file_get_contents(resource_path('css/homepage.css')))
+        ->toContain('.nav.is-scrolled .nav__links a.is-active');
+});
+
+it('floats the hero cards on wrappers so the entrance and float never share an element', function () {
+    $html = get('/')->getContent();
+
+    expect($html)
+        ->toMatch('/<div class="hero__float hero__float--chat" data-enter="6"[^>]*>\s*<div class="chat-card">/')
+        ->toMatch('/<div class="hero__float hero__float--chip" data-enter="7"[^>]*>\s*<div class="chip-card">/');
+
+    expect(file_get_contents(resource_path('css/homepage.css')))
+        ->toMatch('/@keyframes float\s*\{[^@]*translateY\(-8px\)/');
+});
+
+it('keeps the hero column from growing wider than a phone screen', function () {
+    preg_match('/\.hero__inner\s*\{[^}]*\}/', file_get_contents(resource_path('css/homepage.css')), $inner);
+
+    expect($inner[0] ?? '')->toContain('grid-template-columns: minmax(0, 1fr);');
+});
+
 it('shows the school seal in the call to action like the sign-in page', function () {
     $html = get('/')->getContent();
 

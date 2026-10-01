@@ -1,8 +1,9 @@
 /* =====================================================================
    MathLearn — homepage.js
-   Nav state + mobile menu · scroll reveal (once) · stat counters (once)
-   · hero parallax. Animates transform/opacity only. Every effect is
-   skipped or simplified under prefers-reduced-motion.
+   Nav state + mobile menu · current-section highlight · scroll reveal
+   (once) · stat counters (once) · hero parallax. Animates
+   transform/opacity only. Every effect is skipped or simplified under
+   prefers-reduced-motion.
    ===================================================================== */
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -66,6 +67,38 @@ if (nav) {
             if (e.matches) setOpen(false);
         });
     }
+}
+
+// ================= NAV: HIGHLIGHT THE SECTION IN VIEW =================
+// The section crossing a thin band just above the middle of the viewport
+// is "current". Sections without a nav link (hero, how it works, …)
+// clear the highlight instead of leaving the last one lit.
+const spyLinks = Array.from(document.querySelectorAll('[data-spy]'));
+const spySections = Array.from(document.querySelectorAll('main section[id]'));
+
+if (spyLinks.length && spySections.length && 'IntersectionObserver' in window) {
+    const setCurrent = (id) => {
+        spyLinks.forEach((link) => {
+            const isCurrent = link.getAttribute('href') === `#${id}`;
+            link.classList.toggle('is-active', isCurrent);
+            if (isCurrent) {
+                link.setAttribute('aria-current', 'location');
+            } else {
+                link.removeAttribute('aria-current');
+            }
+        });
+    };
+
+    const spyObserver = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) setCurrent(entry.target.id);
+            });
+        },
+        { rootMargin: '-45% 0px -50% 0px' }
+    );
+
+    spySections.forEach((section) => spyObserver.observe(section));
 }
 
 // ================= SCROLL REVEAL (once per element) =================

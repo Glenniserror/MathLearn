@@ -117,7 +117,7 @@ it('constrains section content with a shared max-width container', function () {
     expect($container[0] ?? '')->toContain('var(--container)')->toContain('margin-inline: auto');
     expect($css)->toMatch('/--container:\s*\d+px/');
 
-    foreach (['features', 'how-it-works', 'modules', 'teachers'] as $section) {
+    foreach (['features', 'dashboards', 'how-it-works', 'modules', 'teachers', 'faq'] as $section) {
         expect($html)->toMatch('/<section[^>]+id="'.$section.'"[^>]*>\s*<div class="container/');
     }
 });
