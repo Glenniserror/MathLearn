@@ -13,10 +13,9 @@
         'primary' => 'bg-primary text-white hover:bg-primary-hover focus-visible:outline-primary',
         'secondary' => 'bg-white text-neutral-700 border border-neutral-200 hover:bg-neutral-50 focus-visible:outline-primary',
         'danger' => 'bg-error-tint text-error border border-error/25 hover:bg-error/10 focus-visible:outline-error',
-        // Sign-in/sign-up pages only (see resources/css/app.css): both
-        // actions use the auth pages' blue. Not for use elsewhere.
-        'signin' => 'bg-[var(--auth-signin)] text-white hover:bg-[var(--auth-signin-hover)] focus-visible:outline-[var(--auth-signin)]',
-        'signup' => 'bg-[var(--auth-signup)] text-white hover:bg-[var(--auth-signup-hover)] focus-visible:outline-[var(--auth-signup)]',
+        // Sign-in, sign-up, and password pages only (see .auth-btn in
+        // resources/css/app.css): the landing page's gradient button.
+        'auth' => 'auth-btn',
     ];
 
     $classes = $base.' '.($variants[$variant] ?? $variants['primary']);

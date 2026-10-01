@@ -2,16 +2,6 @@
 
 use function Pest\Laravel\get;
 
-/**
- * The value of a CSS custom property declared in a stylesheet under resources/css.
- */
-function cssToken(string $stylesheet, string $token): ?string
-{
-    preg_match('/'.preg_quote($token, '/').':\s*([^;]+);/', file_get_contents(resource_path("css/{$stylesheet}")), $match);
-
-    return isset($match[1]) ? strtolower(trim($match[1])) : null;
-}
-
 it('uses the same palette as the dashboards', function (string $token) {
     $homepageValue = cssToken('homepage.css', $token);
 

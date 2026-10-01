@@ -48,3 +48,14 @@ function something()
 {
     // ..
 }
+
+/**
+ * The value of a CSS custom property declared in a stylesheet under resources/css,
+ * lowercased and trimmed, or null when the stylesheet doesn't declare it.
+ */
+function cssToken(string $stylesheet, string $token): ?string
+{
+    preg_match('/'.preg_quote($token, '/').':\s*([^;]+);/', file_get_contents(resource_path("css/{$stylesheet}")), $match);
+
+    return isset($match[1]) ? strtolower(trim($match[1])) : null;
+}

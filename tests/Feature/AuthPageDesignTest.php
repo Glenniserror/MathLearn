@@ -51,7 +51,29 @@ it('keeps the auth backdrop and panel dark, muted blues that are easy on the eye
 
 it('puts the google sign-up completion page on the shared blue tokens', function () {
     expect(file_get_contents(resource_path('views/login/google-signup-completion.blade.php')))
-        ->toContain('rounded-md bg-primary text-[15px] font-bold text-white transition-colors duration-150 hover:bg-primary-hover')
+        ->toContain('<button type="submit" class="auth-btn ')
         ->toContain('border-l-4 border-primary bg-primary-tint')
         ->not->toMatch('/#(1b5384|164468|eaf1f7|0f7355|0b5c44)\b/i');
+});
+
+it('gives every auth form the landing page gradient button', function (string $routeName) {
+    preg_match('/<button[^>]*type="submit"[^>]*>/', $this->get(route($routeName))->assertOk()->getContent(), $submit);
+
+    expect($submit[0] ?? '')->toContain('auth-btn');
+})->with(['student.login', 'teacher.login', 'admin.login', 'student.register.form', 'teacher.register.form', 'student.password.request']);
+
+it('styles the auth button exactly like the landing page primary button', function () {
+    preg_match('/\.auth-btn\s*\{[^}]*\}/', file_get_contents(resource_path('css/app.css')), $authButton);
+
+    // homepage.css: .btn--primary uses --blue-grad = linear-gradient(135deg, var(--blue-mid), var(--blue)).
+    expect(cssToken('homepage.css', '--blue-mid'))->toBe('#60a5fa')
+        ->and(cssToken('homepage.css', '--blue'))->toBe('#2563eb')
+        ->and($authButton[0] ?? '')
+        ->toContain('background: linear-gradient(135deg, #60a5fa, #2563eb);')
+        ->toContain('box-shadow: 0 6px 16px rgb(37 99 235 / 0.3);');
+
+    expect(file_get_contents(resource_path('views/components/button.blade.php')))
+        ->toContain("'auth' => 'auth-btn'")
+        ->not->toContain("'signin' =>")
+        ->not->toContain("'signup' =>");
 });

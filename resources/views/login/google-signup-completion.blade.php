@@ -120,7 +120,7 @@
             @enderror
           </div>
 
-          <button type="submit" class="flex h-10 w-full items-center justify-center gap-2 rounded-md bg-primary text-[15px] font-bold text-white transition-colors duration-150 hover:bg-primary-hover active:scale-[0.99] disabled:cursor-not-allowed disabled:bg-neutral-300">
+          <button type="submit" class="auth-btn flex h-10 w-full items-center justify-center gap-2 rounded-md text-[15px] disabled:cursor-not-allowed">
             <i class="fa-solid fa-check"></i> Complete registration
           </button>
         </form>

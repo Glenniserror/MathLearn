@@ -46,7 +46,7 @@
           autocomplete="new-password" required minlength="8" placeholder="••••••••"
       />
 
-      <x-button type="submit" variant="primary" class="w-full">
+      <x-button type="submit" variant="auth" class="w-full">
         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
         Reset Password
       </x-button>
