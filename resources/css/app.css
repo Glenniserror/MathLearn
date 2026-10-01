@@ -53,59 +53,50 @@
 /* @import './login/admin_login.css'; */
 
 /* ================================================================
-   SIGN-IN / SIGN-UP — a small, self-contained palette, deliberately
-   kept out of the @theme block above: blue plays a different role
-   here (background/panel identity, not the one global action color)
-   and green appears nowhere else in the app. Mixing either into the
-   sitewide --color-* tokens would leak them onto buttons everywhere.
+   SIGN-IN / SIGN-UP — a small, self-contained palette, kept out of
+   the @theme block above so these backdrop/panel values don't leak
+   onto buttons elsewhere.
 
-   The homepage hero already gives blue and green meaning — its Sign
-   In button is blue, its Sign Up button is green — so this backdrop
-   reuses that same gradient family instead of inventing a new one,
-   and the actual color rule is: blue = sign in (returning user),
-   green = sign up (new user), everywhere in the app, not just here.
+   All blue, in the same gradient family as the dashboards' "AI Chat"
+   button, the Math AI Assistant header, and the maintenance page —
+   no green anywhere on these pages.
 
-   1. The background goes blue → teal → green, never straight
-      blue-to-green (that middle would mud out to gray). Teal is the
-      natural bridge between the two, and it's the hero's own bridge
-      color too.
-   2. The background stays deep and desaturated — it recedes behind
-      the white card instead of competing with it.
-   3. Blue = sign in, green = sign up, consistently: the submit
-      button, and whichever link points at that action, always match
-      — "Sign up free" is green even on the (blue-actioned) sign-in
-      page, "Sign in" is blue even on the (green-actioned) sign-up
-      page. Never both colors used for the same action.
-   4. Three depth layers front-to-back: background (darkest) → panel
-      (mid-tone) → card (white). That alone reads as depth, no
+   1. The background is a bright blue gradient, deep enough at its
+      light end (#3b82f6) that the white "Back to Homepage" link on
+      it stays readable.
+   2. Sign in and sign up share one action blue (the app's
+      --color-primary): the submit buttons and the links pointing at
+      either action all use it.
+   3. Three depth layers front-to-back: background (bright) → panel
+      (deep navy-blue) → card (white). That alone reads as depth, no
       drop-shadow tricks needed.
    ================================================================ */
 .auth-gradient-bg {
-    --auth-blue: #1e4e7f;
-    --auth-teal: #197a86;
-    --auth-green: #16906e;
-    --auth-panel-blue: #14375c;
-    --auth-panel-green: #0f5f52;
-    --auth-signin: #1b5384;
-    --auth-signin-hover: #164468;
-    --auth-signup: #0f7355;
-    --auth-signup-hover: #0b5c44;
+    --auth-bg-start: #3b82f6;
+    --auth-bg-mid: #2563eb;
+    --auth-bg-end: #1d4ed8;
+    --auth-panel-top: #1d4ed8;
+    --auth-panel-bottom: #1e3a8a;
+    --auth-signin: #2563eb;
+    --auth-signin-hover: #1d4ed8;
+    --auth-signup: var(--auth-signin);
+    --auth-signup-hover: var(--auth-signin-hover);
     --auth-ink: #0e2e4c;
     --auth-slate: #4a5f6e;
     --auth-line: #dde3e8;
 
-    background: linear-gradient(135deg, var(--auth-blue) 0%, var(--auth-teal) 52%, var(--auth-green) 100%);
+    background: linear-gradient(135deg, var(--auth-bg-start) 0%, var(--auth-bg-mid) 50%, var(--auth-bg-end) 100%);
     background-attachment: fixed;
 }
 
 .auth-brand-panel {
-    background: linear-gradient(160deg, var(--auth-panel-blue) 0%, var(--auth-panel-green) 100%);
+    background: linear-gradient(160deg, var(--auth-panel-top) 0%, var(--auth-panel-bottom) 100%);
 }
 
 .auth-tab-active {
     border-color: var(--auth-signin);
     color: var(--auth-ink);
-    background: #eaf1f7;
+    background: #eff6ff;
 }
 .auth-tab-inactive {
     border-color: var(--auth-line);
@@ -114,9 +105,9 @@
 }
 .auth-tab-inactive:hover { border-color: #c5cfd8; color: var(--auth-ink); }
 
-/* Two link colors that carry meaning, not decoration: blue points at
-   the sign-in action, green points at sign-up — same rule the
-   homepage hero buttons already use. */
+/* Links to the sign-in and sign-up actions. Both are blue now (see
+   point 2 above); the two classes stay so each link keeps saying
+   which action it points at. */
 .auth-link-signin { color: var(--auth-signin); font-weight: 600; }
 .auth-link-signin:hover { color: var(--auth-ink); text-decoration: underline; }
 

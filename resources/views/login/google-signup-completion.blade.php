@@ -12,7 +12,7 @@
 </head>
 <body class="auth-gradient-bg flex min-h-screen flex-col items-center justify-center p-4 font-sans sm:p-6">
 
-  <a href="{{ route('student.login') }}" class="mb-4 inline-flex w-full max-w-4xl items-center gap-1.5 text-[13px] font-semibold text-white/70 transition-colors duration-150 hover:text-white">
+  <a href="{{ route('student.login') }}" class="mb-4 inline-flex w-full max-w-4xl items-center gap-1.5 text-[13px] font-semibold text-white/85 transition-colors duration-150 hover:text-white">
     <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
     Back to login
   </a>
@@ -47,8 +47,8 @@
           </x-alert>
         @endif
 
-        <div class="mb-5 flex items-center gap-3 rounded-md border-l-4 border-[#1b5384] bg-[#eaf1f7] px-4 py-3">
-          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#1b5384] text-[15px] font-bold text-white">
+        <div class="mb-5 flex items-center gap-3 rounded-md border-l-4 border-primary bg-primary-tint px-4 py-3">
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-[15px] font-bold text-white">
             {{ strtoupper(substr($user->name, 0, 1)) }}
           </div>
           <div>
@@ -67,7 +67,7 @@
               <input
                 type="text" name="student_id" id="student_id" placeholder="e.g. 24-1234" autocomplete="off"
                 value="{{ old('student_id') }}"
-                class="h-10 w-full rounded-md border border-neutral-200 pl-10 pr-3 text-[15px] text-neutral-900 placeholder:text-neutral-500 outline-none transition-colors duration-150 focus:border-[#1b5384] focus:ring-2 focus:ring-[#1b5384]/15"
+                class="h-10 w-full rounded-md border border-neutral-200 pl-10 pr-3 text-[15px] text-neutral-900 placeholder:text-neutral-500 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary/15"
               >
             </div>
             @error('student_id')<p class="mt-1.5 text-[13px] text-error">{{ $message }}</p>@enderror
@@ -91,7 +91,7 @@
               <input
                 type="text" id="section-search-input" placeholder="Search or select a section…"
                 autocomplete="off" readonly
-                class="h-10 w-full cursor-pointer rounded-md border border-neutral-200 pl-10 pr-9 text-[15px] text-neutral-900 outline-none transition-colors duration-150 focus:border-[#1b5384] focus:ring-2 focus:ring-[#1b5384]/15"
+                class="h-10 w-full cursor-pointer rounded-md border border-neutral-200 pl-10 pr-9 text-[15px] text-neutral-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary/15"
               >
               <i class="fa-solid fa-chevron-down section-chevron pointer-events-none absolute right-3 text-neutral-400 transition-transform duration-150"></i>
             </div>
@@ -100,11 +100,11 @@
               @if(isset($sections) && $sections->count() > 0)
                 @foreach($sections as $index => $section)
                   <div
-                    class="section-option flex cursor-pointer items-center gap-2.5 border-b border-neutral-100 px-3.5 py-2.5 text-[14px] text-neutral-800 transition-colors duration-150 last:border-b-0 hover:bg-[#eaf1f7] hover:text-[#1b5384]"
+                    class="section-option flex cursor-pointer items-center gap-2.5 border-b border-neutral-100 px-3.5 py-2.5 text-[14px] text-neutral-800 transition-colors duration-150 last:border-b-0 hover:bg-primary-tint hover:text-primary"
                     data-value="{{ $section->id }}"
                     data-label="{{ $section->name }}"
                   >
-                    <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-[#eaf1f7] text-[11px] font-bold text-[#1b5384]">{{ $index + 1 }}</span>
+                    <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-primary-tint text-[11px] font-bold text-primary">{{ $index + 1 }}</span>
                     {{ $section->name }}
                   </div>
                 @endforeach
@@ -120,12 +120,12 @@
             @enderror
           </div>
 
-          <button type="submit" class="flex h-10 w-full items-center justify-center gap-2 rounded-md bg-[#1b5384] text-[15px] font-bold text-white transition-colors duration-150 hover:bg-[#164468] active:scale-[0.99] disabled:cursor-not-allowed disabled:bg-neutral-300">
+          <button type="submit" class="flex h-10 w-full items-center justify-center gap-2 rounded-md bg-primary text-[15px] font-bold text-white transition-colors duration-150 hover:bg-primary-hover active:scale-[0.99] disabled:cursor-not-allowed disabled:bg-neutral-300">
             <i class="fa-solid fa-check"></i> Complete registration
           </button>
         </form>
 
-        <p class="mt-4 text-center text-[13px] text-neutral-500">Need help? <a href="{{ route('student.login') }}" class="font-semibold text-[#0f7355] transition-colors duration-150 hover:text-[#0b5c44] hover:underline">Back to login</a></p>
+        <p class="mt-4 text-center text-[13px] text-neutral-500">Need help? <a href="{{ route('student.login') }}" class="font-semibold text-primary transition-colors duration-150 hover:text-primary-hover hover:underline">Back to login</a></p>
       </div>
     </div>
   </div>
