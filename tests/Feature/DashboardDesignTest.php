@@ -223,6 +223,25 @@ it('shows the locked summative test notice as an amber card', function () {
         ->toMatch('/\.notice-card\s*\{[^}]*background:\s*#fffbeb;/');
 });
 
+it('gives the math assistant the same blue gradient as the ai chat button', function () {
+    $blueGradient = 'linear-gradient(135deg, var(--blue-mid), var(--blue))';
+    $mathPanel = file_get_contents(resource_path('css/dashboard/math-panel.css'));
+
+    expect(file_get_contents(resource_path('css/dashboard/student_dashboard.css')))
+        ->toMatch('/\.sidebar-fab-btn\s*\{[^}]*background:\s*'.preg_quote($blueGradient, '/').';/');
+
+    expect($mathPanel)
+        ->toContain(".chat-header { background: {$blueGradient}; }")
+        ->toContain(".fab-btn { background: {$blueGradient}; }")
+        ->not->toMatch('/#0F9B6C/i');
+});
+
+it('shows the page loading bar in the same blue gradient', function () {
+    expect(file_get_contents(resource_path('js/nav-progress.js')))
+        ->toContain('background: linear-gradient(90deg, #60a5fa, #2563eb);')
+        ->not->toContain('#10b981');
+});
+
 it('escapes teacher feedback before it reaches the student dashboard', function () {
     expect(file_get_contents(resource_path('js/dashboard/student_dashboard.js')))
         ->toContain('${escapeHtml(f.teacherName)}')

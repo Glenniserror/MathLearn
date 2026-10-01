@@ -8,9 +8,8 @@
 
    --calc-accent/--calc-accent-tint reuse the dashboard's existing
    --blue/--blue-light tokens (aliased locally so the calculator's
-   markup only has one variable name to reference); the header gradient
-   is the one genuinely new value here, matching the design reference
-   and the original spec's stated blue-to-green gradient.
+   markup only has one variable name to reference); the header uses the
+   same light-to-dark blue gradient as the sidebar "AI Chat" button.
    ================================ */
 
 #ai-chat-window {
@@ -18,8 +17,8 @@
     --calc-accent-tint: var(--blue-light);
 }
 
-/* ── Header re-skin (blue-to-green gradient, matching the design reference) ── */
-.chat-header { background: linear-gradient(135deg, #1D4ED8 0%, #0F9B6C 100%); }
+/* ── Header re-skin (same blue gradient as the "AI Chat" button) ── */
+.chat-header { background: linear-gradient(135deg, var(--blue-mid), var(--blue)); }
 
 .chat-avatar svg { width: 19px; height: 19px; color: white; }
 
@@ -251,7 +250,7 @@
 
 /* ── FAB re-skin (matches the header gradient; icon sizing/color
    already comes from student_dashboard.css's .fab-btn svg rule) ── */
-.fab-btn { background: linear-gradient(135deg, #1D4ED8 0%, #0F9B6C 100%); }
+.fab-btn { background: linear-gradient(135deg, var(--blue-mid), var(--blue)); }
 
 /* ── Mobile: dragging disabled, panel stays a floating card (its
    normal sizing/position already comes from chatbot.css) ── */
