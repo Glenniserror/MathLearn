@@ -13,7 +13,7 @@
     html, body { height: 100%; font-family: 'Inter', -apple-system, sans-serif; }
 
     body {
-      background: linear-gradient(135deg, #60a5fa 0%, #2563eb 55%, #1d4ed8 100%);
+      background: linear-gradient(135deg, #1e4e7f 0%, #1b4778 50%, #173d68 100%);
       min-height: 100vh;
       display: flex;
       align-items: center;
