@@ -26,15 +26,11 @@
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 :root {
   --blue:#2563eb; --blue-dark:#1d4ed8; --blue-light:#eff6ff; --blue-mid:#60a5fa;
-  --green:#10b981; --green-light:#f0fdf4;
-  --orange:#f97316; --orange-light:#fff7ed;
-  --purple:#a855f7; --purple-light:#faf5ff;
+  --blue-100:#dbeafe; --blue-200:#bfdbfe; --blue-800:#1e40af;
   --red:#ef4444; --red-light:#fef2f2;
-  --amber:#f59e0b; --amber-light:#fffbeb;
   --bg:#f4f6fb; --card:#ffffff; --border:#e8ecf2;
   --text:#111827; --text-2:#374151; --text-3:#6b7280; --text-4:#9ca3af;
   --radius:14px; --shadow:0 2px 12px rgba(0,0,0,0.06);
-  --lock:#94a3b8;
 }
 html,body { min-height:100%; font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:var(--text); }
 
@@ -99,13 +95,18 @@ html,body { min-height:100%; font-family:'Plus Jakarta Sans',sans-serif; backgro
 .topic-item:hover:not(.mq-topic--locked) { background:var(--blue-light); border-color:var(--blue-mid); color:var(--blue); transform:translateX(4px); }
 .topic-item:active:not(.mq-topic--locked) { transform:scale(0.98); }
 .topic-item:hover:not(.mq-topic--locked) .topic-dot { background:var(--blue-mid); }
-.topic-item.mq-topic--done { border-color:var(--green); background:var(--green-light); color:#065f46; }
-.topic-item.mq-topic--done .topic-dot { background:var(--green); box-shadow:0 0 0 3px #d1fae5; }
+.topic-item.mq-topic--done { border-color:var(--blue-200); background:var(--blue-light); color:var(--blue-800); }
+.topic-item.mq-topic--done .topic-dot { background:var(--blue); box-shadow:0 0 0 3px var(--blue-100); }
 .topic-item.mq-topic--locked { opacity:0.5; cursor:not-allowed; }
 .topic-item.mq-topic--locked:hover { transform:none; }
-.topic-item.mq-topic--active-unlock { border-color:var(--blue); background:var(--blue-light); color:var(--blue); cursor:pointer; }
+.topic-item.mq-topic--active-unlock { border-color:var(--blue); background:var(--card); color:var(--blue); cursor:pointer; box-shadow:0 0 0 3px var(--blue-100); }
 .topic-item.mq-topic--active-unlock .topic-dot { background:var(--blue); }
-.lock-icon { margin-left:auto; flex-shrink:0; color:var(--lock); font-size:14px; }
+/* The lock glyph stays in the DOM (JS adds/removes it by class) but is
+   drawn as a gray line icon instead of the colored emoji. */
+.lock-icon {
+  margin-left:auto; flex-shrink:0; width:14px; height:14px; font-size:0;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='11' width='18' height='11' rx='2' ry='2'/%3E%3Cpath d='M7 11V7a5 5 0 0 1 10 0v4'/%3E%3C/svg%3E") no-repeat center / contain;
+}
 @keyframes lockShake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-4px)} 40%{transform:translateX(4px)} 60%{transform:translateX(-3px)} 80%{transform:translateX(3px)} }
 .mq-topic--locked.shake { animation:lockShake 0.4s ease; }
 
@@ -121,11 +122,15 @@ html,body { min-height:100%; font-family:'Plus Jakarta Sans',sans-serif; backgro
 }
 .mq-module-tab:hover:not(.mq-module-tab--locked):not(.mq-module-tab--active) { border-color:var(--blue-mid); color:var(--blue); }
 .mq-module-tab--active { background:var(--blue-light); border-color:var(--blue); color:var(--blue); }
-.mq-module-tab--done { border-color:var(--green); color:#065f46; }
-.mq-module-tab--done.mq-module-tab--active { background:var(--green-light); }
+.mq-module-tab--done { border-color:var(--blue-200); color:var(--blue-800); }
+.mq-module-tab--done.mq-module-tab--active { background:var(--blue-light); border-color:var(--blue); }
 .mq-module-tab--locked { opacity:0.55; cursor:not-allowed; }
 .mq-module-tab.shake { animation:lockShake 0.4s ease; }
 .mq-tab-state { font-size:11px; }
+.mq-module-tab--locked .mq-tab-state {
+  width:12px; height:12px; font-size:0;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='11' width='18' height='11' rx='2' ry='2'/%3E%3Cpath d='M7 11V7a5 5 0 0 1 10 0v4'/%3E%3C/svg%3E") no-repeat center / contain;
+}
 .mq-module-hidden { display:none !important; }
 @media(max-width:380px) { .mq-module-tab { font-size:11px; padding:9px 4px; } }
 
@@ -153,21 +158,21 @@ html,body { min-height:100%; font-family:'Plus Jakarta Sans',sans-serif; backgro
   border:1px solid var(--border); background:var(--bg); color:var(--text-3);
   font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.15s;
 }
-.mq-close:hover { background:var(--red-light); border-color:#fca5a5; color:var(--red); }
+.mq-close:hover { background:var(--blue-light); border-color:var(--blue-200); color:var(--blue); }
 
 .mq-phase-row { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
 .mq-phase-label { font-size:10px; font-weight:800; letter-spacing:0.14em; text-transform:uppercase; color:var(--blue); }
 .mq-badge { padding:2px 10px; border-radius:99px; font-size:10px; font-weight:700; letter-spacing:0.06em; }
-.mq-badge--pre    { background:var(--blue-light);   color:var(--blue);   border:1px solid var(--blue-mid); }
-.mq-badge--lesson { background:var(--purple-light);  color:var(--purple); border:1px solid #d8b4fe; }
-.mq-badge--activity { background:var(--amber-light); color:#92400e;       border:1px solid #fcd34d; }
-.mq-badge--post   { background:var(--green-light);   color:var(--green);  border:1px solid #6ee7b7; }
-.mq-badge--result { background:var(--green-light);   color:var(--green);  border:1px solid #6ee7b7; }
+.mq-badge--pre,
+.mq-badge--lesson,
+.mq-badge--activity,
+.mq-badge--post   { background:var(--blue-light); color:var(--blue); border:1px solid var(--blue-200); }
+.mq-badge--result { background:var(--blue);       color:#fff;        border:1px solid var(--blue); }
 
 .mq-steps { display:flex; gap:5px; align-items:center; margin-bottom:18px; }
 .mq-step { height:4px; width:22px; border-radius:99px; background:var(--border); transition:all 0.3s ease; }
 .mq-step--active { background:var(--blue); width:30px; }
-.mq-step--done   { background:var(--green); }
+.mq-step--done   { background:var(--blue-mid); }
 
 .mq-title { font-size:17px; font-weight:800; color:var(--text); letter-spacing:-0.3px; margin-bottom:5px; }
 .mq-desc  { font-size:12px; color:var(--text-3); margin-bottom:20px; line-height:1.55; }
@@ -176,8 +181,8 @@ html,body { min-height:100%; font-family:'Plus Jakarta Sans',sans-serif; backgro
 .mq-progress-label { font-size:11px; font-weight:700; color:var(--text-3); margin-bottom:5px; text-transform:uppercase; letter-spacing:0.3px; }
 .mq-progress-bar { height:5px; background:var(--border); border-radius:99px; overflow:hidden; }
 .mq-progress-fill { height:100%; border-radius:99px; transition:width 0.4s ease; background:linear-gradient(90deg,var(--blue-mid),var(--blue)); }
-.mq-progress-fill--post { background:linear-gradient(90deg,#34d399,var(--green)); }
-.mq-progress-fill--activity { background:linear-gradient(90deg,#fcd34d,var(--amber)); }
+.mq-progress-fill--activity { background:linear-gradient(90deg,var(--blue),var(--blue-dark)); }
+.mq-progress-fill--post { background:linear-gradient(90deg,var(--blue-dark),var(--blue-800)); }
 
 /* Timer */
 .mq-timer-wrap { display:none; align-items:center; gap:8px; margin-bottom:14px; }
@@ -186,12 +191,12 @@ html,body { min-height:100%; font-family:'Plus Jakarta Sans',sans-serif; backgro
 .mq-timer-ring svg { transform:rotate(-90deg); }
 .mq-timer-ring circle { fill:none; stroke-width:3.5; }
 .mq-timer-ring .ring-bg   { stroke:var(--border); }
-.mq-timer-ring .ring-fill { stroke:var(--green); stroke-linecap:round; transition:stroke-dashoffset 1s linear, stroke 0.3s; }
+.mq-timer-ring .ring-fill { stroke:var(--blue); stroke-linecap:round; transition:stroke-dashoffset 1s linear, stroke 0.3s; }
 .mq-timer-num { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; color:var(--text); }
 .mq-timer-label { font-size:12px; font-weight:700; color:var(--text-3); }
 .mq-timer-label span { font-weight:800; color:var(--text-2); }
-.mq-timer-wrap.mq-timer--warn .ring-fill { stroke:var(--orange); }
-.mq-timer-wrap.mq-timer--warn .mq-timer-num { color:var(--orange); }
+.mq-timer-wrap.mq-timer--warn .ring-fill { stroke:var(--blue-800); }
+.mq-timer-wrap.mq-timer--warn .mq-timer-num { color:var(--blue-800); }
 .mq-timer-wrap.mq-timer--danger .ring-fill { stroke:var(--red); }
 .mq-timer-wrap.mq-timer--danger .mq-timer-num { color:var(--red); }
 .mq-timer-wrap.mq-timer--danger .mq-timer-ring { animation:timerPulse 0.5s ease-in-out infinite alternate; }
@@ -206,17 +211,17 @@ html,body { min-height:100%; font-family:'Plus Jakarta Sans',sans-serif; backgro
   cursor:pointer; text-align:left; transition:all 0.15s; width:100%;
 }
 .mq-choice:hover:not(:disabled) { border-color:var(--blue-mid); background:var(--blue-light); color:var(--blue); }
-.mq-choice.mq-choice--correct { border-color:var(--green); background:var(--green-light); color:#065f46; }
+.mq-choice.mq-choice--correct { border-color:var(--blue); background:var(--blue-light); color:var(--blue-800); }
 .mq-choice.mq-choice--wrong   { border-color:var(--red);   background:var(--red-light);   color:#991b1b; }
 .mq-choice:disabled { cursor:default; }
 .mq-choice-letter { width:26px; height:26px; border-radius:6px; background:var(--border); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; flex-shrink:0; transition:all 0.15s; }
 .mq-choice:hover:not(:disabled) .mq-choice-letter { background:var(--blue); color:white; }
-.mq-choice.mq-choice--correct .mq-choice-letter { background:var(--green); color:white; }
+.mq-choice.mq-choice--correct .mq-choice-letter { background:var(--blue); color:white; }
 .mq-choice.mq-choice--wrong   .mq-choice-letter { background:var(--red);   color:white; }
 
 .mq-feedback { padding:11px 14px; border-radius:9px; font-size:12px; line-height:1.5; margin-bottom:14px; display:none; font-weight:600; }
 .mq-feedback.mq-feedback--show    { display:block; }
-.mq-feedback.mq-feedback--correct { background:var(--green-light); border:1px solid #6ee7b7; color:#065f46; }
+.mq-feedback.mq-feedback--correct { background:var(--blue-light); border:1px solid var(--blue-200); color:var(--blue-800); }
 .mq-feedback.mq-feedback--wrong   { background:var(--red-light);   border:1px solid #fca5a5; color:#991b1b; }
 
 .mq-btn-row { display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap; }
@@ -229,11 +234,14 @@ html,body { min-height:100%; font-family:'Plus Jakarta Sans',sans-serif; backgro
 .mq-btn--primary { background:var(--blue); color:white; }
 .mq-btn--primary:hover { background:var(--blue-dark); transform:translateY(-1px); box-shadow:0 4px 14px rgba(37,99,235,0.3); }
 .mq-btn--primary:disabled { opacity:0.35; cursor:not-allowed; transform:none !important; box-shadow:none !important; }
-.mq-btn--success { background:var(--green); color:white; }
-.mq-btn--success:hover { background:#059669; transform:translateY(-1px); box-shadow:0 4px 14px rgba(16,185,129,0.3); }
+.mq-btn--success { background:var(--blue); color:white; }
+.mq-btn--success:hover { background:var(--blue-dark); transform:translateY(-1px); box-shadow:0 4px 14px rgba(37,99,235,0.3); }
 .mq-btn--success:disabled { opacity:0.35; cursor:not-allowed; transform:none !important; box-shadow:none !important; }
-.mq-btn--amber { background:var(--amber); color:white; }
-.mq-btn--amber:hover { background:#d97706; transform:translateY(-1px); box-shadow:0 4px 14px rgba(245,158,11,0.3); }
+/* Secondary step action (Activity / Submit Activity) — tinted, so the solid
+   blue "next step" button beside it stays the obvious primary. */
+.mq-btn--secondary { background:var(--blue-light); color:var(--blue-dark); border:1px solid var(--blue-200); }
+.mq-btn--secondary:hover { background:var(--blue-100); transform:translateY(-1px); }
+.mq-btn--secondary:disabled { cursor:not-allowed; transform:none !important; }
 .mq-btn--ghost { background:var(--bg); color:var(--text-3); border:1px solid var(--border); }
 .mq-btn--ghost:hover { background:#f3f4f6; color:var(--text-2); }
 
@@ -251,8 +259,8 @@ html,body { min-height:100%; font-family:'Plus Jakarta Sans',sans-serif; backgro
   display:inline-flex; align-items:center; gap:5px;
   padding:5px 12px; border-radius:99px; font-size:11px; font-weight:700;
 }
-.mq-status-pill--done    { background:var(--green-light); border:1px solid #6ee7b7; color:#065f46; }
-.mq-status-pill--pending { background:var(--amber-light);  border:1px solid #fcd34d; color:#92400e; }
+.mq-status-pill--done    { background:var(--blue-100);     border:1px solid var(--blue-200); color:var(--blue-800); }
+.mq-status-pill--pending { background:#ffffff;             border:1px dashed var(--blue-mid); color:var(--blue); }
 .mq-status-pill--locked  { background:#f1f5f9;             border:1px solid #cbd5e1; color:#64748b; }
 
 /* Lesson btn row: activity | view module | post-test */
@@ -288,15 +296,15 @@ html,body { min-height:100%; font-family:'Plus Jakarta Sans',sans-serif; backgro
   font-size:13px; font-weight:600; color:var(--text); transition:border-color 0.15s; outline:none;
 }
 .mq-activity-input:focus { border-color:var(--blue-mid); }
-.mq-activity-input.mq-act--correct { border-color:var(--green); background:var(--green-light); color:#065f46; }
+.mq-activity-input.mq-act--correct { border-color:var(--blue); background:var(--blue-light); color:var(--blue-800); }
 .mq-activity-input.mq-act--wrong   { border-color:var(--red);   background:var(--red-light);   color:#991b1b; }
 .mq-activity-hint { font-size:11px; margin-top:5px; font-weight:600; display:none; }
 .mq-activity-hint.mq-show { display:block; }
-.mq-activity-hint.mq-hint--ok { color:#065f46; }
+.mq-activity-hint.mq-hint--ok { color:var(--blue-800); }
 .mq-activity-hint.mq-hint--err { color:#991b1b; }
 .mq-act-score-banner {
-  background:var(--green-light); border:1px solid #6ee7b7; border-radius:9px;
-  padding:11px 14px; font-size:12px; font-weight:700; color:#065f46;
+  background:var(--blue-light); border:1px solid var(--blue-200); border-radius:9px;
+  padding:11px 14px; font-size:12px; font-weight:700; color:var(--blue-800);
   margin-bottom:14px; display:none; text-align:center;
 }
 .mq-act-score-banner.mq-show { display:block; }
@@ -310,7 +318,7 @@ html,body { min-height:100%; font-family:'Plus Jakarta Sans',sans-serif; backgro
 /* RESULT */
 .mq-result-score { text-align:center; padding:20px 0 24px; }
 .mq-score-circle { width:100px; height:100px; border-radius:50%; margin:0 auto 14px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-weight:800; }
-.mq-score-circle--pass { background:var(--green-light); border:3px solid var(--green); color:var(--green); }
+.mq-score-circle--pass { background:var(--blue-light); border:3px solid var(--blue); color:var(--blue); }
 .mq-score-circle--fail { background:var(--red-light);   border:3px solid var(--red);   color:var(--red); }
 .mq-score-num { font-size:2rem; line-height:1; }
 .mq-score-den { font-size:11px; color:var(--text-3); margin-top:2px; }
@@ -327,6 +335,14 @@ html,body { min-height:100%; font-family:'Plus Jakarta Sans',sans-serif; backgro
 .swal2-title { color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 18px; font-weight: 700; }
 .swal2-html-container { color: var(--text-3); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; }
 .swal2-confirm { border-radius: 8px; padding: 8px 24px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; }
+.swal2-container {
+  --swal2-confirm-button-background-color: var(--blue);
+  --swal2-deny-button-background-color: var(--blue-800);
+  --swal2-cancel-button-background-color: var(--text-3);
+  --swal2-outline: 0 0 0 3px rgba(37,99,235,0.35);
+}
+.swal2-icon.swal2-success .swal2-success-ring { border-color: rgba(37,99,235,0.25); }
+.swal2-icon.swal2-success [class^='swal2-success-line'] { background-color: var(--blue-mid); }
   </style>
 
   <script nonce="{{ \Illuminate\Support\Facades\Vite::cspNonce() }}">
@@ -448,7 +464,7 @@ html,body { min-height:100%; font-family:'Plus Jakarta Sans',sans-serif; backgro
       <div class="mq-status-row" id="mq-status-row"></div>
       <div class="mq-lesson-content" id="mq-lesson-content"></div>
       <div class="mq-lesson-btn-row">
-        <button class="mq-btn mq-btn--amber" id="mq-activity-btn">📝 Activity</button>
+        <button class="mq-btn mq-btn--secondary" id="mq-activity-btn">Activity</button>
         <button class="mq-btn mq-btn--view-module" id="mq-viewmodule-btn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13" style="flex-shrink:0"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
           View Module
@@ -467,7 +483,7 @@ html,body { min-height:100%; font-family:'Plus Jakarta Sans',sans-serif; backgro
       </div>
       <div class="mq-btn-row">
         <button class="mq-btn mq-btn--ghost"   id="mq-act-back-btn">← Back to Lesson</button>
-        <button class="mq-btn mq-btn--amber"    id="mq-act-submit-btn">Submit Activity</button>
+        <button class="mq-btn mq-btn--secondary" id="mq-act-submit-btn">Submit Activity</button>
         <button class="mq-btn mq-btn--success"  id="mq-act-proceed-btn" style="display:none">Go to Post-Test →</button>
       </div>
     </div>
@@ -546,7 +562,7 @@ function mkActivity(name, items) { return items; }
 const MQ_TOPICS = {
   ari:{
     name:"Arithmetic Sequence",
-    lesson:`<h3>📊 Arithmetic Sequence</h3><p>An <strong>arithmetic sequence</strong> is a sequence where the difference between consecutive terms is constant — called the <em>common difference (d)</em>.</p><div class="mq-formula">aₙ = a₁ + (n−1)d</div><p>Where <strong>a₁</strong> is the first term, <strong>d</strong> is the common difference, and <strong>n</strong> is the term number.</p><ul><li>Example: 2, 5, 8, 11, 14 → d = 3</li><li>Example: 10, 7, 4, 1, −2 → d = −3</li></ul><p>Sum of first n terms:</p><div class="mq-formula">Sₙ = n/2 · (2a₁ + (n−1)d)</div>`,
+    lesson:`<h3>Arithmetic Sequence</h3><p>An <strong>arithmetic sequence</strong> is a sequence where the difference between consecutive terms is constant — called the <em>common difference (d)</em>.</p><div class="mq-formula">aₙ = a₁ + (n−1)d</div><p>Where <strong>a₁</strong> is the first term, <strong>d</strong> is the common difference, and <strong>n</strong> is the term number.</p><ul><li>Example: 2, 5, 8, 11, 14 → d = 3</li><li>Example: 10, 7, 4, 1, −2 → d = −3</li></ul><p>Sum of first n terms:</p><div class="mq-formula">Sₙ = n/2 · (2a₁ + (n−1)d)</div>`,
     activity:{
       instruction:"Fill in the blanks. Type your answer in each box (decimals and negatives allowed).",
       items:[
@@ -584,7 +600,7 @@ const MQ_TOPICS = {
   },
   geo:{
     name:"Geometric Sequence",
-    lesson:`<h3>📐 Geometric Sequence</h3><p>Each term is multiplied by a fixed <em>common ratio (r)</em>.</p><div class="mq-formula">aₙ = a₁ · r^(n−1)</div><ul><li>2, 6, 18, 54 → r = 3</li><li>100, 50, 25 → r = 0.5</li></ul><div class="mq-formula">Sₙ = a₁(1 − rⁿ) / (1 − r)</div>`,
+    lesson:`<h3>Geometric Sequence</h3><p>Each term is multiplied by a fixed <em>common ratio (r)</em>.</p><div class="mq-formula">aₙ = a₁ · r^(n−1)</div><ul><li>2, 6, 18, 54 → r = 3</li><li>100, 50, 25 → r = 0.5</li></ul><div class="mq-formula">Sₙ = a₁(1 − rⁿ) / (1 − r)</div>`,
     activity:{
       instruction:"Fill in the blanks for Geometric Sequence.",
       items:[
@@ -599,7 +615,7 @@ const MQ_TOPICS = {
   },
   har:{
     name:"Harmonic Sequence",
-    lesson:`<h3>🎵 Harmonic Sequence</h3><p>Reciprocals form an arithmetic sequence.</p><div class="mq-formula">HM of a and b = 2ab / (a+b)</div><ul><li>Example: 1, 1/2, 1/3, 1/4 is harmonic</li></ul>`,
+    lesson:`<h3>Harmonic Sequence</h3><p>Reciprocals form an arithmetic sequence.</p><div class="mq-formula">HM of a and b = 2ab / (a+b)</div><ul><li>Example: 1, 1/2, 1/3, 1/4 is harmonic</li></ul>`,
     activity:{
       instruction:"Fill in the blanks for Harmonic Sequence.",
       items:[
@@ -614,7 +630,7 @@ const MQ_TOPICS = {
   },
   fib:{
     name:"Fibonacci Sequence",
-    lesson:`<h3>🌀 Fibonacci Sequence</h3><p>Each term is the sum of the two preceding terms.</p><div class="mq-formula">F(n) = F(n−1) + F(n−2), F(1)=1, F(2)=1</div><p>Sequence: 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, …</p><ul><li>Found in nature: spirals, petals</li><li>Ratio approaches Golden Ratio φ ≈ 1.618</li></ul>`,
+    lesson:`<h3>Fibonacci Sequence</h3><p>Each term is the sum of the two preceding terms.</p><div class="mq-formula">F(n) = F(n−1) + F(n−2), F(1)=1, F(2)=1</div><p>Sequence: 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, …</p><ul><li>Found in nature: spirals, petals</li><li>Ratio approaches Golden Ratio φ ≈ 1.618</li></ul>`,
     activity:{
       instruction:"Fill in the blanks for Fibonacci Sequence.",
       items:[
@@ -629,7 +645,7 @@ const MQ_TOPICS = {
   },
   fin:{
     name:"Finite and Infinite Sequence",
-    lesson:`<h3>🔢 Finite and Infinite Sequence</h3><p>A <strong>finite sequence</strong> has a last term. An <strong>infinite sequence</strong> goes on forever.</p><div class="mq-formula">Finite: {a₁, a₂, …, aₙ}  |  Infinite: {a₁, a₂, …}</div><ul><li>Finite: 1, 3, 5, 7, 9 (5 terms)</li><li>Infinite: 1, 2, 3, 4, …</li><li>Convergent sequences approach a limit</li></ul>`,
+    lesson:`<h3>Finite and Infinite Sequence</h3><p>A <strong>finite sequence</strong> has a last term. An <strong>infinite sequence</strong> goes on forever.</p><div class="mq-formula">Finite: {a₁, a₂, …, aₙ}  |  Infinite: {a₁, a₂, …}</div><ul><li>Finite: 1, 3, 5, 7, 9 (5 terms)</li><li>Infinite: 1, 2, 3, 4, …</li><li>Convergent sequences approach a limit</li></ul>`,
     activity:{
       instruction:"Fill in the blanks about Finite and Infinite Sequences.",
       items:[
@@ -644,7 +660,7 @@ const MQ_TOPICS = {
   },
   div:{
     name:"Division of Polynomials",
-    lesson:`<h3>➗ Division of Polynomials</h3><p>Use <strong>Long Division</strong> or <strong>Synthetic Division</strong>.</p><div class="mq-formula">Dividend = Divisor × Quotient + Remainder</div><ul><li>Synthetic Division: shorthand for (x − c)</li><li>Zero remainder = divisor is a factor</li></ul>`,
+    lesson:`<h3>Division of Polynomials</h3><p>Use <strong>Long Division</strong> or <strong>Synthetic Division</strong>.</p><div class="mq-formula">Dividend = Divisor × Quotient + Remainder</div><ul><li>Synthetic Division: shorthand for (x − c)</li><li>Zero remainder = divisor is a factor</li></ul>`,
     activity:{
       instruction:"Fill in the blanks for Division of Polynomials.",
       items:[
@@ -659,7 +675,7 @@ const MQ_TOPICS = {
   },
   rem:{
     name:"Remainder & Factor Theorem",
-    lesson:`<h3>📋 Remainder & Factor Theorem</h3><p><strong>Remainder Theorem:</strong> f(x) ÷ (x−c) → remainder = f(c).</p><div class="mq-formula">f(x) ÷ (x − c)  →  Remainder = f(c)</div><p><strong>Factor Theorem:</strong> (x−c) is a factor iff f(c) = 0.</p>`,
+    lesson:`<h3>Remainder & Factor Theorem</h3><p><strong>Remainder Theorem:</strong> f(x) ÷ (x−c) → remainder = f(c).</p><div class="mq-formula">f(x) ÷ (x − c)  →  Remainder = f(c)</div><p><strong>Factor Theorem:</strong> (x−c) is a factor iff f(c) = 0.</p>`,
     activity:{
       instruction:"Fill in the blanks for the Remainder and Factor Theorems.",
       items:[
@@ -674,7 +690,7 @@ const MQ_TOPICS = {
   },
   poly:{
     name:"Polynomial Equations",
-    lesson:`<h3>📘 Polynomial Equations</h3><p>Set polynomial equal to zero: P(x) = 0.</p><div class="mq-formula">aₙxⁿ + … + a₁x + a₀ = 0</div><ul><li>Degree = max number of roots</li><li>Methods: factoring, quadratic formula, synthetic division</li></ul>`,
+    lesson:`<h3>Polynomial Equations</h3><p>Set polynomial equal to zero: P(x) = 0.</p><div class="mq-formula">aₙxⁿ + … + a₁x + a₀ = 0</div><ul><li>Degree = max number of roots</li><li>Methods: factoring, quadratic formula, synthetic division</li></ul>`,
     activity:{
       instruction:"Fill in the blanks for Polynomial Equations.",
       items:[
@@ -689,25 +705,25 @@ const MQ_TOPICS = {
   },
   rat:{
     name:"Rational Functions",
-    lesson:`<h3>⚖️ Rational Functions</h3><p>Contains fractions with polynomial denominators.</p><div class="mq-formula">Multiply both sides by the LCD to clear fractions</div><ul><li>Always check for extraneous solutions (denominators = 0)</li></ul>`,
+    lesson:`<h3>Rational Functions</h3><p>Contains fractions with polynomial denominators.</p><div class="mq-formula">Multiply both sides by the LCD to clear fractions</div><ul><li>Always check for extraneous solutions (denominators = 0)</li></ul>`,
     activity:{instruction:"Fill in the blanks for Rational Functions.",items:[{q:"To solve a rational equation, multiply both sides by the _____.",ans:"LCD",hint:"Least Common Denominator"},{q:"A solution that makes the denominator zero is called an _____ solution.",ans:"extraneous",hint:"It must be rejected"},{q:"Solving 1/x = 2 gives x = _____.",ans:"0.5",hint:"x = 1/2"},{q:"The LCD of 1/x and 1/(x+1) is _____.",ans:"x(x+1)",hint:"Multiply the two denominators"},{q:"After solving a rational equation, you must always _____ your answer.",ans:"check",hint:"Substitute back into the original"},]},
     pre:mqGeneric("Rational Functions"), post:mqGeneric("Rational Functions")
   },
   rad:{
     name:"Radical Equations",
-    lesson:`<h3>√ Radical Equations</h3><p>Contain variables under a radical sign.</p><div class="mq-formula">Isolate the radical → raise both sides to the index power</div><ul><li>Always check for extraneous solutions after squaring</li><li>√(x+3)=4 → x+3=16 → x=13</li></ul>`,
+    lesson:`<h3>Radical Equations</h3><p>Contain variables under a radical sign.</p><div class="mq-formula">Isolate the radical → raise both sides to the index power</div><ul><li>Always check for extraneous solutions after squaring</li><li>√(x+3)=4 → x+3=16 → x=13</li></ul>`,
     activity:{instruction:"Fill in the blanks for Radical Equations.",items:[{q:"To eliminate a square root, raise both sides to the power of _____.",ans:"2",hint:"Square both sides"},{q:"Solving √x = 5 gives x = _____.",ans:"25",hint:"5² = 25"},{q:"Solving √(x+3) = 4 gives x = _____.",ans:"13",hint:"x+3=16 → x=13"},{q:"A solution that doesn't satisfy the original equation is called an _____ solution.",ans:"extraneous",hint:"Check by substituting back"},{q:"The index of the radical in ∛x = 2 is _____.",ans:"3",hint:"Cube root = index 3"},]},
     pre:mqGeneric("Radical Equations"), post:mqGeneric("Radical Equations")
   },
   exp:{
     name:"Exponential Functions",
-    lesson:`<h3>📈 Exponential Functions</h3><p>f(x) = aˣ where a > 0, a ≠ 1.</p><div class="mq-formula">f(x) = aˣ  |  Inverse: logarithm</div><ul><li>a > 1 → exponential growth</li><li>0 &lt; a &lt; 1 → exponential decay</li></ul>`,
+    lesson:`<h3>Exponential Functions</h3><p>f(x) = aˣ where a > 0, a ≠ 1.</p><div class="mq-formula">f(x) = aˣ  |  Inverse: logarithm</div><ul><li>a > 1 → exponential growth</li><li>0 &lt; a &lt; 1 → exponential decay</li></ul>`,
     activity:{instruction:"Fill in the blanks for Exponential Functions.",items:[{q:"f(x) = 2ˣ. Then f(3) = _____.",ans:"8",hint:"2³=8"},{q:"If a > 1 in f(x)=aˣ, the function shows exponential _____.",ans:"growth",hint:"The output increases"},{q:"The inverse of an exponential function is a _____ function.",ans:"logarithmic",hint:"log is the inverse of exp"},{q:"f(x) = (1/2)ˣ shows exponential _____.",ans:"decay",hint:"0 < a < 1"},{q:"2⁰ = _____.",ans:"1",hint:"Any nonzero base to power 0 = 1"},]},
     pre:mqGeneric("Exponential Functions"), post:mqGeneric("Exponential Functions")
   },
   log:{
     name:"Logarithmic Functions",
-    lesson:`<h3>📊 Logarithmic Functions</h3><p>Inverse of exponential.</p><div class="mq-formula">log_b(x) = y  ↔  bʸ = x</div><ul><li>Product: log(ab)=log(a)+log(b)</li><li>Quotient: log(a/b)=log(a)−log(b)</li><li>Power: log(aⁿ)=n·log(a)</li></ul>`,
+    lesson:`<h3>Logarithmic Functions</h3><p>Inverse of exponential.</p><div class="mq-formula">log_b(x) = y  ↔  bʸ = x</div><ul><li>Product: log(ab)=log(a)+log(b)</li><li>Quotient: log(a/b)=log(a)−log(b)</li><li>Power: log(aⁿ)=n·log(a)</li></ul>`,
     activity:{instruction:"Fill in the blanks for Logarithmic Functions.",items:[{q:"log₂(8) = _____.",ans:"3",hint:"2³=8"},{q:"log_b(x)=y means b^_____ = x.",ans:"y",hint:"Definition of logarithm"},{q:"log(ab) = log(a) + _____.",ans:"log(b)",hint:"Product rule"},{q:"log(a/b) = log(a) − _____.",ans:"log(b)",hint:"Quotient rule"},{q:"log(aⁿ) = n · _____.",ans:"log(a)",hint:"Power rule"},]},
     pre:mqGeneric("Logarithmic Functions"), post:mqGeneric("Logarithmic Functions")
   },
@@ -1139,7 +1155,7 @@ function mqStartTimer() {
       if (!mqState.answered) {
         const fb=document.getElementById('mq-feedback');
         fb.className='mq-feedback mq-feedback--show mq-feedback--wrong';
-        fb.textContent='⏰ Time\'s up!';
+        fb.textContent='Time\'s up!';
         document.querySelectorAll('.mq-choice').forEach(b=>b.disabled=true);
         const q=mqState.questions[mqState.current];
         document.querySelectorAll('.mq-choice')[q.ans].classList.add('mq-choice--correct');
@@ -1295,7 +1311,7 @@ function showAttemptReview(topicKey, onlyPhase = null) {
         return attempt.answers.map((a, i) => `
             <div style="padding:8px 0;border-bottom:1px solid #e5e7eb;text-align:left">
                 <div style="font-size:12px;font-weight:600;color:#111827">${i + 1}. ${mqEscapeHtml(a.question)}</div>
-                <div style="font-size:12px;color:${a.isCorrect ? '#16a34a' : '#dc2626'}">Your answer: ${mqEscapeHtml(a.selected ?? '(none)')} ${a.isCorrect ? '✓' : '✗'}</div>
+                <div style="font-size:12px;color:${a.isCorrect ? '#2563eb' : '#dc2626'}">Your answer: ${mqEscapeHtml(a.selected ?? '(none)')} ${a.isCorrect ? '✓' : '✗'}</div>
                 ${!a.isCorrect && a.correct ? `<div style="font-size:12px;color:#6b7280">Correct answer: ${mqEscapeHtml(a.correct)}</div>` : ''}
             </div>
         `).join('');
@@ -1369,14 +1385,14 @@ function mqRender() {
     const statusRow=document.getElementById('mq-status-row');
     statusRow.innerHTML='';
     function pill(text,cls){const d=document.createElement('div');d.className='mq-status-pill '+cls;d.textContent=text;statusRow.appendChild(d);}
-    pill(stateFlags[key].pre?'✅ Pre-Test done':'⏳ Pre-Test done','mq-status-pill--done');
+    pill('✓ Pre-Test done','mq-status-pill--done');
     const readPct=mqReadPct[key]||0;
-    pill('📖 '+readPct+'% Read',readPct>=100?'mq-status-pill--done':(readPct>0?'mq-status-pill--pending':'mq-status-pill--locked'));
+    pill((readPct>=100?'✓ ':'')+readPct+'% Read',readPct>=100?'mq-status-pill--done':(readPct>0?'mq-status-pill--pending':'mq-status-pill--locked'));
     const activityLabel = stateFlags[key].activity
-        ? '✅ Activity done'
-        : (stateFlags[key].activityDone ? '⚠️ Activity submitted (not passed)' : '🔒 Activity pending');
+        ? '✓ Activity done'
+        : (stateFlags[key].activityDone ? 'Activity submitted (not passed)' : 'Activity pending');
     pill(activityLabel, stateFlags[key].activity ? 'mq-status-pill--done' : 'mq-status-pill--pending');
-    pill(stateFlags[key].post?'✅ Post-Test done':'🔒 Post-Test locked',stateFlags[key].post?'mq-status-pill--done':'mq-status-pill--locked');
+    pill(stateFlags[key].post?'✓ Post-Test done':'Post-Test locked',stateFlags[key].post?'mq-status-pill--done':'mq-status-pill--locked');
     // The Activity is a one-time attempt — once submitted (pass or fail)
     // it can't be reopened, same as the Pre-Test/Post-Test.
     document.getElementById('mq-activity-btn').disabled=stateFlags[key].activityDone;
@@ -1808,7 +1824,7 @@ function mqSubmitActivity() {
   if (pass) {
     stateFlags[key].activity = true;
     document.getElementById('mq-act-score-banner').textContent =
-      '🎉 Activity submitted — Post-Test is now unlocked.';
+      '✓ Activity submitted — Post-Test is now unlocked.';
     document.getElementById('mq-act-score-banner').classList.add('mq-show');
     document.getElementById('mq-act-proceed-btn').style.display = '';
   } else {
@@ -1825,7 +1841,7 @@ function mqRenderResult() {
   circle.className='mq-score-circle '+(pass?'mq-score-circle--pass':'mq-score-circle--fail');
   document.getElementById('mq-score-num').textContent=score;
   document.getElementById('mq-score-den').textContent='/ '+total;
-  document.getElementById('mq-result-msg').textContent=pass?'🎉 Excellent Work!':'📚 Keep Practicing!';
+  document.getElementById('mq-result-msg').textContent=pass?'Excellent Work!':'Keep Practicing!';
   document.getElementById('mq-result-sub').textContent=pass?`You scored ${score}/${total}. Topic marked complete!`:`You scored ${score}/${total}. Review and try again.`;
   const btns=document.getElementById('mq-result-btns');
   btns.innerHTML='';

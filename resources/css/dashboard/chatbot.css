@@ -74,7 +74,7 @@
             position: absolute;
             width: 8px;
             height: 8px;
-            background: #10b981;
+            background: var(--blue-mid);
             border-radius: 50%;
             border: 2px solid white;
             bottom: 0;

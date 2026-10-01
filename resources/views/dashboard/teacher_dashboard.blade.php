@@ -221,7 +221,9 @@
                     <div class="section-sub">Monitor your students' progress</div>
                     <div id="home-student-list">
                         <div class="empty-state">
-                            <div class="empty-icon">👩‍🎓</div>
+                            <div class="empty-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                            </div>
                             <h4>No students yet</h4>
                             <p>Students will appear here once they enroll in your class.</p>
                         </div>
@@ -244,7 +246,7 @@
                     </div>
 
                     <div class="action-card">
-                        <div class="action-icon-wrap orange-theme">
+                        <div class="action-icon-wrap blue-theme">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                                 <polyline points="14 2 14 8 20 8"/>
@@ -259,7 +261,7 @@
                     </div>
 
                     <div class="action-card">
-                        <div class="action-icon-wrap purple-theme">
+                        <div class="action-icon-wrap blue-theme">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="12" cy="12" r="10"/>
                                 <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
@@ -334,27 +336,38 @@
 
                 <div class="modules-container">
                     @if ($pendingStudents->count() > 0)
-                    <div class="section-label">⚠️ Pending Student Approvals</div>
-                    <div class="section-sub">{{ $pendingStudents->count() }} student(s) awaiting your approval &middot; <a href="{{ route('teacher.student-approvals') }}" style="color:#1e88e5;font-weight:600;">Manage all &rarr;</a></div>
-                    <div class="pending-teachers-list" style="margin-bottom: 2rem;">
-                        @foreach ($pendingStudents as $student)
-                        <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 1rem; margin-bottom: 0.75rem; border-radius: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <div style="font-weight: 600; color: #78350f;">{{ $student->name }}</div>
-                                <div style="font-size: 0.875rem; color: #92400e;">{{ $student->email }}</div>
+                    <div class="approval-panel">
+                        <div class="approval-head">
+                            <div class="approval-head-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>
                             </div>
-                            <div style="display: flex; gap: 0.5rem;">
-                                <form method="POST" action="{{ route('teacher.student.approve', $student->id) }}" style="display: inline;">
-                                    @csrf
-                                    <button type="submit" style="padding: 0.5rem 1rem; background: #10b981; color: white; border: none; border-radius: 0.375rem; cursor: pointer; font-size: 0.875rem; font-weight: 500;">Approve</button>
-                                </form>
-                                <form method="POST" action="{{ route('teacher.student.reject', $student->id) }}" style="display: inline;">
-                                    @csrf
-                                    <button type="submit" style="padding: 0.5rem 1rem; background: #ef4444; color: white; border: none; border-radius: 0.375rem; cursor: pointer; font-size: 0.875rem; font-weight: 500;">Reject</button>
-                                </form>
+                            <div class="approval-head-text">
+                                <div class="section-label">Pending Student Approvals</div>
+                                <div class="section-sub">{{ $pendingStudents->count() }} student(s) awaiting your approval</div>
                             </div>
+                            <a class="approval-link" href="{{ route('teacher.student-approvals') }}">Manage all &rarr;</a>
                         </div>
-                        @endforeach
+                        <div class="approval-list">
+                            @foreach ($pendingStudents as $student)
+                            <div class="approval-item">
+                                <div class="approval-avatar">{{ mb_strtoupper(mb_substr($student->name, 0, 1)) }}</div>
+                                <div class="approval-info">
+                                    <div class="approval-name">{{ $student->name }}</div>
+                                    <div class="approval-email">{{ $student->email }}</div>
+                                </div>
+                                <div class="approval-actions">
+                                    <form method="POST" action="{{ route('teacher.student.approve', $student->id) }}">
+                                        @csrf
+                                        <button type="submit" class="approval-btn approve">Approve</button>
+                                    </form>
+                                    <form method="POST" action="{{ route('teacher.student.reject', $student->id) }}">
+                                        @csrf
+                                        <button type="submit" class="approval-btn reject">Reject</button>
+                                    </form>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
                     </div>
                     @endif
 
@@ -362,7 +375,7 @@
                     <div class="section-sub">Search, filter, and manage your students</div>
                     <div class="toolbar">
                         <input type="text" class="search-input" id="student-search"
-                               placeholder="🔍  Search by name…"
+                               placeholder="Search by name…"
                                maxlength="100" autocomplete="off">
                         <select class="filter-select" id="student-status-filter">
                             <option value="">All Status</option>
@@ -407,7 +420,9 @@
                     <div class="chart-sub">Number of students per performance level</div>
                     <div id="progress-chart">
                         <div class="empty-state">
-                            <div class="empty-icon">📊</div>
+                            <div class="empty-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                            </div>
                             <h4>No data yet</h4>
                             <p>Charts will appear as students complete activities.</p>
                         </div>
@@ -419,7 +434,9 @@
                     <div class="chart-sub">How far your class has progressed in each module</div>
                     <div id="subject-progress">
                         <div class="empty-state">
-                            <div class="empty-icon">📈</div>
+                            <div class="empty-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                            </div>
                             <h4>No progress data yet</h4>
                             <p>Data appears as students complete modules.</p>
                         </div>
@@ -442,7 +459,9 @@
                     <div class="section-sub">How far each student has progressed</div>
                     <div id="progress-list">
                         <div class="empty-state">
-                            <div class="empty-icon">📈</div>
+                            <div class="empty-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                            </div>
                             <h4>No student data yet</h4>
                             <p>Progress will appear here as students complete activities.</p>
                         </div>
@@ -523,17 +542,17 @@
                             <div class="section-sub">Overview of students grouped by their registered sections</div>
                         </div>
                         <div style="display:flex;gap:8px">
-                            <button class="success-btn" id="open-add-section-btn" style="display:flex;align-items:center;gap:6px;padding:10px 18px;width:auto">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px">
-                                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-                                </svg>
-                                Add Section
-                            </button>
-                            <button class="primary-btn" id="report-export-btn" style="display:flex;align-items:center;gap:6px;padding:10px 18px;width:auto">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px">
+                            <button class="secondary-btn" id="report-export-btn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
                                 </svg>
                                 Export
+                            </button>
+                            <button class="primary-btn" id="open-add-section-btn" style="display:flex;align-items:center;gap:6px;padding:10px 18px;width:auto">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px">
+                                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                                </svg>
+                                Add Section
                             </button>
                         </div>
                     </div>
@@ -554,8 +573,8 @@
                             <div class="section-label">Student Scores by Section</div>
                             <div class="section-sub">Average score per category, grouped by section</div>
                         </div>
-                        <button class="primary-btn" id="class-record-export-btn" style="display:flex;align-items:center;gap:6px;padding:10px 18px;width:auto">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px">
+                        <button class="secondary-btn" id="class-record-export-btn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
                             </svg>
                             Export
@@ -622,7 +641,7 @@
                     <div class="section-sub">Browse, add, and manage your math learning modules</div>
                     <div class="toolbar">
                         <input type="text" class="search-input" id="module-search"
-                               placeholder="🔍  Search modules…"
+                               placeholder="Search modules…"
                                maxlength="100" autocomplete="off">
                         <select class="filter-select" id="module-topic-filter">
                             <option value="">All Topics</option>
@@ -644,7 +663,9 @@
                     </div>
                     <div id="modules-grid" class="module-cards-grid">
                         <div class="empty-state">
-                            <div class="empty-icon">📦</div>
+                            <div class="empty-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                            </div>
                             <h4>No modules yet</h4>
                             <p>Click "Add Module" to create your first learning module.</p>
                         </div>
@@ -657,7 +678,7 @@
                  ============================================================ -->
             <div class="page" id="page-quiz">
                 <div class="hero-section">
-                    <h1 class="welcome-title">Quiz Generator ✨</h1>
+                    <h1 class="welcome-title">Quiz Generator</h1>
                     <p class="welcome-subtitle">AI-powered pre-test &amp; post-test generation for Math topics</p>
                 </div>
 
@@ -772,7 +793,7 @@
                             <!-- Pre-Test Count -->
                             <div class="quiz-count-field">
                                 <label for="quiz-count-pre">
-                                    📋 Pre-Test items
+                                    Pre-Test items
                                     <span class="quiz-count-badge">1 – 30</span>
                                 </label>
                                 <input type="number"
@@ -786,7 +807,7 @@
                             <!-- Activity Count -->
                             <div class="quiz-count-field">
                                 <label for="quiz-count-act">
-                                    ⚡ Activity items
+                                    Activity items
                                     <span class="quiz-count-badge">1 – 10</span>
                                 </label>
                                 <input type="number"
@@ -800,7 +821,7 @@
                             <!-- Post-Test Count -->
                             <div class="quiz-count-field">
                                 <label for="quiz-count-post">
-                                    ✅ Post-Test items
+                                    Post-Test items
                                     <span class="quiz-count-badge">1 – 30</span>
                                 </label>
                                 <input type="number"
@@ -837,7 +858,9 @@
 
                     <!-- Error State -->
                     <div class="quiz-error-state" id="quiz-error">
-                        <span class="error-icon">⚠️</span>
+                        <span class="error-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        </span>
                         <div class="error-content">
                             <div class="error-title">Generation Failed</div>
                             <div class="error-message" id="quiz-error-msg">Something went wrong. Please try again.</div>
@@ -855,19 +878,19 @@
                             <div class="section-sub" id="quiz-result-sub">Generated successfully</div>
                         </div>
                         <div style="display:flex;gap:8px;flex-wrap:wrap">
-                            <button class="success-btn" id="save-quiz-btn" style="display:flex;align-items:center;gap:6px;padding:10px 18px;width:auto">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px">
+                            <button class="secondary-btn" id="regenerate-quiz-btn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.86"/>
+                                </svg>
+                                Regenerate
+                            </button>
+                            <button class="primary-btn" id="save-quiz-btn" style="display:flex;align-items:center;gap:6px;padding:10px 18px;width:auto">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px">
                                     <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
                                     <polyline points="17 21 17 13 7 13 7 21"/>
                                     <polyline points="7 3 7 8 15 8"/>
                                 </svg>
                                 Save to Supabase
-                            </button>
-                            <button class="primary-btn" id="regenerate-quiz-btn" style="display:flex;align-items:center;gap:6px;padding:10px 18px;width:auto">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px">
-                                    <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.86"/>
-                                </svg>
-                                Regenerate
                             </button>
                         </div>
                     </div>
@@ -880,15 +903,15 @@
                     <!-- Tab Switcher -->
                     <div class="quiz-tabs">
                         <button class="quiz-tab active" id="tab-pretest">
-                            📋 Pre-Test
+                            Pre-Test
                             <span class="quiz-tab-count">15 items</span>
                         </button>
                         <button class="quiz-tab" id="tab-activity">
-                            ⚡ Activity
+                            Activity
                             <span class="quiz-tab-count">5 items</span>
                         </button>
                         <button class="quiz-tab" id="tab-posttest">
-                            ✅ Post-Test
+                            Post-Test
                             <span class="quiz-tab-count">15 items</span>
                         </button>
                     </div>
@@ -896,7 +919,9 @@
                     <!-- Pre-Test Panel -->
                     <div class="quiz-panel" id="panel-pretest">
                         <div class="quiz-panel-header pre-header">
-                            <div class="quiz-panel-icon">📋</div>
+                            <div class="quiz-panel-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                            </div>
                             <div>
                                 <div class="quiz-panel-title">Pre-Test Questions</div>
                                 <div class="quiz-panel-sub">15 multiple-choice questions — administered before the lesson</div>
@@ -908,7 +933,9 @@
                     <!-- Activity Panel -->
                     <div class="quiz-panel" id="panel-activity" style="display:none">
                         <div class="quiz-panel-header activity-header">
-                            <div class="quiz-panel-icon">⚡</div>
+                            <div class="quiz-panel-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                            </div>
                             <div>
                                 <div class="quiz-panel-title">Classroom Activity</div>
                                 <div class="quiz-panel-sub">5 hardcoded activities — same for all students</div>
@@ -920,7 +947,9 @@
                     <!-- Post-Test Panel -->
                     <div class="quiz-panel" id="panel-posttest" style="display:none">
                         <div class="quiz-panel-header post-header">
-                            <div class="quiz-panel-icon">✅</div>
+                            <div class="quiz-panel-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                            </div>
                             <div>
                                 <div class="quiz-panel-title">Post-Test Questions</div>
                                 <div class="quiz-panel-sub">15 multiple-choice questions — administered after the lesson</div>
@@ -937,7 +966,9 @@
                     <div class="section-sub">All quizzes stored in Database — saving does not publish them to students</div>
                     <div id="saved-quizzes-list">
                         <div class="empty-state">
-                            <div class="empty-icon">🗂️</div>
+                            <div class="empty-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                            </div>
                             <h4>No saved quizzes yet</h4>
                             <p>Generate and save a quiz to see it here.</p>
                         </div>
@@ -950,7 +981,9 @@
                     <div class="section-sub">Activities where students currently see your questions instead of the defaults</div>
                     <div id="quiz-published-list">
                         <div class="empty-state">
-                            <div class="empty-icon">📭</div>
+                            <div class="empty-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
+                            </div>
                             <h4>No published quizzes</h4>
                             <p>Generate a quiz and click "Publish to students" to send it live.</p>
                         </div>
@@ -1013,7 +1046,9 @@
                     <div class="section-sub">Your latest actions on the platform</div>
                     <div id="profile-activity">
                         <div class="empty-state">
-                            <div class="empty-icon">📋</div>
+                            <div class="empty-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+                            </div>
                             <h4>No recent activity</h4>
                             <p>Your actions will appear here.</p>
                         </div>

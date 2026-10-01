@@ -10,33 +10,36 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f1f5f9; color: #0f172a; padding: 2rem 1.5rem 4rem; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f4f6fb; color: #111827; padding: 2rem 1.5rem 4rem; }
         .page-header { max-width: 1100px; margin: 0 auto 1.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
         .page-header h1 { font-size: 1.5rem; font-weight: 800; }
-        .page-header p { color: #64748b; font-size: 0.9rem; margin-top: 0.25rem; }
-        .back-link { color: #1e88e5; font-weight: 600; text-decoration: none; font-size: 0.9rem; }
-        .back-link:hover { text-decoration: underline; }
+        .page-header p { color: #6b7280; font-size: 0.9rem; margin-top: 0.25rem; }
+        .back-link { color: #2563eb; font-weight: 700; text-decoration: none; font-size: 0.85rem; padding: 0.5rem 0.9rem; background: #fff; border: 1px solid #bfdbfe; border-radius: 0.5rem; transition: background 0.15s; }
+        .back-link:hover { background: #eff6ff; }
         .container { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.5rem; }
         .alert { padding: 0.85rem 1.1rem; border-radius: 0.6rem; font-size: 0.9rem; font-weight: 600; }
-        .alert-success { background: #dcfce7; color: #166534; }
-        .alert-error { background: #fee2e2; color: #991b1b; }
-        .card { background: #fff; border-radius: 0.85rem; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: hidden; }
-        .card-header { padding: 1.1rem 1.4rem; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; }
+        .alert-success { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+        .alert-error { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+        .card { background: #fff; border: 1px solid #e8ecf2; border-radius: 0.85rem; box-shadow: 0 2px 12px rgba(0,0,0,0.06); overflow: hidden; }
+        .card-header { padding: 1.1rem 1.4rem; border-bottom: 1px solid #e8ecf2; display: flex; align-items: center; justify-content: space-between; }
         .card-header h2 { font-size: 1.05rem; font-weight: 700; }
-        .badge { font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 999px; }
-        .badge-pending { background: #fef3c7; color: #92400e; }
-        .badge-approved { background: #dcfce7; color: #166534; }
-        .badge-rejected { background: #fee2e2; color: #991b1b; }
+        .badge { font-size: 0.75rem; font-weight: 700; padding: 0.15rem 0.6rem; border: 1px solid transparent; border-radius: 999px; }
+        .badge-pending { background: #eff6ff; color: #2563eb; border-color: #bfdbfe; }
+        .badge-approved { background: #dbeafe; color: #1e40af; }
+        .badge-rejected { background: #fef2f2; color: #b91c1c; }
         table { width: 100%; border-collapse: collapse; }
         th, td { text-align: left; padding: 0.85rem 1.4rem; font-size: 0.88rem; border-bottom: 1px solid #f1f5f9; }
         th { color: #64748b; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.03em; }
         tr:last-child td { border-bottom: none; }
         .empty-row td { text-align: center; color: #94a3b8; padding: 1.5rem; }
         .actions { display: flex; gap: 0.5rem; }
-        .btn { padding: 0.4rem 0.85rem; border: none; border-radius: 0.4rem; cursor: pointer; font-size: 0.82rem; font-weight: 600; }
-        .btn-approve { background: #10b981; color: #fff; }
-        .btn-reject { background: #ef4444; color: #fff; }
-        .btn-reset { background: #e2e8f0; color: #334155; }
+        .btn { padding: 0.4rem 0.85rem; border: 1px solid transparent; border-radius: 0.5rem; cursor: pointer; font-family: inherit; font-size: 0.82rem; font-weight: 700; transition: background 0.15s, border-color 0.15s, color 0.15s; }
+        .btn-approve { background: #2563eb; color: #fff; }
+        .btn-approve:hover { background: #1d4ed8; }
+        .btn-reject { background: #fff; border-color: #e5e7eb; color: #6b7280; }
+        .btn-reject:hover { background: #fef2f2; border-color: #fca5a5; color: #b91c1c; }
+        .btn-reset { background: #eff6ff; border-color: #bfdbfe; color: #1d4ed8; }
+        .btn-reset:hover { background: #dbeafe; }
         .pagination { padding: 1rem 1.4rem; }
     </style>
 </head>
