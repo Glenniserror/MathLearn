@@ -284,7 +284,17 @@ html, body {
 
 /* Recent Activity list rows: icon avatar + title/badge/time stack. */
 .activity-row { display: flex; align-items: flex-start; gap: 12px; }
+/* White tile so the green/orange result icon stands out on the gray row. */
+.activity-row .icon-container { background: #fff; border: 1px solid var(--border); }
 .activity-info { flex: 1; min-width: 0; }
+
+/* Feedback list: per-item dismiss button. */
+.feedback-dismiss {
+    background: none; border: none; border-radius: 6px; padding: 4px;
+    color: var(--text-4); cursor: pointer; font-size: 14px; line-height: 1;
+    transition: color 0.15s, background 0.15s;
+}
+.feedback-dismiss:hover { color: var(--red); background: var(--red-light); }
 
 .percentage      { font-size: 12px; font-weight: 700; color: var(--green); flex-shrink: 0; }
 .percentage.blue { color: var(--blue); }
@@ -342,6 +352,12 @@ html, body {
     transition: transform 0.2s;
 }
 .action-icon-wrap svg { width: 22px; height: 22px; }
+/* Action tiles: filled gradients in each card's own color (same treatment
+   as the AI Chat button) so the quick actions read as the page's CTAs. */
+.action-icon-wrap.blue-theme   { background: linear-gradient(135deg, var(--blue-mid), var(--blue)); color: #fff; box-shadow: 0 6px 16px rgba(37,99,235,0.28); }
+.action-icon-wrap.green-theme  { background: linear-gradient(135deg, #34d399, var(--green)); color: #fff; box-shadow: 0 6px 16px rgba(16,185,129,0.28); }
+.action-icon-wrap.orange-theme { background: linear-gradient(135deg, #fb923c, var(--orange)); color: #fff; box-shadow: 0 6px 16px rgba(249,115,22,0.28); }
+.action-icon-wrap.purple-theme { background: linear-gradient(135deg, #c084fc, var(--purple)); color: #fff; box-shadow: 0 6px 16px rgba(168,85,247,0.28); }
 .action-content { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .action-card h3 { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 3px; letter-spacing: -0.2px; }
 .action-card p  { font-size: 12px; color: var(--text-3); margin-bottom: 12px; line-height: 1.4; flex: 1; }
@@ -520,6 +536,13 @@ html, body {
 .swal2-confirm:hover { transform: translateY(-2px) !important; box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important; }
 .swal2-cancel { border-radius: 8px !important; padding: 10px 24px !important; font-family: 'Plus Jakarta Sans', sans-serif !important; font-weight: 700 !important; font-size: 14px !important; }
 .swal2-timer-progress-bar { background: var(--blue) !important; }
+/* Popups without an explicit button color fall back to the dashboard's
+   blue and gray instead of sweetalert2's purple. Set on the container
+   (not :root) so it wins over the library's own :root defaults. */
+.swal2-container {
+    --swal2-confirm-button-background-color: var(--blue);
+    --swal2-cancel-button-background-color: var(--text-3);
+}
 
 /* ================================
    ANIMATIONS
@@ -538,8 +561,33 @@ html, body {
 }
 
 /* Empty state */
-.empty-state { text-align: center; padding: 40px 20px; color: var(--text-3); }
-.empty-icon  { font-size: 40px; margin-bottom: 10px; }
+.empty-state { text-align: center; padding: 36px 20px; color: var(--text-3); }
+.empty-icon  {
+    width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 12px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bg); font-size: 28px; line-height: 1;
+}
+
+/* Locked Summative Test notice. */
+.notice-card {
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    background: #fffbeb; border: 1px solid #fde68a; border-radius: var(--radius);
+    padding: 26px 20px; box-shadow: var(--shadow);
+}
+.notice-icon {
+    width: 56px; height: 56px; border-radius: 50%; margin-bottom: 12px;
+    display: flex; align-items: center; justify-content: center;
+    background: #fef3c7; font-size: 26px; line-height: 1;
+}
+.notice-title { font-size: 16px; font-weight: 800; color: #b45309; margin-bottom: 4px; }
+.notice-text  { font-size: 13px; color: #92400e; line-height: 1.5; max-width: 380px; }
+.notice-progress { width: 100%; max-width: 320px; margin-top: 16px; text-align: left; }
+.notice-progress-label {
+    display: flex; justify-content: space-between;
+    font-size: 12px; font-weight: 700; color: #92400e; margin-bottom: 6px;
+}
+.notice-progress .progress-bar-bg { height: 8px; margin-bottom: 0; background: #fde68a; }
+.notice-progress .progress-fill   { background: linear-gradient(90deg, #fbbf24, #f59e0b); }
 .empty-state h4 { font-size: 15px; font-weight: 700; color: var(--text-2); margin-bottom: 4px; }
 .empty-state p  { font-size: 12px; }
 

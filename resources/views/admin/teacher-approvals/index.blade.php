@@ -14,29 +14,33 @@
         .page-header { max-width: 1100px; margin: 0 auto 1.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
         .page-header h1 { font-size: 1.5rem; font-weight: 800; }
         .page-header p { color: #64748b; font-size: 0.9rem; margin-top: 0.25rem; }
-        .back-link { color: #1e88e5; font-weight: 600; text-decoration: none; font-size: 0.9rem; }
-        .back-link:hover { text-decoration: underline; }
+        .back-link { color: #2563eb; font-weight: 700; text-decoration: none; font-size: 0.85rem; padding: 0.5rem 0.9rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; background: #fff; transition: background 0.15s, border-color 0.15s; }
+        .back-link:hover { background: #eff6ff; border-color: #93c5fd; }
         .container { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.5rem; }
         .alert { padding: 0.85rem 1.1rem; border-radius: 0.6rem; font-size: 0.9rem; font-weight: 600; }
         .alert-success { background: #dcfce7; color: #166534; }
         .alert-error { background: #fee2e2; color: #991b1b; }
-        .card { background: #fff; border-radius: 0.85rem; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: hidden; }
+        .card { background: #fff; border: 1px solid #e8ecf2; border-radius: 0.85rem; box-shadow: 0 2px 12px rgba(0,0,0,0.06); overflow-x: auto; }
         .card-header { padding: 1.1rem 1.4rem; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; }
         .card-header h2 { font-size: 1.05rem; font-weight: 700; }
         .badge { font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 999px; }
         .badge-pending { background: #fef3c7; color: #92400e; }
         .badge-approved { background: #dcfce7; color: #166534; }
         .badge-rejected { background: #fee2e2; color: #991b1b; }
-        table { width: 100%; border-collapse: collapse; }
+        table { width: 100%; min-width: 560px; border-collapse: collapse; }
+        tbody tr:hover td { background: #f8fafc; }
         th, td { text-align: left; padding: 0.85rem 1.4rem; font-size: 0.88rem; border-bottom: 1px solid #f1f5f9; }
         th { color: #64748b; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.03em; }
         tr:last-child td { border-bottom: none; }
         .empty-row td { text-align: center; color: #94a3b8; padding: 1.5rem; }
         .actions { display: flex; gap: 0.5rem; }
-        .btn { padding: 0.4rem 0.85rem; border: none; border-radius: 0.4rem; cursor: pointer; font-size: 0.82rem; font-weight: 600; }
+        .btn { padding: 0.45rem 0.9rem; border: none; border-radius: 0.5rem; cursor: pointer; font-family: inherit; font-size: 0.82rem; font-weight: 700; transition: background 0.15s, box-shadow 0.15s; }
         .btn-approve { background: #10b981; color: #fff; }
+        .btn-approve:hover { background: #059669; box-shadow: 0 4px 12px rgba(16,185,129,0.3); }
         .btn-reject { background: #ef4444; color: #fff; }
+        .btn-reject:hover { background: #dc2626; box-shadow: 0 4px 12px rgba(239,68,68,0.3); }
         .btn-reset { background: #e2e8f0; color: #334155; }
+        .btn-reset:hover { background: #cbd5e1; }
         .pagination { padding: 1rem 1.4rem; }
     </style>
 </head>

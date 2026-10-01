@@ -251,28 +251,37 @@
                 </div>
                 <div class="modules-container">
                     @if ($pendingTeachers->count() > 0)
-                    <div class="section-label">⚠️ Pending Teacher Approvals</div>
-                    <div class="section-sub">{{ $pendingTeachers->count() }} teacher(s) awaiting approval &middot; <a href="{{ route('admin.teacher-approvals') }}" style="color:#1e88e5;font-weight:600;">Manage all &rarr;</a></div>
-                    <div class="pending-teachers-list" style="margin-bottom: 2rem;">
-                        @foreach ($pendingTeachers as $teacher)
-                        <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 1rem; margin-bottom: 0.75rem; border-radius: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <div style="font-weight: 600; color: #78350f;">{{ $teacher->name }}</div>
-                                <div style="font-size: 0.875rem; color: #92400e;">{{ $teacher->email }}</div>
+                    <section class="approval-panel">
+                        <div class="approval-head">
+                            <div class="approval-head-icon">⏳</div>
+                            <div class="approval-head-text">
+                                <div class="section-label">Pending Teacher Approvals</div>
+                                <div class="section-sub">{{ $pendingTeachers->count() }} teacher(s) awaiting approval</div>
                             </div>
-                            <div style="display: flex; gap: 0.5rem;">
-                                <form method="POST" action="{{ route('admin.teacher.approve', $teacher->id) }}" style="display: inline;">
-                                    @csrf
-                                    <button type="submit" style="padding: 0.5rem 1rem; background: #10b981; color: white; border: none; border-radius: 0.375rem; cursor: pointer; font-size: 0.875rem; font-weight: 500;">Approve</button>
-                                </form>
-                                <form method="POST" action="{{ route('admin.teacher.reject', $teacher->id) }}" style="display: inline;">
-                                    @csrf
-                                    <button type="submit" style="padding: 0.5rem 1rem; background: #ef4444; color: white; border: none; border-radius: 0.375rem; cursor: pointer; font-size: 0.875rem; font-weight: 500;">Reject</button>
-                                </form>
-                            </div>
+                            <a href="{{ route('admin.teacher-approvals') }}" class="approval-link">Manage all &rarr;</a>
                         </div>
-                        @endforeach
-                    </div>
+                        <div class="approval-list">
+                            @foreach ($pendingTeachers as $teacher)
+                            <div class="approval-item">
+                                <div class="approval-avatar">{{ mb_strtoupper(mb_substr($teacher->name, 0, 1)) }}</div>
+                                <div class="approval-info">
+                                    <div class="approval-name">{{ $teacher->name }}</div>
+                                    <div class="approval-email">{{ $teacher->email }}</div>
+                                </div>
+                                <div class="approval-actions">
+                                    <form method="POST" action="{{ route('admin.teacher.approve', $teacher->id) }}">
+                                        @csrf
+                                        <button type="submit" class="approval-btn approve">Approve</button>
+                                    </form>
+                                    <form method="POST" action="{{ route('admin.teacher.reject', $teacher->id) }}">
+                                        @csrf
+                                        <button type="submit" class="approval-btn reject">Reject</button>
+                                    </form>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                    </section>
                     @endif
                     <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
                         <div>
@@ -287,7 +296,7 @@
                         </button>
                     </div>
                     <div class="toolbar">
-                        <input type="text" class="search-input" id="user-search" placeholder="🔍  Search by name or email…" maxlength="100" autocomplete="off">
+                        <input type="text" class="search-input" id="user-search" placeholder="Search by name or email…" maxlength="100" autocomplete="off">
                         <select class="filter-select" id="user-role-filter">
                             <option value="">All Roles</option>
                             <option value="admin">Admin</option>
@@ -491,7 +500,7 @@
                     </div>
                     <div class="toolbar">
                         <input type="text" class="search-input" id="module-search"
-                               placeholder="🔍  Search modules…"
+                               placeholder="Search modules…"
                                maxlength="100" autocomplete="off">
                         <select class="filter-select" id="module-topic-filter">
                             <option value="">All Topics</option>
@@ -531,13 +540,13 @@
                             <div class="section-sub">Search, filter, and manage the platform's activity log</div>
                         </div>
                         <div style="display:flex;gap:8px;flex-wrap:wrap">
-                            <button class="primary-btn" id="open-archived-logs-btn" style="display:flex;align-items:center;gap:6px;padding:10px 18px;width:auto;background:#6b7280">
+                            <button class="primary-btn is-muted" id="open-archived-logs-btn" style="display:flex;align-items:center;gap:6px;padding:10px 18px;width:auto">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px">
                                     <path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/>
                                 </svg>
                                 Archived Logs
                             </button>
-                            <button class="primary-btn" id="open-clear-old-logs-btn" style="display:flex;align-items:center;gap:6px;padding:10px 18px;width:auto;background:#f97316">
+                            <button class="primary-btn is-warning" id="open-clear-old-logs-btn" style="display:flex;align-items:center;gap:6px;padding:10px 18px;width:auto">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px">
                                     <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/>
                                 </svg>
@@ -552,7 +561,7 @@
                         </div>
                     </div>
                     <div class="toolbar">
-                        <input type="text" class="search-input" id="activity-search" placeholder="🔍  Search by name, email, or activity…" maxlength="255" autocomplete="off">
+                        <input type="text" class="search-input" id="activity-search" placeholder="Search by name, email, or activity…" maxlength="255" autocomplete="off">
                         <select class="filter-select" id="activity-type-filter">
                             <option value="">All Types</option>
                             <option value="registration">Account Created</option>
@@ -624,16 +633,34 @@
                 <div class="settings-section">
                     <h3>Roles &amp; Permissions</h3>
                     <div class="desc">What each role can currently access — fixed by role, not editable here</div>
+                    @php
+                        $rolePermissions = [
+                            'View Dashboard' => [true, true, true],
+                            'Manage Users' => [true, false, false],
+                            'Create Content' => [true, true, false],
+                            'View Analytics' => [true, true, false],
+                            'System Settings' => [true, false, false],
+                            'Take Quizzes' => [true, true, true],
+                        ];
+                    @endphp
                     <div class="table-wrap">
-                        <table>
+                        <table class="perm-table">
                             <thead><tr><th>Permission</th><th>Admin</th><th>Teacher</th><th>Student</th></tr></thead>
                             <tbody>
-                                <tr><td>View Dashboard</td><td>✅</td><td>✅</td><td>✅</td></tr>
-                                <tr><td>Manage Users</td><td>✅</td><td>❌</td><td>❌</td></tr>
-                                <tr><td>Create Content</td><td>✅</td><td>✅</td><td>❌</td></tr>
-                                <tr><td>View Analytics</td><td>✅</td><td>✅</td><td>❌</td></tr>
-                                <tr><td>System Settings</td><td>✅</td><td>❌</td><td>❌</td></tr>
-                                <tr><td>Take Quizzes</td><td>✅</td><td>✅</td><td>✅</td></tr>
+                                @foreach ($rolePermissions as $permission => $allowedByRole)
+                                <tr>
+                                    <td>{{ $permission }}</td>
+                                    @foreach ($allowedByRole as $isAllowed)
+                                    <td>
+                                        @if ($isAllowed)
+                                        <span class="perm-icon is-allowed" title="Allowed">&#10003;</span>
+                                        @else
+                                        <span class="perm-icon is-denied" title="Not allowed">&#10005;</span>
+                                        @endif
+                                    </td>
+                                    @endforeach
+                                </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -646,12 +673,10 @@
                         <label class="toggle"><input type="checkbox" id="feat-maintenance"><span class="toggle-slider"></span></label>
                     </div>
                 </div>
-                <div class="settings-section" style="border-color:#fca5a5">
-                    <h3 style="color:var(--red)">Danger Zone</h3>
-                    <div class="desc">Irreversible actions — proceed with caution. To manage activity logs (delete individual entries, archive old ones, or export), see the <a href="javascript:void(0)" id="danger-zone-activity-link" style="color:var(--blue);font-weight:600">Activity tab</a>.</div>
-                    <div style="display:flex;gap:10px;flex-wrap:wrap">
-                        <button class="danger-btn" id="reset-platform-btn" style="max-width:200px">Reset Platform</button>
-                    </div>
+                <div class="settings-section is-danger">
+                    <h3>Danger Zone</h3>
+                    <div class="desc">Irreversible actions — proceed with caution. To manage activity logs (delete individual entries, archive old ones, or export), see the <a href="javascript:void(0)" id="danger-zone-activity-link" class="danger-zone-link">Activity tab</a>.</div>
+                    <button class="danger-btn is-compact" id="reset-platform-btn">Reset Platform</button>
                 </div>
             </div>
 

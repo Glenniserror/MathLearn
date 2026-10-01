@@ -636,11 +636,11 @@
 
                 <!-- LOCK STATUS INDICATOR -->
                 <div id="summative-lock-notice" style="display:none; margin-bottom:20px;">
-                    <section class="modules-container" style="background: #fef3c7; border: 1px solid #fcd34d; text-align: center; padding: 20px; opacity: 1; animation: none;">
-                        <div style="font-size: 32px; margin-bottom: 8px;">🔒</div>
-                        <div class="section-label" style="color: #b45309; margin-bottom: 4px;">Test Not Yet Available</div>
-                        <div style="font-size: 13px; color: #92400e; margin-bottom: 16px;">Complete all 3 modules first to unlock this comprehensive test.</div>
-                        <div id="lock-progress-display" style="text-align: left; margin-top: 12px;"></div>
+                    <section class="notice-card">
+                        <div class="notice-icon">🔒</div>
+                        <div class="notice-title">Test Not Yet Available</div>
+                        <div class="notice-text">Complete all 3 modules first to unlock this comprehensive test.</div>
+                        <div id="lock-progress-display" class="notice-progress"></div>
                     </section>
                 </div>
 

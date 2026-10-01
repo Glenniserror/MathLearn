@@ -247,7 +247,7 @@ async function deleteUser(id) {
         title: 'Delete User?',
         html: `Remove <strong>${Security.escape(u.name)}</strong>? This cannot be undone.`,
         icon: 'warning', showCancelButton: true,
-        confirmButtonColor: '#ef4444', cancelButtonColor: '#d1d5db',
+        confirmButtonColor: '#ef4444', cancelButtonColor: '#6b7280',
         confirmButtonText: 'Yes, delete',
     }).then(async r => {
         if (!r.isConfirmed) return;
@@ -735,7 +735,7 @@ async function confirmDanger(action, desc) {
     Swal.fire({
         title: Security.escape(action) + '?', text: desc,
         icon: 'warning', showCancelButton: true,
-        confirmButtonColor: '#ef4444', cancelButtonColor: '#d1d5db',
+        confirmButtonColor: '#ef4444', cancelButtonColor: '#6b7280',
         confirmButtonText: 'Yes, confirm',
     }).then(async r => {
         if (!r.isConfirmed) return;
@@ -952,7 +952,7 @@ async function resetContentStatus(id) {
         title: 'Reset to Pending?',
         text: `"${c.name}" will be moved back to the review queue.`,
         icon: 'question', showCancelButton: true,
-        confirmButtonColor: '#f97316', cancelButtonColor: '#d1d5db',
+        confirmButtonColor: '#f97316', cancelButtonColor: '#6b7280',
         confirmButtonText: 'Yes, reset',
     }).then(async r => {
         if (!r.isConfirmed) return;
@@ -975,7 +975,7 @@ async function deleteContent(id) {
         title: 'Delete Module?',
         html: `"<strong>${Security.escape(c.name)}</strong>" will be permanently deleted.`,
         icon: 'warning', showCancelButton: true,
-        confirmButtonColor: '#ef4444', cancelButtonColor: '#d1d5db',
+        confirmButtonColor: '#ef4444', cancelButtonColor: '#6b7280',
         confirmButtonText: 'Yes, delete permanently',
     }).then(async r => {
         if (!r.isConfirmed) return;
@@ -1010,7 +1010,7 @@ function renderHome() {
         <div class="log-item">
             <div class="log-info">
                 <div class="log-avatar ${colors[a.type] || 'blue-avatar'}">${Security.escape(initials(a.title))}</div>
-                <div>
+                <div class="log-text">
                     <div class="log-title">${Security.escape(a.title)}</div>
                     <div class="log-meta">${Security.escape(a.sub)}</div>
                 </div>
@@ -1510,7 +1510,7 @@ function confirmLogout() {
     Swal.fire({
         title: 'Are you sure?', text: 'You will be logged out of your account.',
         icon: 'warning', showCancelButton: true,
-        confirmButtonColor: '#2563eb', cancelButtonColor: '#d33',
+        confirmButtonColor: '#2563eb', cancelButtonColor: '#6b7280',
         confirmButtonText: 'Yes, logout!', cancelButtonText: 'Cancel',
     }).then(r => {
         if (r.isConfirmed) {
@@ -1684,10 +1684,10 @@ function renderModules() {
             : '';
 
         const rejectedHint = m.status === 'Rejected'
-            ? `<div style="margin-top:6px;padding:6px 10px;background:#fef2f2;border-radius:6px;font-size:11px;color:#dc2626;font-weight:600">⚠️ Marked rejected — edit and re-save, or delete.</div>`
+            ? `<div class="module-hint is-rejected"><span>⚠️</span><span>Marked rejected — edit and re-save, or delete.</span></div>`
             : '';
         const pendingHint = m.status === 'Pending Review'
-            ? `<div style="margin-top:6px;padding:6px 10px;background:#fff7ed;border-radius:6px;font-size:11px;color:#ea580c;font-weight:600">🕐 Awaiting approval in Content Management before students can access it.</div>`
+            ? `<div class="module-hint is-pending"><span>🕐</span><span>Awaiting approval in Content Management before students can access it.</span></div>`
             : '';
 
         return `

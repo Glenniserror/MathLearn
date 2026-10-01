@@ -394,7 +394,7 @@ document.addEventListener('DOMContentLoaded', function () {
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#2563eb',
-            cancelButtonColor: '#d33',
+            cancelButtonColor: '#6b7280',
             confirmButtonText: 'Yes, logout!',
             cancelButtonText: 'Cancel',
         }).then(result => {
@@ -1070,15 +1070,14 @@ Return ONLY a valid JSON array of ${items.length} strings (the rewritten version
             listEl.innerHTML = items.map(f => `
                 <div class="module-item">
                     <div class="module-title-row">
-                        <span class="module-name">${FEEDBACK_ICONS[f.type] || '💬'} ${f.teacherName}</span>
+                        <span class="module-name">${FEEDBACK_ICONS[f.type] || '💬'} ${escapeHtml(f.teacherName)}</span>
                         <span style="display:flex;align-items:center;gap:8px">
                             ${f.read ? '' : '<span class="status-badge badge-warn">New</span>'}
-                            <button type="button" data-action="delete-feedback" data-id="${f.id}" title="Remove this feedback"
-                                style="background:none;border:none;color:#9ca3af;cursor:pointer;font-size:14px;line-height:1;padding:0">✕</button>
+                            <button type="button" class="feedback-dismiss" data-action="delete-feedback" data-id="${f.id}" title="Remove this feedback">✕</button>
                         </span>
                     </div>
                     <p style="margin:6px 0 4px;font-size:14px;color:var(--text-2)">${escapeHtml(f.message)}</p>
-                    <div class="section-sub" style="margin:0">${f.date}</div>
+                    <div class="section-sub" style="margin:0">${escapeHtml(f.date)}</div>
                 </div>`).join('');
         }
 
@@ -1189,9 +1188,11 @@ Return ONLY a valid JSON array of ${items.length} strings (the rewritten version
         if (!unlocked) {
             const progress = await getCompletionProgress();
             const lockDisplay = `
-                <div style="margin-bottom: 12px;">
-                    <div style="font-size: 13px; color: #92400e;">Complete all learning module topics first to unlock the summative test (${progress.completed}/${progress.total} done).</div>
+                <div class="notice-progress-label">
+                    <span>Topics completed</span>
+                    <span>${progress.completed}/${progress.total}</span>
                 </div>
+                <div class="progress-bar-bg"><div class="progress-fill" style="width:${progress.percentage}%"></div></div>
             `;
 
             document.getElementById('lock-progress-display').innerHTML = lockDisplay;

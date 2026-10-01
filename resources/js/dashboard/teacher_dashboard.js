@@ -1045,8 +1045,8 @@ function scoreOrDash(cell) {
 function classRecordCategoryTable(title, sectionStudents, categoryKey) {
     const topics = classRecordData.topics;
     return `
-        <div style="margin-bottom:18px">
-            <div style="font-weight:600;color:#374151;font-size:13px;margin-bottom:8px">${Security.escape(title)}</div>
+        <div>
+            <div class="record-title">${Security.escape(title)}</div>
             <div class="table-wrap">
                 <table>
                     <thead>
@@ -1073,7 +1073,7 @@ function classRecordCategoryTable(title, sectionStudents, categoryKey) {
 function classRecordSummativeTable(sectionStudents) {
     return `
         <div>
-            <div style="font-weight:600;color:#374151;font-size:13px;margin-bottom:8px">Summative</div>
+            <div class="record-title">Summative</div>
             <div class="table-wrap">
                 <table>
                     <thead><tr><th>Name</th><th>Score</th></tr></thead>
@@ -1104,18 +1104,17 @@ function renderClassRecord() {
 
     container.innerHTML = reportSections.map((sec, idx) => {
         const sectionStudents = classRecordData.students.filter(s => s.section_id === sec.id);
-        const colorHex = sectionColor(idx);
 
         return `
-            <div style="border:1px solid #e5e7eb;border-left:5px solid ${colorHex};border-radius:16px;margin-bottom:20px;overflow:hidden;background:white;box-shadow:0 1px 3px rgba(0,0,0,0.05)">
-                <div style="padding:18px 24px;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center">
-                    <div style="display:flex;align-items:center;gap:10px">
-                        <span style="width:10px;height:10px;border-radius:50%;background:${colorHex};flex-shrink:0"></span>
-                        <div style="font-weight:700;color:#111827;font-size:16px">${Security.escape(sec.name)}</div>
+            <div class="section-card is-record" style="--section-color:${sectionColor(idx)}">
+                <div class="section-top">
+                    <div class="section-left">
+                        <span class="section-dot"></span>
+                        <div class="sec-name">${Security.escape(sec.name)}</div>
                     </div>
-                    <div style="font-size:13px;color:#6b7280">${sectionStudents.length} student(s)</div>
+                    <div class="sec-meta">${sectionStudents.length} student(s)</div>
                 </div>
-                <div style="padding:18px 24px">
+                <div class="record-body">
                     ${classRecordCategoryTable('Pretest', sectionStudents, 'pretest')}
                     ${classRecordCategoryTable('Posttest', sectionStudents, 'posttest')}
                     ${classRecordCategoryTable('Activity', sectionStudents, 'activity')}
@@ -1410,8 +1409,6 @@ function renderSectionsContainer() {
     }
 
     container.innerHTML = allSections.map((sec, idx) => {
-        const colorHex = sectionColor(idx);
-
         // Real students in this section, from the already-loaded roster
         // (StudentController::getTeacherStudents), not a placeholder count.
         const sectionStudents = students.filter(s => s.section_id === sec.id);
@@ -1423,59 +1420,49 @@ function renderSectionsContainer() {
         const top = [...sectionStudents].sort((a, b) => b.progress - a.progress)[0];
 
         return `
-            <div style="border:1px solid #e5e7eb;border-radius:16px;margin-bottom:20px;overflow:hidden;background:white;box-shadow:0 1px 3px rgba(0,0,0,0.05)">
-                <!-- Section Header -->
-                <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:24px;border-bottom:1px solid #f3f4f6">
-                    <div style="display:flex;align-items:center;gap:16px;flex:1">
-                        <!-- Colored Badge -->
-                        <div style="width:56px;height:56px;background:${colorHex};color:white;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:24px;flex-shrink:0;box-shadow:0 2px 8px ${colorHex}33">
-                            ${idx + 1}
-                        </div>
-                        <!-- Section Info -->
-                        <div>
-                            <div style="font-weight:700;color:#111827;font-size:16px">${Security.escape(sec.name)}</div>
-                            <div style="font-size:13px;color:#6b7280;display:flex;gap:16px;margin-top:6px">
-                                <span>👥 <strong style="color:#4b5563">${studentCount}</strong> students</span>
-                                <span>📊 Avg: <strong style="color:#4b5563">${avgProgress}%</strong></span>
+            <div class="section-card" style="--section-color:${sectionColor(idx)}">
+                <div class="section-top">
+                    <div class="section-left">
+                        <div class="marker">${idx + 1}</div>
+                        <div class="section-info">
+                            <div class="sec-name">${Security.escape(sec.name)}</div>
+                            <div class="sec-meta">
+                                <span>👥 <strong>${studentCount}</strong> students</span>
+                                <span>📊 Avg: <strong>${avgProgress}%</strong></span>
                             </div>
                         </div>
                     </div>
-                    <!-- Action Icons -->
-                    <div style="display:flex;gap:6px">
-                        <button data-action="edit-section" data-id="${sec.id}" data-name="${Security.escape(sec.name)}"
-                                style="background:none;border:none;cursor:pointer;padding:10px;color:#9ca3af;transition:color 0.2s;border-radius:8px;hover:{background:#f3f4f6;color:#6b7280}">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px">
+                    <div class="sec-actions">
+                        <button class="icon-btn edit-btn" data-action="edit-section" data-id="${sec.id}" data-name="${Security.escape(sec.name)}" title="Rename section">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
                             </svg>
                         </button>
-                        <button data-action="delete-section" data-id="${sec.id}"
-                                style="background:none;border:none;cursor:pointer;padding:10px;color:#9ca3af;transition:color 0.2s;border-radius:8px;hover:{background:#fef2f2;color:#ef4444}">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px">
+                        <button class="icon-btn del-btn" data-action="delete-section" data-id="${sec.id}" title="Delete section">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/>
                             </svg>
                         </button>
                     </div>
                 </div>
-                
-                <!-- Section Content: real student roster -->
-                <div style="padding:16px 24px;background:#fafbfc">
+
+                <div class="section-body">
                     ${studentCount === 0
-                        ? `<div style="text-align:center;padding:32px 0">
-                               <div style="color:#d1d5db;font-size:64px;margin-bottom:12px;opacity:0.8">👥</div>
-                               <div style="color:#9ca3af;font-size:15px;font-weight:500">No students in this section yet</div>
+                        ? `<div class="empty-state">
+                               <div class="empty-icon">👥</div>
+                               <h4>No students in this section yet</h4>
                            </div>`
                         : sectionStudents.map(s => `
-                            <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f3f4f6">
-                                <div style="display:flex;align-items:center;gap:10px;min-width:0">
+                            <div class="section-student">
+                                <div class="section-student-name">
                                     <div class="student-avatar" style="width:28px;height:28px;font-size:10px;flex-shrink:0">${Security.escape(initials(s.name))}</div>
-                                    <span style="font-size:13.5px;color:#111827;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${Security.escape(s.name)}</span>
+                                    <span>${Security.escape(s.name)}</span>
                                 </div>
-                                <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+                                <div class="section-student-meta">
                                     <span class="status-badge ${badgeClass(s.status)}">${Security.escape(s.status)}</span>
-                                    <span style="font-size:12.5px;font-weight:700;color:${progressColor(s.progress)};width:36px;text-align:right">${s.progress}%</span>
-                                    <button data-action="view-answers" data-id="${s.id}" data-name="${Security.escape(s.name)}" title="View this student's quiz answers"
-                                            style="background:none;border:none;cursor:pointer;padding:6px;color:#9ca3af;border-radius:6px;display:flex">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px">
+                                    <span class="section-student-pct" style="color:${progressColor(s.progress)}">${s.progress}%</span>
+                                    <button class="icon-btn is-plain edit-btn" data-action="view-answers" data-id="${s.id}" data-name="${Security.escape(s.name)}" title="View this student's quiz answers">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                             <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
                                         </svg>
                                     </button>
@@ -1484,10 +1471,9 @@ function renderSectionsContainer() {
                     }
                 </div>
 
-                <!-- Section Footer -->
-                <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 24px;background:#f9fafb;border-top:1px solid #f3f4f6;font-size:13px;color:#6b7280">
-                    <span>Top: <strong style="color:#111827">${top ? Security.escape(top.name) : 'N/A'}</strong></span>
-                    <span>Needs attention: <strong style="color:#111827">${needsAttention} students</strong></span>
+                <div class="sec-footer">
+                    <span>Top: <strong>${top ? Security.escape(top.name) : 'N/A'}</strong></span>
+                    <span>Needs attention: <strong>${needsAttention} students</strong></span>
                 </div>
             </div>
         `;
@@ -1528,13 +1514,13 @@ function openAddSection() {
                 </p>
             </div>`,
         confirmButtonText: 'Add Section',
-        confirmButtonColor: '#1E88E5',
+        confirmButtonColor: '#2563eb',
         showCancelButton: true,
         cancelButtonText: 'Cancel',
         focusConfirm: false,
         didOpen: () => {
             const input = document.getElementById('swal-section-name');
-            input.addEventListener('focus', () => { input.style.background = '#fff'; input.style.borderColor = '#1E88E5'; });
+            input.addEventListener('focus', () => { input.style.background = '#fff'; input.style.borderColor = '#2563eb'; });
             input.addEventListener('blur', () => { input.style.background = '#F1F5F9'; input.style.borderColor = 'transparent'; });
         },
         preConfirm: () => {
@@ -1583,7 +1569,7 @@ function editSection(id, currentName) {
         inputValue: currentName,
         inputAttributes: { autocomplete: 'off' },
         confirmButtonText: 'Save',
-        confirmButtonColor: '#1E88E5',
+        confirmButtonColor: '#2563eb',
         showCancelButton: true,
         inputValidator: v => !v.trim() && 'Section name cannot be empty',
     }).then(async result => {
@@ -1672,16 +1658,14 @@ function renderModules() {
             : '';
 
         const rejectedHint = m.status === 'Rejected'
-            ? `<div style="margin-top:6px;padding:6px 10px;background:#fef2f2;border-radius:6px;
-                           font-size:11px;color:#dc2626;font-weight:600">
-                   ⚠️ Rejected by admin — please review and re-upload if needed.
+            ? `<div class="module-hint is-rejected">
+                   <span>⚠️</span><span>Rejected by admin — please review and re-upload if needed.</span>
                </div>`
             : '';
 
         const pendingHint = m.status === 'Pending Review'
-            ? `<div style="margin-top:6px;padding:6px 10px;background:#fff7ed;border-radius:6px;
-                           font-size:11px;color:#ea580c;font-weight:600">
-                   🕐 Awaiting admin approval before students can access this module.
+            ? `<div class="module-hint is-pending">
+                   <span>🕐</span><span>Awaiting admin approval before students can access this module.</span>
                </div>`
             : '';
 
@@ -1713,13 +1697,12 @@ function renderModules() {
                 <div class="module-card-actions">
                     <button class="tbl-btn view" data-action="view-module" data-id="${Security.escape(String(m.id))}">View</button>
                     ${m.status === 'Published'
-                        ? `<button class="tbl-btn" data-action="send-to-downloads" data-id="${Security.escape(String(m.id))}"
-                               style="background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe;font-weight:700">
+                        ? `<button class="tbl-btn send" data-action="send-to-downloads" data-id="${Security.escape(String(m.id))}">
                                📥 Send
                            </button>`
                         : `<button class="tbl-btn edit" data-action="edit-module" data-id="${Security.escape(String(m.id))}">Edit</button>`
                     }
-                    <button class="tbl-btn feedback" data-action="delete-module" data-id="${Security.escape(String(m.id))}">Delete</button>
+                    <button class="tbl-btn del" data-action="delete-module" data-id="${Security.escape(String(m.id))}">Delete</button>
                 </div>
             </div>
         </div>`;
@@ -2261,7 +2244,7 @@ function confirmLogout() {
     Swal.fire({
         title: 'Are you sure?', text: 'You will be logged out of your account.',
         icon: 'warning', showCancelButton: true,
-        confirmButtonColor: '#2563eb', cancelButtonColor: '#d33',
+        confirmButtonColor: '#2563eb', cancelButtonColor: '#6b7280',
         confirmButtonText: 'Yes, logout!', cancelButtonText: 'Cancel',
     }).then(r => {
         if (r.isConfirmed) {
@@ -3815,7 +3798,7 @@ function renderSavedQuizzes() {
             <div class="saved-quiz-actions" style="display:flex;gap:6px;flex-shrink:0">
                 <button class="tbl-btn view"     data-action="view-saved-quiz" data-idx="${idx}">View</button>
                 <button class="tbl-btn edit"     data-action="edit-saved-quiz" data-idx="${idx}">Edit</button>
-                <button class="tbl-btn feedback" data-action="delete-saved-quiz" data-idx="${idx}">Delete</button>
+                <button class="tbl-btn del"      data-action="delete-saved-quiz" data-idx="${idx}">Delete</button>
             </div>
         </div>`).join('');
 }
@@ -4249,7 +4232,7 @@ async function renderPublishedPanel() {
                 </div>
             </div>
             <div class="saved-quiz-actions">
-                <button class="tbl-btn feedback"
+                <button class="tbl-btn del"
                         data-action="unpublish" data-topic-key="${Security.escape(r.topic_key)}" data-label="${Security.escape(label)}">
                     Unpublish
                 </button>
@@ -4378,7 +4361,7 @@ async function renderTopicManager() {
                         ${Security.escape(t.module_key)}
                     </span>
                 </span>
-                <button class="tbl-btn feedback" style="padding:4px 10px;font-size:11px"
+                <button class="tbl-btn del" style="padding:4px 10px;font-size:11px"
                         data-action="remove-custom-topic" data-id="${Security.escape(t.id)}" data-name="${Security.escape(t.topic_name)}">
                     Remove
                 </button>

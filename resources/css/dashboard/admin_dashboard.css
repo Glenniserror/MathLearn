@@ -235,6 +235,8 @@ html, body {
 .metric-card:nth-child(1) { animation-delay: 0.05s; }
 .metric-card:nth-child(2) { animation-delay: 0.10s; }
 .metric-card:nth-child(3) { animation-delay: 0.15s; }
+.metric-card:nth-child(4) { animation-delay: 0.20s; }
+.metric-card:nth-child(5) { animation-delay: 0.25s; }
 
 .metric-header {
     display: flex;
@@ -287,6 +289,11 @@ html, body {
     .metrics-grid { width: auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
     .metric-card { width: auto; }
     .metric-value { font-size: 30px; }
+    /* Keep rows full: 4 cards sit 2 × 2, 5 cards sit 3 over 2 — never a lone orphan card. */
+    .metrics-grid:has(> .metric-card:nth-child(4):last-child) { grid-template-columns: repeat(2, 1fr); }
+    .metrics-grid:has(> .metric-card:nth-child(5):last-child) { grid-template-columns: repeat(6, 1fr); }
+    .metrics-grid:has(> .metric-card:nth-child(5):last-child) > .metric-card { grid-column: span 2; }
+    .metrics-grid:has(> .metric-card:nth-child(5):last-child) > .metric-card:nth-child(n+4) { grid-column: span 3; }
 }
 @media (min-width: 1024px) {
     .metrics-scroll-wrap { margin-bottom: 28px; }
@@ -296,6 +303,9 @@ html, body {
     .metric-label { font-size: 12px; }
     .icon-container { width: 42px; height: 42px; border-radius: 11px; }
     .icon-container svg { width: 22px; height: 22px; }
+}
+@media (min-width: 1280px) {
+    .metrics-grid:has(> .metric-card:nth-child(4):last-child) { grid-template-columns: repeat(4, 1fr); }
 }
 
 .section-label { font-size: 16px; font-weight: 800; color: var(--text); letter-spacing: -0.3px; margin-bottom: 3px; }
@@ -338,6 +348,7 @@ html, body {
 .log-item:nth-child(4) { animation-delay: 0.28s; }
 
 .log-info { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+.log-text { min-width: 0; }
 
 .log-avatar {
     width: 36px; height: 36px;
@@ -372,11 +383,13 @@ html, body {
     font-weight: 700;
     flex-shrink: 0;
     letter-spacing: 0.2px;
+    white-space: nowrap;
 }
 .badge-new    { background: #dbeafe; color: #1d4ed8; }
 .badge-good   { background: #dcfce7; color: #15803d; }
 .badge-system { background: #fef3c7; color: #b45309; }
 .badge-warn   { background: #fef3c7; color: #b45309; }
+.badge-average { background: #fef3c7; color: #b45309; }
 .badge-danger { background: #fee2e2; color: #dc2626; }
 
 .view-topics-btn {
@@ -437,6 +450,10 @@ html, body {
     transition: transform 0.2s;
 }
 .action-icon-wrap svg { width: 22px; height: 22px; }
+.action-icon-wrap.blue-theme   { background: linear-gradient(135deg, var(--blue-mid), var(--blue)); color: #fff; box-shadow: 0 6px 16px rgba(37,99,235,0.28); }
+.action-icon-wrap.green-theme  { background: linear-gradient(135deg, #34d399, var(--green)); color: #fff; box-shadow: 0 6px 16px rgba(16,185,129,0.28); }
+.action-icon-wrap.orange-theme { background: linear-gradient(135deg, #fb923c, var(--orange)); color: #fff; box-shadow: 0 6px 16px rgba(249,115,22,0.28); }
+.action-icon-wrap.purple-theme { background: linear-gradient(135deg, #c084fc, var(--purple)); color: #fff; box-shadow: 0 6px 16px rgba(168,85,247,0.28); }
 .action-content { flex: 1; min-width: 0; align-self: stretch; display: flex; flex-direction: column; }
 .action-card h3 { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 3px; letter-spacing: -0.2px; }
 .action-card p  { font-size: 12px; color: var(--text-3); margin-bottom: 12px; line-height: 1.4; flex: 1; }
@@ -466,6 +483,10 @@ html, body {
 }
 .primary-btn:hover { background: var(--blue-dark); transform: translateY(-1px); box-shadow: 0 6px 16px rgba(37,99,235,0.3); }
 .primary-btn:active { transform: scale(0.97); box-shadow: none; }
+.primary-btn.is-muted         { background: #6b7280; }
+.primary-btn.is-muted:hover   { background: #4b5563; box-shadow: 0 6px 16px rgba(75,85,99,0.3); }
+.primary-btn.is-warning       { background: var(--orange); }
+.primary-btn.is-warning:hover { background: #ea580c; box-shadow: 0 6px 16px rgba(249,115,22,0.3); }
 
 .outline-btn {
     display: block; width: 100%;
@@ -486,6 +507,7 @@ html, body {
 }
 .danger-btn:hover { background: #dc2626; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(239,68,68,0.3); }
 .danger-btn:active { transform: scale(0.97); }
+.danger-btn.is-compact { width: auto; padding: 10px 24px; }
 
 @media (min-width: 1024px) {
     .primary-btn, .outline-btn, .danger-btn { font-size: 14px; padding: 11px; }
@@ -555,12 +577,13 @@ tr:hover td { background: #fafbff; }
 .toolbar { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
 .search-input {
     flex: 1; min-width: 180px;
-    padding: 9px 14px;
+    padding: 9px 14px 9px 36px;
     border: 1px solid var(--border); border-radius: 9px;
     font-family: inherit; font-size: 13px; color: var(--text);
-    background: white; outline: none; transition: border-color 0.2s;
+    background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E") no-repeat 12px center / 15px 15px;
+    outline: none; transition: border-color 0.2s, box-shadow 0.2s;
 }
-.search-input:focus { border-color: var(--blue-mid); }
+.search-input:focus { border-color: var(--blue-mid); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
 .filter-select {
     padding: 9px 14px;
     border: 1px solid var(--border); border-radius: 9px;
@@ -590,6 +613,7 @@ tr:hover td { background: #fafbff; }
    without hovering couldn't previously tell this apart from Edit/View. */
 .tbl-btn.del       { background: var(--red-light); border-color: #fca5a5; color: var(--red); }
 .tbl-btn.del:hover { background: #fee2e2; }
+td:has(> .tbl-btn) { white-space: nowrap; }
 
 .chart-container {
     background: var(--card);
@@ -872,7 +896,14 @@ tr:hover td { background: #fafbff; }
    EMPTY STATES
    ================================ */
 .empty-state { text-align: center; padding: 40px 20px; color: var(--text-3); }
-.empty-icon  { font-size: 40px; margin-bottom: 10px; }
+.empty-icon  {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    margin: 0 auto 12px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bg);
+    font-size: 28px; line-height: 1;
+}
 .empty-state h4 { font-size: 15px; font-weight: 700; color: var(--text-2); margin-bottom: 4px; }
 .empty-state p  { font-size: 12px; }
 
@@ -885,6 +916,13 @@ tr:hover td { background: #fafbff; }
 .swal2-confirm { border-radius: 8px !important; padding: 10px 24px !important; font-family: 'Plus Jakarta Sans', sans-serif !important; font-weight: 700 !important; font-size: 14px !important; }
 .swal2-cancel  { border-radius: 8px !important; padding: 10px 24px !important; font-family: 'Plus Jakarta Sans', sans-serif !important; font-weight: 700 !important; font-size: 14px !important; }
 .swal2-timer-progress-bar { background: var(--blue) !important; }
+/* Popups without an explicit button color fall back to the dashboard's
+   blue and gray instead of sweetalert2's purple. Set on the container
+   (not :root) so it wins over the library's own :root defaults. */
+.swal2-container {
+    --swal2-confirm-button-background-color: var(--blue);
+    --swal2-cancel-button-background-color: var(--text-3);
+}
 
 /* ================================
    ANIMATIONS
@@ -1115,6 +1153,114 @@ tr:hover td { background: #fafbff; }
     transition: all 0.15s;
 }
 .file-preview-remove:hover { background: var(--red-light); border-color: #fca5a5; color: var(--red); }
+
+/* ================================
+   PENDING APPROVALS (Users page)
+   Amber = waiting on you; green approves, red rejects.
+   ================================ */
+.approval-panel { margin-bottom: 22px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+.approval-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.approval-head-icon {
+    width: 40px; height: 40px;
+    border-radius: 11px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    background: #fef3c7;
+    font-size: 20px; line-height: 1;
+}
+.approval-head-text { flex: 1; min-width: 0; }
+.approval-head .section-sub { margin-bottom: 0; }
+.approval-link {
+    flex-shrink: 0;
+    padding: 7px 12px;
+    border: 1px solid var(--border); border-radius: 8px;
+    background: white;
+    font-size: 12px; font-weight: 700; color: var(--blue);
+    text-decoration: none; white-space: nowrap;
+    transition: background 0.15s, border-color 0.15s;
+}
+.approval-link:hover { background: var(--blue-light); border-color: var(--blue-mid); }
+.approval-list { display: flex; flex-direction: column; gap: 8px; }
+.approval-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px;
+    background: #fffbeb;
+    border: 1px solid #fde68a; border-left: 4px solid #f59e0b; border-radius: 10px;
+    transition: box-shadow 0.15s;
+}
+.approval-item:hover { box-shadow: var(--shadow); }
+.approval-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    color: white; font-size: 13px; font-weight: 800;
+}
+.approval-info { flex: 1; min-width: 0; }
+.approval-name,
+.approval-email { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.approval-name  { font-size: 13px; font-weight: 700; color: #78350f; }
+.approval-email { font-size: 12px; color: #92400e; }
+.approval-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.approval-btn {
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-family: inherit; font-size: 12px; font-weight: 700;
+    cursor: pointer; transition: all 0.15s;
+}
+.approval-btn.approve { background: var(--green); border: 1px solid var(--green); color: white; }
+.approval-btn.approve:hover { background: #059669; border-color: #059669; box-shadow: 0 4px 12px rgba(16,185,129,0.3); }
+.approval-btn.reject { background: white; border: 1px solid #fca5a5; color: #dc2626; }
+.approval-btn.reject:hover { background: var(--red); border-color: var(--red); color: white; }
+@media (max-width: 480px) {
+    .approval-head, .approval-item { flex-wrap: wrap; }
+    .approval-actions { width: 100%; }
+    .approval-actions form { flex: 1; }
+    .approval-btn { width: 100%; }
+}
+
+/* ================================
+   MODULE CARD STATUS HINTS
+   ================================ */
+.module-hint {
+    display: flex; align-items: flex-start; gap: 6px;
+    margin-top: 6px; padding: 7px 10px;
+    border-radius: 7px;
+    font-size: 11px; font-weight: 600; line-height: 1.4;
+}
+.module-hint.is-pending  { background: #fff7ed; color: #ea580c; }
+.module-hint.is-rejected { background: #fef2f2; color: #dc2626; }
+
+/* ================================
+   CONTENT QUEUE — small screens
+   Approve / Reject / Delete drop to their own row instead of squeezing
+   the file name down to a few characters.
+   ================================ */
+@media (max-width: 639px) {
+    .queue-item { flex-wrap: wrap; }
+    .queue-actions { width: 100%; justify-content: flex-end; }
+}
+
+/* ================================
+   SETTINGS — Roles & Permissions, Danger Zone
+   ================================ */
+.perm-table td:not(:first-child),
+.perm-table th:not(:first-child) { text-align: center; }
+.perm-table td:first-child { font-weight: 600; color: var(--text); }
+.perm-icon {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 800; line-height: 1;
+}
+.perm-icon.is-allowed { background: #dcfce7; color: #15803d; }
+.perm-icon.is-denied  { background: #fee2e2; color: #dc2626; }
+
+.settings-section.is-danger { border-color: #fca5a5; background: linear-gradient(180deg, #fff5f5, white 60%); }
+.settings-section.is-danger h3 { color: var(--red); }
+.danger-zone-link { color: var(--blue); font-weight: 600; }
+.danger-zone-link:hover { color: var(--blue-dark); }
 
 /* ================================
    SMALL SCREEN TWEAKS
