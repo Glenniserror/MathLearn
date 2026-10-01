@@ -887,7 +887,6 @@ h3 {
 .bar { height: 8px; border-radius: var(--radius-pill); background: #e5e7eb; overflow: hidden; }
 .bar__fill { display: block; width: 0; height: 100%; border-radius: var(--radius-pill); background: var(--blue); }
 .bar__fill--done { background: var(--green); }
-.bar__fill--low { background: var(--orange); }
 
 /* ================= 9. STATS =================
    Below the hero, on the light background, like the dashboards' metric row. */
@@ -1424,6 +1423,31 @@ h3 {
     white-space: nowrap;
 }
 
+/* Live numbers: the dashboards' green "good" badge, with a beating dot. */
+.tag--live {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.tag__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .tag__dot { animation: beat 2s ease-in-out infinite; }
+}
+
+@keyframes beat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.5); }
+}
+
 .dash__stats {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1452,7 +1476,7 @@ h3 {
     color: var(--text-2);
 }
 .row__pct { font-weight: 800; color: var(--blue); font-variant-numeric: tabular-nums; }
-.row__pct--low { color: var(--orange); }
+.row__pct--done { color: var(--green); }
 
 /* ================= FAQ =================
    Same card and chevron as the legal accordions. On wide screens the

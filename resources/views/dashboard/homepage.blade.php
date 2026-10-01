@@ -48,16 +48,17 @@
         ['label' => 'Facebook', 'icon' => 'i-facebook', 'url' => null],
         ['label' => 'YouTube',  'icon' => 'i-youtube',  'url' => null],
     ];
-    // Teacher-dashboard preview. Pass $overview from the controller with
-    // AGGREGATE numbers only (no student names or personal progress, this
-    // page is public):
+    // Teacher-dashboard preview. The homepage route passes $overview from
+    // App\Services\PlatformOverview: platform-wide AGGREGATE numbers only
+    // (no student names or personal progress, this page is public):
     //   $overview = [
     //       'students'         => 15,
     //       'avg_progress'     => 1,     // percent, 0-100
     //       'pending_feedback' => 0,
     //       'modules'          => [['name' => 'Sequences and Series', 'avg' => 20], ...],
     //   ];
-    // Without $overview the preview falls back to clearly labelled sample data.
+    // It's null until a student account is approved; the preview then falls
+    // back to clearly labelled sample data.
     $isLive = isset($overview);
     $overview = $overview ?? [
         'students' => 38,
@@ -638,10 +639,14 @@
 
             <div class="dash__head" aria-hidden="true">
                 <div>
-                    <strong>Class overview</strong>
-                    <span class="sub">{{ $isLive ? 'Live from the platform' : 'Grade 10 · Rizal' }}</span>
+                    <strong>{{ $isLive ? 'School overview' : 'Class overview' }}</strong>
+                    <span class="sub">{{ $isLive ? 'All sections · refreshed every '.\App\Services\PlatformOverview::CACHE_MINUTES.' minutes' : 'Grade 10 · Rizal' }}</span>
                 </div>
-                <span class="tag">{{ $isLive ? 'Live data' : 'Sample data' }}</span>
+                @if ($isLive)
+                    <span class="tag tag--live"><span class="tag__dot"></span>Live data</span>
+                @else
+                    <span class="tag">Sample data</span>
+                @endif
             </div>
 
             <div class="dash__stats" aria-hidden="true">
@@ -674,9 +679,10 @@
                     @foreach ($overview['modules'] as $module)
                         @php $avg = max(0, min(100, (int) $module['avg'])); @endphp
                         <div>
-                            <div class="row__top"><span>{{ $module['name'] }}</span><span class="row__pct{{ $avg < 65 ? ' row__pct--low' : '' }}">{{ $avg }}%</span></div>
+                            {{-- Same colors as the dashboards' progress bars: blue in progress, green complete. --}}
+                            <div class="row__top"><span>{{ $module['name'] }}</span><span class="row__pct{{ $avg >= 100 ? ' row__pct--done' : '' }}">{{ $avg }}%</span></div>
                             {{-- Width is set by homepage.js from data-width (no inline style, CSP-safe). --}}
-                            <div class="bar"><span class="bar__fill{{ $avg < 65 ? ' bar__fill--low' : '' }}" data-width="{{ $avg }}"></span></div>
+                            <div class="bar"><span class="bar__fill{{ $avg >= 100 ? ' bar__fill--done' : '' }}" data-width="{{ $avg }}"></span></div>
                         </div>
                     @endforeach
                 </div>

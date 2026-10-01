@@ -33,6 +33,7 @@ use App\Http\Controllers\Teacher\StudentAnswersController;
 use App\Http\Controllers\Teacher\StudentApprovalController;
 use App\Http\Controllers\TeacherDashboardController;
 use App\Models\PlatformSetting;
+use App\Services\PlatformOverview;
 use Illuminate\Support\Facades\Route;
 
 // AI chat assistant — students only, throttled since each call is a paid
@@ -43,13 +44,17 @@ Route::post('/chatbot/ask', [ChatbotController::class, 'ask'])
     ->name('chatbot.ask');
 
 /* ----------- Homepage ----------- */
-Route::get('/', function () {
+Route::get('/', function (PlatformOverview $platformOverview) {
     $platformDescription = PlatformSetting::get(
         'platform_desc',
         'Interactive learning platform for Junior High School Mathematics at Bubog National High School'
     );
 
-    return view('dashboard.homepage', ['platformDescription' => $platformDescription]);
+    return view('dashboard.homepage', [
+        'platformDescription' => $platformDescription,
+        // Live, aggregate-only numbers for the teacher dashboard preview.
+        'overview' => $platformOverview->get(),
+    ]);
 })->name('homepage');
 
 // Client-side observability events (report downloaded, quiz published, …)
