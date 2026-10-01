@@ -463,8 +463,7 @@ h3 {
     align-items: center;
     min-height: 100vh;
     min-height: 100dvh;
-    /* Extra room at the bottom: the stats cards overlap it by --s-12. */
-    padding: calc(var(--nav-h) + var(--s-8)) 0 calc(var(--s-24) + var(--s-12));
+    padding: calc(var(--nav-h) + var(--s-8)) 0 var(--s-24);
     overflow: hidden;
     background: var(--navy-grad);
     color: #fff;
@@ -788,11 +787,11 @@ h3 {
     color: var(--purple);
 }
 
-/* Scroll cue: sits above the band the stats cards overlap. */
+/* Scroll cue */
 .scroll-cue {
     position: absolute;
     left: 50%;
-    bottom: calc(var(--s-12) + var(--s-4));
+    bottom: var(--s-6);
     display: grid;
     place-items: center;
     width: 48px;
@@ -816,7 +815,7 @@ h3 {
 
 /* Short landscape phones: don't force a tall hero, drop the cue. */
 @media (max-height: 520px) and (orientation: landscape) {
-    .hero { min-height: auto; padding-bottom: var(--s-24); }
+    .hero { min-height: auto; padding-bottom: var(--s-12); }
     .scroll-cue { display: none; }
 }
 
@@ -891,11 +890,11 @@ h3 {
 .bar__fill--low { background: var(--orange); }
 
 /* ================= 9. STATS =================
-   The cards float over the bottom edge of the hero. */
-.stats {
-    position: relative;
-    z-index: 1;
-    margin-top: calc(-1 * var(--s-12));
+   Below the hero, on the light background, like the dashboards' metric row. */
+.stats { padding-top: var(--s-10); }
+
+@media (min-width: 1024px) {
+    .stats { padding-top: var(--s-12); }
 }
 
 .stats__grid {
@@ -916,7 +915,7 @@ h3 {
     border: 1px solid var(--border);
     border-radius: var(--radius);
     background: var(--card);
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow);
 }
 
 /* Gradient icon tiles: the dashboards' action-card icons. */

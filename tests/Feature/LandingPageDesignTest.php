@@ -151,6 +151,14 @@ it('floats the hero cards on wrappers so the entrance and float never share an e
         ->toMatch('/@keyframes float\s*\{[^@]*translateY\(-8px\)/');
 });
 
+it('keeps the stats cards below the hero instead of overlapping it', function () {
+    preg_match('/\.stats\s*\{[^}]*\}/', file_get_contents(resource_path('css/homepage.css')), $stats);
+
+    expect($stats[0] ?? '')
+        ->toContain('padding-top:')
+        ->not->toContain('margin-top: calc(-1');
+});
+
 it('keeps the hero column from growing wider than a phone screen', function () {
     preg_match('/\.hero__inner\s*\{[^}]*\}/', file_get_contents(resource_path('css/homepage.css')), $inner);
 
