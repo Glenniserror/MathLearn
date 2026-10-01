@@ -13,7 +13,7 @@
     html, body { height: 100%; font-family: 'Inter', -apple-system, sans-serif; }
 
     body {
-      background: linear-gradient(135deg, #1e4e7f 0%, #197a86 52%, #16906e 100%);
+      background: linear-gradient(135deg, #60a5fa 0%, #2563eb 55%, #1d4ed8 100%);
       min-height: 100vh;
       display: flex;
       align-items: center;
@@ -69,7 +69,7 @@
       position: absolute;
       inset: 0;
       border-radius: 50%;
-      background: #e3f2f0;
+      background: #eff6ff;
       animation: pulse-ring 2s ease-in-out infinite;
     }
     @keyframes pulse-ring {
@@ -79,7 +79,7 @@
     .gear-icon {
       position: relative;
       font-size: 40px;
-      color: #197a86;
+      color: #2563eb;
       animation: spin 3.5s linear infinite;
     }
     @keyframes spin {
@@ -105,11 +105,11 @@
     .dots { display: flex; align-items: center; justify-content: center; gap: 7px; margin-bottom: 6px; }
     .dots span {
       width: 9px; height: 9px; border-radius: 50%;
-      background: #16906e;
+      background: #60a5fa;
       animation: bounce 1.4s ease-in-out infinite;
     }
-    .dots span:nth-child(2) { animation-delay: 0.15s; background: #1e4e7f; }
-    .dots span:nth-child(3) { animation-delay: 0.3s;  background: #16906e; }
+    .dots span:nth-child(2) { animation-delay: 0.15s; background: #2563eb; }
+    .dots span:nth-child(3) { animation-delay: 0.3s;  background: #1d4ed8; }
     @keyframes bounce {
       0%, 80%, 100% { transform: translateY(0);    opacity: 0.5; }
       40%           { transform: translateY(-10px); opacity: 1;   }
@@ -122,10 +122,10 @@
       margin-top: 20px;
       padding: 6px 14px;
       border-radius: 99px;
-      background: #eaf1f7;
+      background: #eff6ff;
       font-size: 12px;
       font-weight: 600;
-      color: #0f7355;
+      color: #1d4ed8;
     }
   </style>
 </head>

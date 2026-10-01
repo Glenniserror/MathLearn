@@ -27,6 +27,19 @@ it('lets an admin enable maintenance mode, which blocks public routes', function
     $this->get(route('homepage'))->assertStatus(503);
 });
 
+it('shows the maintenance page in the blue palette without green', function () {
+    $admin = User::factory()->create(['role' => 'admin']);
+    $this->actingAs($admin)->postJson(route('admin.maintenance.toggle'), ['enable' => true]);
+
+    $this->get(route('homepage'))
+        ->assertStatus(503)
+        ->assertSee("We'll be right back", false)
+        ->assertSee('background: linear-gradient(135deg, #60a5fa 0%, #2563eb 55%, #1d4ed8 100%);', false)
+        ->assertDontSee('#16906e', false)
+        ->assertDontSee('#197a86', false)
+        ->assertDontSee('#0f7355', false);
+});
+
 it('keeps the admin portal reachable while maintenance mode is on', function () {
     $admin = User::factory()->create(['role' => 'admin']);
     $this->actingAs($admin)->postJson(route('admin.maintenance.toggle'), ['enable' => true]);
