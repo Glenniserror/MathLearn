@@ -57,26 +57,26 @@
    the @theme block above so these backdrop/panel values don't leak
    onto buttons elsewhere.
 
-   All blue, in the same gradient family as the dashboards' "AI Chat"
-   button, the Math AI Assistant header, and the maintenance page —
-   no green anywhere on these pages.
+   All blue — no green anywhere on these pages.
 
-   1. The background is a bright blue gradient, deep enough at its
-      light end (#3b82f6) that the white "Back to Homepage" link on
-      it stays readable.
+   1. The background is a deep, muted navy-blue gradient. A bright,
+      saturated blue filling the whole screen was glaring; this one is
+      easy on the eyes and recedes behind the white card instead of
+      competing with it.
    2. Sign in and sign up share one action blue (the app's
       --color-primary): the submit buttons and the links pointing at
-      either action all use it.
-   3. Three depth layers front-to-back: background (bright) → panel
-      (deep navy-blue) → card (white). That alone reads as depth, no
-      drop-shadow tricks needed.
+      either action all use it. It's the only bright blue on the page,
+      so it's where the eye lands.
+   3. Three depth layers front-to-back: background (muted navy) →
+      panel (darker navy) → card (white). That alone reads as depth,
+      no drop-shadow tricks needed.
    ================================================================ */
 .auth-gradient-bg {
-    --auth-bg-start: #3b82f6;
-    --auth-bg-mid: #2563eb;
-    --auth-bg-end: #1d4ed8;
-    --auth-panel-top: #1d4ed8;
-    --auth-panel-bottom: #1e3a8a;
+    --auth-bg-start: #1e4e7f;
+    --auth-bg-mid: #1b4778;
+    --auth-bg-end: #173d68;
+    --auth-panel-top: #14375c;
+    --auth-panel-bottom: #0f2a47;
     --auth-signin: #2563eb;
     --auth-signin-hover: #1d4ed8;
     --auth-signup: var(--auth-signin);

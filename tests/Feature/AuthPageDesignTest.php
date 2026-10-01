@@ -23,9 +23,6 @@ it('uses only blue in the sign-in and sign-up palette', function () {
     preg_match('/\.auth-brand-panel\s*\{[^}]*\}/', $css, $panel);
 
     expect($backdrop[0] ?? '')
-        ->toContain('--auth-bg-start: #3b82f6;')
-        ->toContain('--auth-bg-mid: #2563eb;')
-        ->toContain('--auth-bg-end: #1d4ed8;')
         ->toContain('--auth-signin: #2563eb;')
         ->toContain('--auth-signup: var(--auth-signin);')
         ->toContain('background: linear-gradient(135deg, var(--auth-bg-start) 0%, var(--auth-bg-mid) 50%, var(--auth-bg-end) 100%);');
@@ -33,8 +30,24 @@ it('uses only blue in the sign-in and sign-up palette', function () {
     expect($panel[0] ?? '')
         ->toContain('background: linear-gradient(160deg, var(--auth-panel-top) 0%, var(--auth-panel-bottom) 100%);');
 
-    expect($css)->not->toMatch('/#(16906e|197a86|1e4e7f|0f5f52|0f7355|0b5c44)\b/i');
+    expect($css)->not->toMatch('/#(16906e|197a86|0f5f52|0f7355|0b5c44)\b/i');
 });
+
+it('keeps the auth backdrop and panel dark, muted blues that are easy on the eyes', function (string $token) {
+    preg_match('/'.preg_quote($token, '/').':\s*#([0-9a-f]{6});/i', file_get_contents(resource_path('css/app.css')), $match);
+    expect($match)->not->toBeEmpty();
+
+    $toLinear = function (string $channel): float {
+        $value = hexdec($channel) / 255;
+
+        return $value <= 0.03928 ? $value / 12.92 : (($value + 0.055) / 1.055) ** 2.4;
+    };
+    [$red, $green, $blue] = array_map($toLinear, str_split($match[1], 2));
+
+    expect(0.2126 * $red + 0.7152 * $green + 0.0722 * $blue)->toBeLessThan(0.1)
+        ->and($blue)->toBeGreaterThan($green)
+        ->and($green)->toBeGreaterThan($red);
+})->with(['--auth-bg-start', '--auth-bg-mid', '--auth-bg-end', '--auth-panel-top', '--auth-panel-bottom']);
 
 it('puts the google sign-up completion page on the shared blue tokens', function () {
     expect(file_get_contents(resource_path('views/login/google-signup-completion.blade.php')))
