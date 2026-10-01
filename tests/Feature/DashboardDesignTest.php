@@ -31,6 +31,14 @@ it('gives sweetalert popups the dashboard blue and gray buttons', function (stri
         ->toMatch('/\.swal2-container\s*\{[^}]*--swal2-confirm-button-background-color:\s*var\(--blue\);[^}]*--swal2-cancel-button-background-color:\s*var\(--text-3\);/');
 })->with('dashboard stylesheets');
 
+it('makes the logout confirm button red with a gray cancel', function (string $script) {
+    preg_match('/You will be logged out of your account\.(.*?)confirmButtonText: \'Yes, logout!\'/s', file_get_contents(resource_path($script)), $dialog);
+
+    expect($dialog[1] ?? '')
+        ->toMatch("/confirmButtonColor:\s*'#ef4444'/")
+        ->toMatch("/cancelButtonColor:\s*'#6b7280'/");
+})->with('dashboard scripts');
+
 it('never shows a red or washed-out cancel button in confirm dialogs', function (string $script) {
     expect(file_get_contents(resource_path($script)))
         ->not->toContain("cancelButtonColor: '#d33'")

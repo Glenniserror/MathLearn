@@ -2244,7 +2244,7 @@ function confirmLogout() {
     Swal.fire({
         title: 'Are you sure?', text: 'You will be logged out of your account.',
         icon: 'warning', showCancelButton: true,
-        confirmButtonColor: '#2563eb', cancelButtonColor: '#6b7280',
+        confirmButtonColor: '#ef4444', cancelButtonColor: '#6b7280',
         confirmButtonText: 'Yes, logout!', cancelButtonText: 'Cancel',
     }).then(r => {
         if (r.isConfirmed) {

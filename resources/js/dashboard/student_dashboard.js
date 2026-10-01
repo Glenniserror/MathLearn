@@ -393,7 +393,7 @@ document.addEventListener('DOMContentLoaded', function () {
             text: 'You will be logged out of your account.',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#2563eb',
+            confirmButtonColor: '#ef4444',
             cancelButtonColor: '#6b7280',
             confirmButtonText: 'Yes, logout!',
             cancelButtonText: 'Cancel',
