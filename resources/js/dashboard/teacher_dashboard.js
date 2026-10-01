@@ -51,35 +51,6 @@ const Security = {
 };
 
 /* ============================================================
-   ICONS — the same line-icon set the sidebar uses, for JS-rendered
-   empty states and tiles (keeps the UI blue instead of multicolor emoji)
-   ============================================================ */
-const ICON_PATHS = {
-    users:     '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
-    user:      '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
-    award:     '<circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>',
-    trending:  '<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>',
-    barChart:  '<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>',
-    layers:    '<polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>',
-    clock:     '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
-    alert:     '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>',
-    package:   '<line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>',
-    clipboard: '<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>',
-    folder:    '<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>',
-    inbox:     '<polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>',
-    zap:       '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>',
-    help:      '<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
-    send:      '<line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>',
-    edit:      '<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>',
-    trash:     '<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/>',
-    check:     '<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',
-};
-
-function icon(name) {
-    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON_PATHS[name] || ''}</svg>`;
-}
-
-/* ============================================================
    STATE
    ============================================================ */
 let students    = [];
@@ -193,7 +164,7 @@ function renderHome() {
     if (!students.length) {
         listEl.innerHTML = `
             <div class="empty-state">
-                <div class="empty-icon">${icon('users')}</div>
+                <div class="empty-icon">👩‍🎓</div>
                 <h4>No students yet</h4>
                 <p>Students will appear here once they enroll in your class.</p>
             </div>`;
@@ -240,16 +211,17 @@ function renderTopPerformingStudents() {
         .sort((a, b) => b.avgPost - a.avgPost);
 
     if (!ranked.length) {
-        tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">${icon('award')}</div><h4>No completed quizzes yet</h4></div></td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">🏆</div><h4>No completed quizzes yet</h4></div></td></tr>`;
         return;
     }
 
+    const medals = ['🥇', '🥈', '🥉'];
     tbody.innerHTML = ranked.slice(0, 5).map((s, i) => `
         <tr>
-            <td><span class="rank-badge rank-${i + 1}">${i + 1}</span></td>
+            <td>${medals[i] || (i + 1)}</td>
             <td><b>${Security.escape(s.name)}</b></td>
             <td>${Security.escape(s.section || '—')}</td>
-            <td style="color:var(--blue);font-weight:700">${s.avgPost}%</td>
+            <td style="color:var(--green);font-weight:700">${s.avgPost}%</td>
             <td>${s.modulesCompleted}/${s.modulesTotal}</td>
             <td>—</td>
         </tr>`).join('');
@@ -269,7 +241,7 @@ function renderStudents() {
 
     const tbody = document.getElementById('students-tbody');
     if (!slice.length) {
-        tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="empty-icon">${icon('user')}</div><h4>No students found</h4><p>Try a different search or filter.</p></div></td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="empty-icon">👤</div><h4>No students found</h4><p>Try a different search or filter.</p></div></td></tr>`;
     } else {
         tbody.innerHTML = slice.map((s, i) => `
             <tr>
@@ -415,10 +387,10 @@ async function loadFeedbacks() {
 }
 
 const FEEDBACK_TYPE_META = {
-    encouragement: { label: 'Encouragement' },
-    improvement:   { label: 'Needs Improvement' },
-    praise:        { label: 'Praise' },
-    reminder:      { label: 'Reminder' },
+    encouragement: { icon: '💪', label: 'Encouragement' },
+    improvement:   { icon: '📈', label: 'Needs Improvement' },
+    praise:        { icon: '🌟', label: 'Praise' },
+    reminder:      { icon: '⏰', label: 'Reminder' },
 };
 
 /** Render this student's full feedback history inside the Send Feedback modal. */
@@ -436,11 +408,11 @@ function renderFeedbackHistory(studentId) {
 
     wrap.style.display = '';
     list.innerHTML = history.map(f => {
-        const meta = FEEDBACK_TYPE_META[f.type] || { label: f.type };
+        const meta = FEEDBACK_TYPE_META[f.type] || { icon: '💬', label: f.type };
         return `
             <div style="background:#f4f6fb;border-radius:8px;padding:10px 12px">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-                    <span style="font-size:10px;font-weight:700;color:#2563eb;text-transform:uppercase;letter-spacing:0.4px">${Security.escape(meta.label)}</span>
+                    <span style="font-size:11px;font-weight:700;color:#2563eb">${meta.icon} ${Security.escape(meta.label)}</span>
                     <span style="display:flex;align-items:center;gap:8px">
                         <span style="font-size:10px;color:#9ca3af">${Security.escape(f.date)}</span>
                         <button type="button" data-action="delete-feedback" data-id="${f.id}" title="Delete this feedback"
@@ -477,9 +449,9 @@ function deleteFeedback(id) {
 }
 
 const ANSWERS_PHASE_META = {
-    pre:      { label: 'Pre-Test' },
-    post:     { label: 'Post-Test' },
-    activity: { label: 'Activity' },
+    pre:      { icon: '📝', label: 'Pre-Test' },
+    post:     { icon: '✅', label: 'Post-Test' },
+    activity: { icon: '📋', label: 'Activity' },
 };
 
 // Matches MODULE_GROUPS in StudentController.php / admin_dashboard.js —
@@ -647,15 +619,15 @@ function renderAnswersDetail() {
                 <button type="button" data-action="export-pdf"
                     style="display:flex;align-items:center;gap:6px;padding:6px 12px;margin-bottom:10px;
                            background:#2563eb;color:#fff;border:none;border-radius:8px;
-                           font-size:12px;font-weight:600;cursor:pointer;flex-shrink:0">Export PDF</button>
+                           font-size:12px;font-weight:600;cursor:pointer;flex-shrink:0">⬇ Export PDF</button>
             </div>
             ${topicAttempts.map(a => {
-                const meta = ANSWERS_PHASE_META[a.phase] || { label: a.phase };
+                const meta = ANSWERS_PHASE_META[a.phase] || { icon: '💬', label: a.phase };
                 const when = a.updated_at ? new Date(a.updated_at).toLocaleString() : '';
                 return `
                     <div style="border:1px solid #e5e7eb;border-radius:10px;margin-bottom:12px;overflow:hidden">
                         <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#f9fafb;border-bottom:1px solid #f3f4f6">
-                            <span style="font-size:13px;font-weight:700;color:#111827">${Security.escape(meta.label)} — ${Security.escape(a.topic_name)}</span>
+                            <span style="font-size:13px;font-weight:700;color:#111827">${meta.icon} ${Security.escape(meta.label)} — ${Security.escape(a.topic_name)}</span>
                             <span style="font-size:12px;font-weight:700;color:#2563eb">${a.score}/${a.total}</span>
                         </div>
                         <div style="padding:8px 14px">
@@ -667,14 +639,14 @@ function renderAnswersDetail() {
                                 // a background AI lookup (module.blade.php's
                                 // attachActivityReferenceAnswers); until then it's null.
                                 const ungraded = qa.correct === null || qa.correct === undefined;
-                                const color = ungraded ? '#6b7280' : (qa.isCorrect ? '#2563eb' : '#dc2626');
-                                const mark   = ungraded ? '•' : (qa.isCorrect ? '✓' : '✗');
+                                const color = ungraded ? '#6b7280' : (qa.isCorrect ? '#059669' : '#dc2626');
+                                const icon   = ungraded ? '•' : (qa.isCorrect ? '✓' : '✗');
                                 const label  = ungraded ? 'Recorded' : 'Answered';
                                 return `
                                 <div style="padding:8px 0;${i > 0 ? 'border-top:1px solid #f3f4f6' : ''}">
                                     <div style="font-size:12.5px;font-weight:600;color:#374151;margin-bottom:4px">${i + 1}. ${Security.escape(qa.question)}</div>
                                     <div style="font-size:12px;color:${color}">
-                                        ${mark} ${label}: <strong>${Security.escape(String(qa.selected ?? '—'))}</strong>
+                                        ${icon} ${label}: <strong>${Security.escape(String(qa.selected ?? '—'))}</strong>
                                         ${!ungraded ? ` — Correct: <strong>${Security.escape(String(qa.correct))}</strong>` : ''}
                                     </div>
                                 </div>`;
@@ -808,7 +780,7 @@ function renderProgress() {
     const progEl = document.getElementById('progress-list');
 
     if (!students.length) {
-        progEl.innerHTML = `<div class="empty-state"><div class="empty-icon">${icon('trending')}</div><h4>No student data yet</h4><p>Progress will appear here as students complete activities.</p></div>`;
+        progEl.innerHTML = `<div class="empty-state"><div class="empty-icon">📈</div><h4>No student data yet</h4><p>Progress will appear here as students complete activities.</p></div>`;
         return;
     }
 
@@ -826,14 +798,12 @@ function renderProgress() {
             </div>
         </div>`).join('');
 
-    // A single blue ramp, darkest = strongest standing; "Needs Help" stays
-    // red so the students who need attention still stand out.
     const chartEl = document.getElementById('progress-chart');
     const groups  = [
-        { label: 'Excellent', count: students.filter(s => s.status === 'Excellent').length,  color: '#1e40af' },
-        { label: 'Good',      count: students.filter(s => s.status === 'Good').length,       color: '#2563eb' },
-        { label: 'Average',   count: students.filter(s => s.status === 'Average').length,    color: '#3b82f6' },
-        { label: 'In Progress', count: students.filter(s => s.status === 'In Progress').length, color: '#93c5fd' },
+        { label: 'Excellent', count: students.filter(s => s.status === 'Excellent').length,  color: '#2563eb' },
+        { label: 'Good',      count: students.filter(s => s.status === 'Good').length,       color: '#10b981' },
+        { label: 'Average',   count: students.filter(s => s.status === 'Average').length,    color: '#f97316' },
+        { label: 'In Progress', count: students.filter(s => s.status === 'In Progress').length, color: '#1d4ed8' },
         { label: 'Help',      count: students.filter(s => s.status === 'Needs Help').length, color: '#ef4444' },
     ];
     const maxV = Math.max(...groups.map(g => g.count), 1);
@@ -846,7 +816,7 @@ function renderProgress() {
 
     const subjectEl = document.getElementById('subject-progress');
     if (!subjectCompletion.length || !subjectCompletion.some(s => s.pct > 0)) {
-        subjectEl.innerHTML = `<div class="empty-state"><div class="empty-icon">${icon('trending')}</div><h4>No progress data yet</h4><p>Data appears as students complete modules.</p></div>`;
+        subjectEl.innerHTML = '<div class="empty-state"><div class="empty-icon">📈</div><h4>No progress data yet</h4><p>Data appears as students complete modules.</p></div>';
     } else {
         subjectEl.innerHTML = subjectCompletion.map(s => `
             <div class="progress-row">
@@ -887,10 +857,10 @@ function getReportSections() {
     return allSections.length ? allSections : sections;
 }
 
-/** A distinct shade of blue per section, by its position in the sections list —
- *  shared between Reports and Class Record so the same section always gets the
- *  same shade across the dashboard. Every shade keeps white text readable. */
-const SECTION_COLORS = ['#2563eb', '#1e40af', '#1d4ed8', '#1e3a8a'];
+/** A distinct color per section, by its position in the sections list — shared
+ *  between Reports and Class Record so the same section always gets the same
+ *  color across the dashboard. */
+const SECTION_COLORS = ['#3b82f6', '#10b981', '#f97316', '#8b5cf6', '#ec4899', '#06b6d4'];
 function sectionColor(idx) {
     return SECTION_COLORS[idx % SECTION_COLORS.length];
 }
@@ -920,7 +890,7 @@ function showReportExportPicker() {
         denyButtonText: 'Excel',
         cancelButtonText: 'Cancel',
         confirmButtonColor: '#2563eb',
-        denyButtonColor: '#1e40af',
+        denyButtonColor: '#16a34a',
     }).then(async r => {
         if (r.isConfirmed) {
             try {
@@ -1075,8 +1045,8 @@ function scoreOrDash(cell) {
 function classRecordCategoryTable(title, sectionStudents, categoryKey) {
     const topics = classRecordData.topics;
     return `
-        <div>
-            <div class="record-title">${Security.escape(title)}</div>
+        <div style="margin-bottom:18px">
+            <div style="font-weight:600;color:#374151;font-size:13px;margin-bottom:8px">${Security.escape(title)}</div>
             <div class="table-wrap">
                 <table>
                     <thead>
@@ -1092,7 +1062,7 @@ function classRecordCategoryTable(title, sectionStudents, categoryKey) {
                                     <td><b>${Security.escape(s.name)}</b></td>
                                     ${topics.map(t => `<td>${scoreOrDash(s[categoryKey]?.[t.key])}</td>`).join('')}
                                 </tr>`).join('')
-                            : `<tr><td colspan="${topics.length + 1}"><div class="empty-state"><div class="empty-icon">${icon('users')}</div><h4>No students in this section yet</h4></div></td></tr>`}
+                            : `<tr><td colspan="${topics.length + 1}"><div class="empty-state"><div class="empty-icon">👥</div><h4>No students in this section yet</h4></div></td></tr>`}
                     </tbody>
                 </table>
             </div>
@@ -1103,14 +1073,14 @@ function classRecordCategoryTable(title, sectionStudents, categoryKey) {
 function classRecordSummativeTable(sectionStudents) {
     return `
         <div>
-            <div class="record-title">Summative</div>
+            <div style="font-weight:600;color:#374151;font-size:13px;margin-bottom:8px">Summative</div>
             <div class="table-wrap">
                 <table>
                     <thead><tr><th>Name</th><th>Score</th></tr></thead>
                     <tbody>
                         ${sectionStudents.length
                             ? sectionStudents.map(s => `<tr><td><b>${Security.escape(s.name)}</b></td><td>${scoreOrDash(s.summative)}</td></tr>`).join('')
-                            : `<tr><td colspan="2"><div class="empty-state"><div class="empty-icon">${icon('users')}</div><h4>No students in this section yet</h4></div></td></tr>`}
+                            : `<tr><td colspan="2"><div class="empty-state"><div class="empty-icon">👥</div><h4>No students in this section yet</h4></div></td></tr>`}
                     </tbody>
                 </table>
             </div>
@@ -1125,7 +1095,7 @@ function renderClassRecord() {
     if (!reportSections.length) {
         container.innerHTML = `
             <div class="empty-state">
-                <div class="empty-icon">${icon('layers')}</div>
+                <div class="empty-icon">🏫</div>
                 <h4>No sections yet</h4>
                 <p>Create a section first from the Reports page.</p>
             </div>`;
@@ -1134,17 +1104,18 @@ function renderClassRecord() {
 
     container.innerHTML = reportSections.map((sec, idx) => {
         const sectionStudents = classRecordData.students.filter(s => s.section_id === sec.id);
+        const colorHex = sectionColor(idx);
 
         return `
-            <div class="section-card">
-                <div class="section-top">
-                    <div class="section-left">
-                        <div class="marker is-small" style="background:${sectionColor(idx)}">${idx + 1}</div>
-                        <div class="sec-name">${Security.escape(sec.name)}</div>
+            <div style="border:1px solid #e5e7eb;border-left:5px solid ${colorHex};border-radius:16px;margin-bottom:20px;overflow:hidden;background:white;box-shadow:0 1px 3px rgba(0,0,0,0.05)">
+                <div style="padding:18px 24px;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center">
+                    <div style="display:flex;align-items:center;gap:10px">
+                        <span style="width:10px;height:10px;border-radius:50%;background:${colorHex};flex-shrink:0"></span>
+                        <div style="font-weight:700;color:#111827;font-size:16px">${Security.escape(sec.name)}</div>
                     </div>
-                    <div class="sec-meta"><span>${icon('users')}<strong>${sectionStudents.length}</strong> student(s)</span></div>
+                    <div style="font-size:13px;color:#6b7280">${sectionStudents.length} student(s)</div>
                 </div>
-                <div class="record-body">
+                <div style="padding:18px 24px">
                     ${classRecordCategoryTable('Pretest', sectionStudents, 'pretest')}
                     ${classRecordCategoryTable('Posttest', sectionStudents, 'posttest')}
                     ${classRecordCategoryTable('Activity', sectionStudents, 'activity')}
@@ -1171,7 +1142,7 @@ function showClassRecordExportPicker() {
         denyButtonText: 'Excel',
         cancelButtonText: 'Cancel',
         confirmButtonColor: '#2563eb',
-        denyButtonColor: '#1e40af',
+        denyButtonColor: '#16a34a',
     }).then(async r => {
         if (r.isConfirmed) {
             try {
@@ -1351,7 +1322,7 @@ async function loadAndRenderModules() {
     if (grid) {
         grid.innerHTML = `
             <div class="empty-state">
-                <div class="empty-icon">${icon('clock')}</div>
+                <div class="empty-icon">⏳</div>
                 <h4>Loading modules…</h4>
                 <p>Fetching latest status from Supabase.</p>
             </div>`;
@@ -1372,7 +1343,7 @@ async function loadAndRenderModules() {
         if (grid) {
             grid.innerHTML = `
                 <div class="empty-state">
-                    <div class="empty-icon is-error">${icon('alert')}</div>
+                    <div class="empty-icon">⚠️</div>
                     <h4>Could not load modules</h4>
                     <p>${Security.escape(err.message)}</p>
                     <button class="primary-btn" style="margin-top:12px"
@@ -1431,7 +1402,7 @@ function renderSectionsContainer() {
     if (!allSections || allSections.length === 0) {
         container.innerHTML = `
             <div class="empty-state">
-                <div class="empty-icon">${icon('layers')}</div>
+                <div class="empty-icon">🏫</div>
                 <h4>No sections yet</h4>
                 <p>Click "Add Section" to create your first section.</p>
             </div>`;
@@ -1439,6 +1410,8 @@ function renderSectionsContainer() {
     }
 
     container.innerHTML = allSections.map((sec, idx) => {
+        const colorHex = sectionColor(idx);
+
         // Real students in this section, from the already-loaded roster
         // (StudentController::getTeacherStudents), not a placeholder count.
         const sectionStudents = students.filter(s => s.section_id === sec.id);
@@ -1450,54 +1423,71 @@ function renderSectionsContainer() {
         const top = [...sectionStudents].sort((a, b) => b.progress - a.progress)[0];
 
         return `
-            <div class="section-card">
-                <div class="section-top">
-                    <div class="section-left">
-                        <div class="marker" style="background:${sectionColor(idx)}">${idx + 1}</div>
-                        <div style="min-width:0">
-                            <div class="sec-name">${Security.escape(sec.name)}</div>
-                            <div class="sec-meta">
-                                <span>${icon('users')}<strong>${studentCount}</strong> students</span>
-                                <span>${icon('barChart')}Avg <strong>${avgProgress}%</strong></span>
+            <div style="border:1px solid #e5e7eb;border-radius:16px;margin-bottom:20px;overflow:hidden;background:white;box-shadow:0 1px 3px rgba(0,0,0,0.05)">
+                <!-- Section Header -->
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:24px;border-bottom:1px solid #f3f4f6">
+                    <div style="display:flex;align-items:center;gap:16px;flex:1">
+                        <!-- Colored Badge -->
+                        <div style="width:56px;height:56px;background:${colorHex};color:white;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:24px;flex-shrink:0;box-shadow:0 2px 8px ${colorHex}33">
+                            ${idx + 1}
+                        </div>
+                        <!-- Section Info -->
+                        <div>
+                            <div style="font-weight:700;color:#111827;font-size:16px">${Security.escape(sec.name)}</div>
+                            <div style="font-size:13px;color:#6b7280;display:flex;gap:16px;margin-top:6px">
+                                <span>👥 <strong style="color:#4b5563">${studentCount}</strong> students</span>
+                                <span>📊 Avg: <strong style="color:#4b5563">${avgProgress}%</strong></span>
                             </div>
                         </div>
                     </div>
-                    <div class="sec-actions">
-                        <button class="icon-btn edit-btn" data-action="edit-section" data-id="${sec.id}" data-name="${Security.escape(sec.name)}" title="Rename section">
-                            ${icon('edit')}
+                    <!-- Action Icons -->
+                    <div style="display:flex;gap:6px">
+                        <button data-action="edit-section" data-id="${sec.id}" data-name="${Security.escape(sec.name)}"
+                                style="background:none;border:none;cursor:pointer;padding:10px;color:#9ca3af;transition:color 0.2s;border-radius:8px;hover:{background:#f3f4f6;color:#6b7280}">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                            </svg>
                         </button>
-                        <button class="icon-btn del-btn" data-action="delete-section" data-id="${sec.id}" title="Delete section">
-                            ${icon('trash')}
+                        <button data-action="delete-section" data-id="${sec.id}"
+                                style="background:none;border:none;cursor:pointer;padding:10px;color:#9ca3af;transition:color 0.2s;border-radius:8px;hover:{background:#fef2f2;color:#ef4444}">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px">
+                                <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/>
+                            </svg>
                         </button>
                     </div>
                 </div>
-
-                <div class="section-body">
+                
+                <!-- Section Content: real student roster -->
+                <div style="padding:16px 24px;background:#fafbfc">
                     ${studentCount === 0
-                        ? `<div class="empty-state">
-                               <div class="empty-icon">${icon('users')}</div>
-                               <h4>No students in this section yet</h4>
+                        ? `<div style="text-align:center;padding:32px 0">
+                               <div style="color:#d1d5db;font-size:64px;margin-bottom:12px;opacity:0.8">👥</div>
+                               <div style="color:#9ca3af;font-size:15px;font-weight:500">No students in this section yet</div>
                            </div>`
                         : sectionStudents.map(s => `
-                            <div class="section-student">
-                                <div class="section-student-name">
-                                    <div class="student-avatar" style="width:28px;height:28px;font-size:10px">${Security.escape(initials(s.name))}</div>
-                                    <span>${Security.escape(s.name)}</span>
+                            <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f3f4f6">
+                                <div style="display:flex;align-items:center;gap:10px;min-width:0">
+                                    <div class="student-avatar" style="width:28px;height:28px;font-size:10px;flex-shrink:0">${Security.escape(initials(s.name))}</div>
+                                    <span style="font-size:13.5px;color:#111827;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${Security.escape(s.name)}</span>
                                 </div>
-                                <div class="section-student-meta">
+                                <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
                                     <span class="status-badge ${badgeClass(s.status)}">${Security.escape(s.status)}</span>
-                                    <span class="section-student-pct" style="color:${progressColor(s.progress)}">${s.progress}%</span>
-                                    <button class="icon-btn edit-btn is-plain" data-action="view-answers" data-id="${s.id}" data-name="${Security.escape(s.name)}" title="View this student's quiz answers">
-                                        ${icon('check')}
+                                    <span style="font-size:12.5px;font-weight:700;color:${progressColor(s.progress)};width:36px;text-align:right">${s.progress}%</span>
+                                    <button data-action="view-answers" data-id="${s.id}" data-name="${Security.escape(s.name)}" title="View this student's quiz answers"
+                                            style="background:none;border:none;cursor:pointer;padding:6px;color:#9ca3af;border-radius:6px;display:flex">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px">
+                                            <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                                        </svg>
                                     </button>
                                 </div>
                             </div>`).join('')
                     }
                 </div>
 
-                <div class="sec-footer">
-                    <span>Top: <strong>${top ? Security.escape(top.name) : 'N/A'}</strong></span>
-                    <span>Needs attention: <strong>${needsAttention} students</strong></span>
+                <!-- Section Footer -->
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 24px;background:#f9fafb;border-top:1px solid #f3f4f6;font-size:13px;color:#6b7280">
+                    <span>Top: <strong style="color:#111827">${top ? Security.escape(top.name) : 'N/A'}</strong></span>
+                    <span>Needs attention: <strong style="color:#111827">${needsAttention} students</strong></span>
                 </div>
             </div>
         `;
@@ -1538,13 +1528,13 @@ function openAddSection() {
                 </p>
             </div>`,
         confirmButtonText: 'Add Section',
-        confirmButtonColor: '#2563eb',
+        confirmButtonColor: '#1E88E5',
         showCancelButton: true,
         cancelButtonText: 'Cancel',
         focusConfirm: false,
         didOpen: () => {
             const input = document.getElementById('swal-section-name');
-            input.addEventListener('focus', () => { input.style.background = '#fff'; input.style.borderColor = '#2563eb'; });
+            input.addEventListener('focus', () => { input.style.background = '#fff'; input.style.borderColor = '#1E88E5'; });
             input.addEventListener('blur', () => { input.style.background = '#F1F5F9'; input.style.borderColor = 'transparent'; });
         },
         preConfirm: () => {
@@ -1593,7 +1583,7 @@ function editSection(id, currentName) {
         inputValue: currentName,
         inputAttributes: { autocomplete: 'off' },
         confirmButtonText: 'Save',
-        confirmButtonColor: '#2563eb',
+        confirmButtonColor: '#1E88E5',
         showCancelButton: true,
         inputValidator: v => !v.trim() && 'Section name cannot be empty',
     }).then(async result => {
@@ -1658,7 +1648,7 @@ function renderModules() {
     if (!filtered.length) {
         grid.innerHTML = `
             <div class="empty-state">
-                <div class="empty-icon">${icon('package')}</div>
+                <div class="empty-icon">📦</div>
                 <h4>${modulesData.length ? 'No modules match your search' : 'No modules uploaded yet'}</h4>
                 <p>${modulesData.length ? 'Try a different search or topic filter.' : 'Click "+ Add Module" to upload your first file.'}</p>
             </div>`;
@@ -1682,23 +1672,23 @@ function renderModules() {
             : '';
 
         const rejectedHint = m.status === 'Rejected'
-            ? `<div class="module-hint is-rejected">
-                   ${icon('alert')}
-                   <span>Rejected by admin — please review and re-upload if needed.</span>
+            ? `<div style="margin-top:6px;padding:6px 10px;background:#fef2f2;border-radius:6px;
+                           font-size:11px;color:#dc2626;font-weight:600">
+                   ⚠️ Rejected by admin — please review and re-upload if needed.
                </div>`
             : '';
 
         const pendingHint = m.status === 'Pending Review'
-            ? `<div class="module-hint is-pending">
-                   ${icon('clock')}
-                   <span>Awaiting admin approval before students can access this module.</span>
+            ? `<div style="margin-top:6px;padding:6px 10px;background:#fff7ed;border-radius:6px;
+                           font-size:11px;color:#ea580c;font-weight:600">
+                   🕐 Awaiting admin approval before students can access this module.
                </div>`
             : '';
 
         return `
         <div class="module-card">
             <div class="module-card-header">
-                <div class="module-icon-wrap blue-theme">
+                <div class="module-icon-wrap ${topicTheme(m.topic)}">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                          stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px">
                         <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
@@ -1723,10 +1713,13 @@ function renderModules() {
                 <div class="module-card-actions">
                     <button class="tbl-btn view" data-action="view-module" data-id="${Security.escape(String(m.id))}">View</button>
                     ${m.status === 'Published'
-                        ? `<button class="tbl-btn accent" data-action="send-to-downloads" data-id="${Security.escape(String(m.id))}">Send</button>`
+                        ? `<button class="tbl-btn" data-action="send-to-downloads" data-id="${Security.escape(String(m.id))}"
+                               style="background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe;font-weight:700">
+                               📥 Send
+                           </button>`
                         : `<button class="tbl-btn edit" data-action="edit-module" data-id="${Security.escape(String(m.id))}">Edit</button>`
                     }
-                    <button class="tbl-btn del" data-action="delete-module" data-id="${Security.escape(String(m.id))}">Delete</button>
+                    <button class="tbl-btn feedback" data-action="delete-module" data-id="${Security.escape(String(m.id))}">Delete</button>
                 </div>
             </div>
         </div>`;
@@ -2002,7 +1995,7 @@ function sendToDownloads(id) {
 
                 <div style="display:flex;flex-direction:column;gap:8px">
 
-                    <label for="r-mod1" style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border-radius:10px;border:1.5px solid #e5e7eb;background:#fff;cursor:pointer" id="lbl-mod1">
+                    <label for="r-mod1" style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border-radius:10px;border:2px solid #bfdbfe;background:#eff6ff;cursor:pointer" id="lbl-mod1">
                         <input type="radio" id="r-mod1" name="swal-mod" value="Module 1: Sequences and Series"
                                ${preselect === 'mod1' ? 'checked' : ''}
                                style="margin-top:2px;accent-color:#2563eb;width:15px;height:15px;flex-shrink:0">
@@ -2012,23 +2005,23 @@ function sendToDownloads(id) {
                         </div>
                     </label>
 
-                    <label for="r-mod2" style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border-radius:10px;border:1.5px solid #e5e7eb;background:#fff;cursor:pointer" id="lbl-mod2">
+                    <label for="r-mod2" style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border-radius:10px;border:0.5px solid #e5e7eb;background:#fff;cursor:pointer" id="lbl-mod2">
                         <input type="radio" id="r-mod2" name="swal-mod" value="Module 2: Polynomials"
                                ${preselect === 'mod2' ? 'checked' : ''}
-                               style="margin-top:2px;accent-color:#2563eb;width:15px;height:15px;flex-shrink:0">
+                               style="margin-top:2px;accent-color:#16a34a;width:15px;height:15px;flex-shrink:0">
                         <div>
-                            <div style="font-size:13px;font-weight:700;color:#1e40af">Module 2</div>
-                            <div style="font-size:12px;color:#2563eb;font-weight:600;margin-top:1px">Polynomials and Polynomial Equations</div>
+                            <div style="font-size:13px;font-weight:700;color:#14532d">Module 2</div>
+                            <div style="font-size:12px;color:#16a34a;font-weight:600;margin-top:1px">Polynomials and Polynomial Equations</div>    
                         </div>
                     </label>
 
-                    <label for="r-mod3" style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border-radius:10px;border:1.5px solid #e5e7eb;background:#fff;cursor:pointer" id="lbl-mod3">
+                    <label for="r-mod3" style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border-radius:10px;border:0.5px solid #e5e7eb;background:#fff;cursor:pointer" id="lbl-mod3">
                         <input type="radio" id="r-mod3" name="swal-mod" value="Module 3: Advanced Equations"
                                ${preselect === 'mod3' ? 'checked' : ''}
-                               style="margin-top:2px;accent-color:#2563eb;width:15px;height:15px;flex-shrink:0">
+                               style="margin-top:2px;accent-color:#d97706;width:15px;height:15px;flex-shrink:0">
                         <div>
-                            <div style="font-size:13px;font-weight:700;color:#1e40af">Module 3</div>
-                            <div style="font-size:12px;color:#2563eb;font-weight:600;margin-top:1px">Advanced Equations and Functions</div>
+                            <div style="font-size:13px;font-weight:700;color:#78350f">Module 3</div>
+                            <div style="font-size:12px;color:#d97706;font-weight:600;margin-top:1px">Advanced Equations and Functions</div>
                         </div>
                     </label>
                 </div>
@@ -2036,18 +2029,28 @@ function sendToDownloads(id) {
         showCancelButton: true,
         confirmButtonColor: '#2563eb',
         cancelButtonColor: '#6b7280',
-        confirmButtonText: 'Send to downloads',
+        confirmButtonText: '📥 Send to downloads',
         cancelButtonText: 'Cancel',
         didOpen: () => {
             // Live highlight whichever radio is selected
             const radios = document.querySelectorAll('input[name="swal-mod"]');
+            const lbls   = {
+                'r-mod1': { border: '2px solid #bfdbfe', bg: '#eff6ff' },
+                'r-mod2': { border: '2px solid #bbf7d0', bg: '#f0fdf4' },
+                'r-mod3': { border: '2px solid #fde68a', bg: '#fffbeb' },
+            };
 
             function refreshHighlight() {
                 radios.forEach(r => {
                     const lbl = document.getElementById('lbl-' + r.id.replace('r-', ''));
                     if (!lbl) return;
-                    lbl.style.borderColor = r.checked ? '#2563eb' : '#e5e7eb';
-                    lbl.style.background  = r.checked ? '#eff6ff' : '#fff';
+                    if (r.checked) {
+                        lbl.style.border      = lbls[r.id].border;
+                        lbl.style.background  = lbls[r.id].bg;
+                    } else {
+                        lbl.style.border      = '0.5px solid #e5e7eb';
+                        lbl.style.background  = '#fff';
+                    }
                 });
             }
 
@@ -2087,6 +2090,13 @@ function sendToDownloads(id) {
             warn('Failed', err.message || 'Could not update the module. Please try again.');
         }
     });
+}
+
+function topicTheme(topic) {
+    if (topic.includes('Module 1') || topic.includes('Sequences')) return 'blue-theme';
+    if (topic.includes('Module 2') || topic.includes('Polynomials')) return 'green-theme';
+    if (topic.includes('Module 3') || topic.includes('Advanced')) return 'orange-theme';
+    return 'blue-theme';
 }
 
 /* ============================================================
@@ -2150,13 +2160,13 @@ function initFileUpload() {
 function renderProfile() {
     const actEl = document.getElementById('profile-activity');
     if (!activity.length) {
-        actEl.innerHTML = `<div class="empty-state"><div class="empty-icon">${icon('clipboard')}</div><h4>No recent activity</h4><p>Your actions will appear here.</p></div>`;
+        actEl.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><h4>No recent activity</h4><p>Your actions will appear here.</p></div>`;
         return;
     }
     actEl.innerHTML = activity.slice(0, 5).map(a => `
         <div class="student-item" style="cursor:default">
             <div class="student-info">
-                <div class="student-avatar">${Security.escape(initials(a.title))}</div>
+                <div class="student-avatar" style="background:linear-gradient(135deg,#60a5fa,#2563eb)">${Security.escape(initials(a.title))}</div>
                 <div>
                     <div class="student-name">${Security.escape(a.title)}</div>
                     <div class="student-meta">${Security.escape(a.sub)}</div>
@@ -2251,7 +2261,7 @@ function confirmLogout() {
     Swal.fire({
         title: 'Are you sure?', text: 'You will be logged out of your account.',
         icon: 'warning', showCancelButton: true,
-        confirmButtonColor: '#2563eb', cancelButtonColor: '#6b7280',
+        confirmButtonColor: '#2563eb', cancelButtonColor: '#d33',
         confirmButtonText: 'Yes, logout!', cancelButtonText: 'Cancel',
     }).then(r => {
         if (r.isConfirmed) {
@@ -2298,17 +2308,17 @@ function badgeClass(status) {
 // instead of a pill badge.
 function statusTextColor(status) {
     return {
-        Excellent: '#1e40af',
-        Good: '#1e40af',
-        Average: '#2563eb',
-        'In Progress': '#2563eb',
+        Excellent: '#15803d',
+        Good: '#15803d',
+        Average: '#b45309',
+        'In Progress': '#1d4ed8',
         'Needs Help': '#b91c1c',
-        'Not Started': '#64748b',
+        'Not Started': '#4b5563',
     }[status] || '#111827';
 }
 function progressColor(pct) {
-    if (pct >= 100) return '#1e40af'; // deep blue — complete
-    if (pct <= 0) return '#94a3b8'; // gray — not started
+    if (pct >= 100) return '#10b981'; // green — complete
+    if (pct <= 0) return '#ef4444'; // red — not started
     return '#2563eb'; // blue — in progress
 }
 function makePgBtn(label, disabled, handler) {
@@ -3035,9 +3045,9 @@ function renderQuizResults(quiz) {
     const tabPre  = document.getElementById('tab-pretest');
     const tabAct  = document.getElementById('tab-activity');
     const tabPost = document.getElementById('tab-posttest');
-    if (tabPre)  tabPre.innerHTML  = `Pre-Test <span class="quiz-tab-count">${quiz.pretest.length} items</span>`;
-    if (tabAct)  tabAct.innerHTML  = `Activity <span class="quiz-tab-count">${quiz.activity.length} items</span>`;
-    if (tabPost) tabPost.innerHTML = `Post-Test <span class="quiz-tab-count">${quiz.posttest.length} items</span>`;
+    if (tabPre)  tabPre.innerHTML  = `📋 Pre-Test <span class="quiz-tab-count">${quiz.pretest.length} items</span>`;
+    if (tabAct)  tabAct.innerHTML  = `⚡ Activity <span class="quiz-tab-count">${quiz.activity.length} items</span>`;
+    if (tabPost) tabPost.innerHTML = `✅ Post-Test <span class="quiz-tab-count">${quiz.posttest.length} items</span>`;
 
     renderQuestionList('pretest-questions',  quiz.pretest,  'pretest');
     renderQuestionList('posttest-questions', quiz.posttest, 'posttest');
@@ -3056,7 +3066,7 @@ function renderQuestionList(containerId, questions, type) {
     if (!el || !Array.isArray(questions)) return;
 
     if (!questions.length) {
-        el.innerHTML = `<div class="empty-state"><div class="empty-icon">${icon('inbox')}</div><h4>No questions generated</h4><p>Try regenerating the quiz.</p></div>`;
+        el.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div><h4>No questions generated</h4><p>Try regenerating the quiz.</p></div>`;
         return;
     }
 
@@ -3122,7 +3132,7 @@ function renderActivityList(containerId, activities) {
     if (!el || !Array.isArray(activities)) return;
 
     if (!activities.length) {
-        el.innerHTML = `<div class="empty-state"><div class="empty-icon">${icon('zap')}</div><h4>No activity items</h4></div>`;
+        el.innerHTML = `<div class="empty-state"><div class="empty-icon">⚡</div><h4>No activity items</h4></div>`;
         return;
     }
 
@@ -3144,7 +3154,7 @@ function renderActivityList(containerId, activities) {
                      data-idx="${idx}"
                      data-field="instruction"
                      title="Click to edit instruction"
-                >${Security.escape(a.instruction)}</div>` : ''}
+                >📝 ${Security.escape(a.instruction)}</div>` : ''}
                 <div class="quiz-edit-hint">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                          style="width:11px;height:11px;flex-shrink:0">
@@ -3328,7 +3338,7 @@ function renderSymbolPalette() {
 
     mount.innerHTML = `
         <div class="quiz-symbol-palette">
-            <input type="text" class="quiz-symbol-search" placeholder="Search symbols by name (e.g. 'sum', 'pi', 'root')…"
+            <input type="text" class="quiz-symbol-search" placeholder="🔍 Search symbols by name (e.g. 'sum', 'pi', 'root')…"
                    value="${Security.escape(query)}" maxlength="40">
             ${recentsHtml}
             ${query ? '' : `<div class="quiz-symbol-tabs">${tabsHtml}</div>`}
@@ -3495,7 +3505,7 @@ function injectQuizEditStyles() {
     box-shadow: 0 0 0 2px #2563eb55;
 }
 .quiz-edit-saved {
-    background: #dbeafe !important;
+    background: #d1fae5 !important;
     transition: background .4s;
 }
 
@@ -3527,8 +3537,8 @@ function injectQuizEditStyles() {
     flex-shrink: 0;
 }
 .quiz-opt-radio-dot.is-correct {
-    border-color: #2563eb;
-    background: #2563eb;
+    border-color: #16a34a;
+    background: #16a34a;
     box-shadow: inset 0 0 0 3px #fff;
 }
 .quiz-opt-radio-wrap:hover .quiz-opt-radio-dot { border-color: #2563eb; }
@@ -3581,14 +3591,14 @@ function injectQuizEditStyles() {
 }
 .quiz-symbol-search {
     width: 100%;
-    padding: 8px 12px 8px 34px;
+    padding: 8px 12px;
     margin-bottom: 10px;
     border: 1.5px solid #e5e7eb;
     border-radius: 8px;
     font-family: inherit;
     font-size: 12.5px;
     color: #111827;
-    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E") no-repeat 11px center / 14px 14px;
+    background: #fff;
     outline: none;
     transition: border-color .15s;
 }
@@ -3729,7 +3739,7 @@ async function saveQuizToSupabase() {
             showCancelButton:  true,
             confirmButtonColor:'#2563eb',
             cancelButtonColor: '#6b7280',
-            confirmButtonText: 'Yes, publish',
+            confirmButtonText: '📤 Yes, publish',
             cancelButtonText:  'Not yet',
         });
 
@@ -3784,7 +3794,7 @@ function renderSavedQuizzes() {
     if (!savedQuizzes.length) {
         el.innerHTML = `
             <div class="empty-state">
-                <div class="empty-icon">${icon('folder')}</div>
+                <div class="empty-icon">🗂️</div>
                 <h4>No saved quizzes yet</h4>
                 <p>Generate and save a quiz to see it here.</p>
             </div>`;
@@ -3793,7 +3803,7 @@ function renderSavedQuizzes() {
 
     el.innerHTML = savedQuizzes.map((q, idx) => `
         <div class="saved-quiz-item" style="animation-delay:${idx * 0.05}s">
-            <div class="saved-quiz-icon">${icon('help')}</div>
+            <div class="saved-quiz-icon">❓</div>
             <div class="saved-quiz-info">
                 <div class="saved-quiz-title">${Security.escape(q.activityLabel || q.topicLabel || 'Quiz')}</div>
                 <div class="saved-quiz-meta">
@@ -3805,7 +3815,7 @@ function renderSavedQuizzes() {
             <div class="saved-quiz-actions" style="display:flex;gap:6px;flex-shrink:0">
                 <button class="tbl-btn view"     data-action="view-saved-quiz" data-idx="${idx}">View</button>
                 <button class="tbl-btn edit"     data-action="edit-saved-quiz" data-idx="${idx}">Edit</button>
-                <button class="tbl-btn del" data-action="delete-saved-quiz" data-idx="${idx}">Delete</button>
+                <button class="tbl-btn feedback" data-action="delete-saved-quiz" data-idx="${idx}">Delete</button>
             </div>
         </div>`).join('');
 }
@@ -3846,10 +3856,10 @@ function viewSavedQuiz(idx) {
         return acts.map((a, i) => `
             <div class="modal-q-item">
                 <div style="display:flex;align-items:flex-start;gap:8px">
-                    <span class="modal-q-num">${i + 1}</span>
+                    <span class="modal-q-num" style="background:var(--purple)">${i + 1}</span>
                     <div>
                         <div class="modal-q-text">${Security.escape(a.question)}</div>
-                        ${a.instruction ? `<div style="font-size:12px;color:var(--text-3);margin-top:4px">${Security.escape(a.instruction)}</div>` : ''}
+                        ${a.instruction ? `<div style="font-size:12px;color:var(--text-3);margin-top:4px">📝 ${Security.escape(a.instruction)}</div>` : ''}
                     </div>
                 </div>
             </div>`).join('');
@@ -3860,11 +3870,11 @@ function viewSavedQuiz(idx) {
             <b style="color:var(--text-2)">${Security.escape(q.topicLabel || '')}</b> ·
             ${Security.escape(q.grade || '')} · ${Security.escape(q.difficulty || '')} · ${Security.escape(q.createdAt || '')}
         </div>
-        <div class="modal-q-heading">Pre-Test (${(q.pretest || []).length} items)</div>
+        <div style="font-size:14px;font-weight:800;color:var(--blue);margin-bottom:10px">📋 Pre-Test (${(q.pretest || []).length} items)</div>
         ${renderModalQs(q.pretest)}
-        <div class="modal-q-heading">Activity (${(q.activity || []).length} items)</div>
+        <div style="font-size:14px;font-weight:800;color:var(--purple);margin:16px 0 10px">⚡ Activity (${(q.activity || []).length} items)</div>
         ${renderActivityModal(q.activity)}
-        <div class="modal-q-heading">Post-Test (${(q.posttest || []).length} items)</div>
+        <div style="font-size:14px;font-weight:800;color:var(--green);margin:16px 0 10px">✅ Post-Test (${(q.posttest || []).length} items)</div>
         ${renderModalQs(q.posttest)}
     `;
 
@@ -3888,22 +3898,22 @@ async function editSavedQuiz(idx) {
                 </p>
                 <div style="display:flex;flex-direction:column;gap:10px">
                     <div style="padding:14px;border-radius:10px;border:1.5px solid #bfdbfe;background:#eff6ff">
-                        <div style="font-size:13px;font-weight:700;color:#1e40af;margin-bottom:4px">Manual Edit</div>
-                        <div style="font-size:12px;color:#2563eb">Edit questions, options, and answers directly</div>
+                        <div style="font-size:13px;font-weight:700;color:#1e40af;margin-bottom:4px">✏️ Manual Edit</div>
+                        <div style="font-size:12px;color:#3b82f6">Edit questions, options, and answers directly</div>
                     </div>
-                    <div style="padding:14px;border-radius:10px;border:1.5px solid #e5e7eb;background:#fff">
-                        <div style="font-size:13px;font-weight:700;color:#1e40af;margin-bottom:4px">Re-generate with AI</div>
-                        <div style="font-size:12px;color:#6b7280">Generate brand new questions for this topic</div>
+                    <div style="padding:14px;border-radius:10px;border:1.5px solid #bbf7d0;background:#f0fdf4">
+                        <div style="font-size:13px;font-weight:700;color:#065f46;margin-bottom:4px">🤖 Re-generate with AI</div>
+                        <div style="font-size:12px;color:#10b981">Generate brand new questions for this topic</div>
                     </div>
                 </div>
             </div>`,
         showCancelButton:   true,
         showDenyButton:     true,
         confirmButtonColor: '#2563eb',
-        denyButtonColor:    '#1e40af',
+        denyButtonColor:    '#10b981',
         cancelButtonColor:  '#6b7280',
-        confirmButtonText:  'Manual Edit',
-        denyButtonText:     'Re-generate',
+        confirmButtonText:  '✏️ Manual Edit',
+        denyButtonText:     '🤖 Re-generate',
         cancelButtonText:   'Cancel',
     });
 
@@ -3980,7 +3990,7 @@ async function reGenerateQuiz(idx) {
     navigate('quiz');
 
     await Swal.fire({
-        title:             'Re-generate Quiz?',
+        title:             '🤖 Re-generate Quiz?',
         html:              `<p style="font-size:13px;color:#6b7280;font-family:'Plus Jakarta Sans',sans-serif">
                                This will generate new questions for<br>
                                <strong style="color:#111827">${Security.escape(q.activityLabel || q.topicLabel)}</strong><br><br>
@@ -3988,9 +3998,9 @@ async function reGenerateQuiz(idx) {
                            </p>`,
         icon:              'question',
         showCancelButton:  true,
-        confirmButtonColor:'#2563eb',
+        confirmButtonColor:'#10b981',
         cancelButtonColor: '#6b7280',
-        confirmButtonText: 'Generate Now',
+        confirmButtonText: '🤖 Generate Now',
         cancelButtonText:  'Cancel',
     }).then(async r => {
         if (r.isConfirmed) {
@@ -4108,7 +4118,7 @@ async function publishCurrentQuiz({ skipConfirm = false } = {}) {
             showCancelButton:  true,
             confirmButtonColor:'#2563eb',
             cancelButtonColor: '#6b7280',
-            confirmButtonText: 'Publish',
+            confirmButtonText: '📤 Publish',
             cancelButtonText:  'Cancel',
         });
 
@@ -4133,7 +4143,7 @@ async function publishCurrentQuiz({ skipConfirm = false } = {}) {
                 showCancelButton:  true,
                 confirmButtonColor:'#2563eb',
                 cancelButtonColor: '#6b7280',
-                confirmButtonText: 'Yes, Replace',
+                confirmButtonText: '🔄 Yes, Replace',
                 cancelButtonText:  'Cancel',
             });
 
@@ -4215,7 +4225,7 @@ async function renderPublishedPanel() {
     if (!rows.length) {
         el.innerHTML = `
             <div class="empty-state">
-                <div class="empty-icon">${icon('inbox')}</div>
+                <div class="empty-icon">📭</div>
                 <h4>No published quizzes</h4>
                 <p>Generate a quiz and click "Publish to students" to send it live.</p>
             </div>`;
@@ -4229,8 +4239,8 @@ async function renderPublishedPanel() {
         const actLen  = safeParseJSON(r.activity, []).length;
         const date    = formatDate(r.published_at);
         return `
-        <div class="saved-quiz-item is-published">
-            <div class="saved-quiz-icon">${icon('send')}</div>
+        <div class="saved-quiz-item" style="border-left:3px solid #2563eb">
+            <div class="saved-quiz-icon" style="background:#eff6ff;color:#2563eb">📤</div>
             <div class="saved-quiz-info">
                 <div class="saved-quiz-title">${Security.escape(label)}</div>
                 <div class="saved-quiz-meta">
@@ -4239,7 +4249,7 @@ async function renderPublishedPanel() {
                 </div>
             </div>
             <div class="saved-quiz-actions">
-                <button class="tbl-btn del"
+                <button class="tbl-btn feedback"
                         data-action="unpublish" data-topic-key="${Security.escape(r.topic_key)}" data-label="${Security.escape(label)}">
                     Unpublish
                 </button>
@@ -4360,7 +4370,7 @@ async function renderTopicManager() {
                         letter-spacing:.08em;margin-bottom:8px">Custom Topics</div>
             ${customTopics.map(t => `
             <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;
-                        border-radius:8px;background:#eff6ff;border:1px solid #bfdbfe;
+                        border-radius:8px;background:#faf5ff;border:1px solid #e9d5ff;
                         margin-bottom:5px">
                 <span style="font-size:12px;font-weight:600;color:#374151;flex:1">
                     ${Security.escape(t.topic_name)}
@@ -4368,7 +4378,7 @@ async function renderTopicManager() {
                         ${Security.escape(t.module_key)}
                     </span>
                 </span>
-                <button class="tbl-btn del" style="padding:4px 10px;font-size:11px"
+                <button class="tbl-btn feedback" style="padding:4px 10px;font-size:11px"
                         data-action="remove-custom-topic" data-id="${Security.escape(t.id)}" data-name="${Security.escape(t.topic_name)}">
                     Remove
                 </button>

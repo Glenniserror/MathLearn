@@ -110,7 +110,7 @@
             <button class="sidebar-item" data-page="feedback" style="position:relative">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                 Feedback
-                <span id="feedback-unread-badge" class="nav-badge" style="display:none"></span>
+                <span id="feedback-unread-badge" style="display:none;position:absolute;top:6px;left:26px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:999px;min-width:16px;height:16px;line-height:16px;text-align:center;padding:0 4px;"></span>
             </button>
             <button class="sidebar-item" data-page="profile">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -243,7 +243,7 @@
                         </div>
                     </div>
                     <div class="action-card">
-                        <div class="action-icon-wrap blue-theme">
+                        <div class="action-icon-wrap green-theme">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                         </div>
                         <div class="action-content">
@@ -343,15 +343,15 @@
 
                     <div class="progress-row">
                         <div class="progress-label"><span>Sequences and Series</span><span id="progress-mod1-pct">0%</span></div>
-                        <div class="progress-bar"><div class="progress-fill-bar" id="progress-mod1-fill" style="width:0%; background:var(--blue)"></div></div>
+                        <div class="progress-bar"><div class="progress-fill-bar" id="progress-mod1-fill" style="width:0%; background:var(--red)"></div></div>
                     </div>
                     <div class="progress-row">
                         <div class="progress-label"><span>Polynomials and Polynomial Equations</span><span id="progress-mod2-pct">0%</span></div>
-                        <div class="progress-bar"><div class="progress-fill-bar" id="progress-mod2-fill" style="width:0%; background:var(--blue)"></div></div>
+                        <div class="progress-bar"><div class="progress-fill-bar" id="progress-mod2-fill" style="width:0%; background:var(--red)"></div></div>
                     </div>
                     <div class="progress-row" style="margin-bottom:0">
                         <div class="progress-label"><span>Advanced Equations and Functions</span><span id="progress-mod3-pct">0%</span></div>
-                        <div class="progress-bar"><div class="progress-fill-bar" id="progress-mod3-fill" style="width:0%; background:var(--blue)"></div></div>
+                        <div class="progress-bar"><div class="progress-fill-bar" id="progress-mod3-fill" style="width:0%; background:var(--red)"></div></div>
                     </div>
                 </section>
 
@@ -359,9 +359,7 @@
                     <div class="section-label">Recent Activity</div>
                     <div class="section-sub">Your latest learning events</div>
                     <div class="empty-state" id="recent-activity-empty">
-                        <div class="empty-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-                        </div>
+                        <div class="empty-icon">📋</div>
                         <h4>No activity yet</h4>
                         <p>Start a module to track your progress here.</p>
                     </div>
@@ -378,9 +376,7 @@
 
                 <section class="modules-container">
                     <div class="empty-state" id="feedback-empty">
-                        <div class="empty-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                        </div>
+                        <div class="empty-icon">💬</div>
                         <h4>No feedback yet</h4>
                         <p>Your teacher's feedback will appear here.</p>
                     </div>
@@ -448,7 +444,7 @@
             <!-- ===== DOWNLOADS PAGE ===== -->
             <div class="page" id="page-downloads">
                 <div class="hero-section">
-                    <h1 class="welcome-title">Offline Materials</h1>
+                    <h1 class="welcome-title">Offline Materials 📥</h1>
                     <p class="welcome-subtitle">Download assessments and worksheets to practice offline</p>
                 </div>
 
@@ -459,7 +455,7 @@
                     <div class="section-sub">Practice worksheets and assessment sheets</div>
 
                     <div class="download-item">
-                        <div class="download-icon blue-theme">
+                        <div class="download-icon green-theme">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                         </div>
                         <div class="download-info">
@@ -472,7 +468,7 @@
                     </div>
                     
                     <div class="download-item">
-                        <div class="download-icon blue-theme">
+                        <div class="download-icon green-theme">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                         </div>
                         <div class="download-info">
@@ -485,7 +481,7 @@
                     </div>
 
                     <div class="download-item">
-                        <div class="download-icon blue-theme">
+                        <div class="download-icon green-theme">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                         </div>
                         <div class="download-info">
@@ -498,7 +494,7 @@
                     </div>
 
                     <div class="download-item">
-                        <div class="download-icon blue-theme">
+                        <div class="download-icon green-theme">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                         </div>
                         <div class="download-info">
@@ -511,7 +507,7 @@
                     </div>
 
                     <div class="download-item">
-                        <div class="download-icon blue-theme">
+                        <div class="download-icon green-theme">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                         </div>
                         <div class="download-info">
@@ -529,7 +525,7 @@
                     <div class="section-sub">Practice worksheets and assessment sheets</div>
 
                     <div class="download-item">
-                        <div class="download-icon blue-theme">
+                        <div class="download-icon orange-theme">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                         </div>
                         <div class="download-info">
@@ -542,7 +538,7 @@
                     </div>
 
                     <div class="download-item">
-                        <div class="download-icon blue-theme">
+                        <div class="download-icon orange-theme">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                         </div>
                         <div class="download-info">
@@ -555,7 +551,7 @@
                     </div>
 
                     <div class="download-item">
-                        <div class="download-icon blue-theme">
+                        <div class="download-icon orange-theme">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                         </div>
                         <div class="download-info">
@@ -573,7 +569,7 @@
                     <div class="section-sub">Practice worksheets and assessment sheets</div>
 
                     <div class="download-item">
-                        <div class="download-icon blue-theme">
+                        <div class="download-icon purple-theme">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                         </div>
                         <div class="download-info">
@@ -586,7 +582,7 @@
                     </div>
 
                     <div class="download-item">
-                        <div class="download-icon blue-theme">
+                        <div class="download-icon purple-theme">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                         </div>
                         <div class="download-info">
@@ -599,7 +595,7 @@
                     </div>
 
                     <div class="download-item">
-                        <div class="download-icon blue-theme">
+                        <div class="download-icon purple-theme">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                         </div>
                         <div class="download-info">
@@ -612,7 +608,7 @@
                     </div>
 
                     <div class="download-item">
-                        <div class="download-icon blue-theme">
+                        <div class="download-icon purple-theme">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                         </div>
                         <div class="download-info">
@@ -629,7 +625,7 @@
             <!-- ===== SUMMATIVE TEST PAGE ===== -->
             <div class="page" id="page-summative">
                 <div class="hero-section">
-                    <h1 class="welcome-title">Summative Test</h1>
+                    <h1 class="welcome-title">Summative Test 📋</h1>
                     <p class="welcome-subtitle">Answer all questions carefully. You can review before submitting.</p>
                 </div>
 
@@ -640,13 +636,11 @@
 
                 <!-- LOCK STATUS INDICATOR -->
                 <div id="summative-lock-notice" style="display:none; margin-bottom:20px;">
-                    <section class="notice-card">
-                        <div class="notice-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                        </div>
-                        <div class="notice-title">Test Not Yet Available</div>
-                        <div class="notice-text">Complete all 3 modules first to unlock this comprehensive test.</div>
-                        <div id="lock-progress-display" class="notice-progress"></div>
+                    <section class="modules-container" style="background: #fef3c7; border: 1px solid #fcd34d; text-align: center; padding: 20px; opacity: 1; animation: none;">
+                        <div style="font-size: 32px; margin-bottom: 8px;">🔒</div>
+                        <div class="section-label" style="color: #b45309; margin-bottom: 4px;">Test Not Yet Available</div>
+                        <div style="font-size: 13px; color: #92400e; margin-bottom: 16px;">Complete all 3 modules first to unlock this comprehensive test.</div>
+                        <div id="lock-progress-display" style="text-align: left; margin-top: 12px;"></div>
                     </section>
                 </div>
 
@@ -655,21 +649,15 @@
                         <div class="section-label">Test Instructions</div>
                         <div class="section-sub">Read before you begin</div>
                         <div class="download-item" style="border:none; padding:0; margin-bottom:10px;">
-                            <div class="download-icon blue-theme">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-                            </div>
+                            <div class="download-icon blue-theme">📖</div>
                             <div class="download-info"><span class="download-name">This test covers all 3 modules.</span><span class="download-meta">Sequences · Polynomials · Advanced Equations</span></div>
                         </div>
                         <div class="download-item" style="border:none; padding:0; margin-bottom:10px;">
-                            <div class="download-icon blue-theme">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                            </div>
+                            <div class="download-icon orange-theme">❓</div>
                             <div class="download-info"><span class="download-name" id="quiz-instructions-count">Multiple choice questions</span><span class="download-meta">Choose the best answer for each item</span></div>
                         </div>
                         <div class="download-item" style="border:none; padding:0; margin-bottom:0;">
-                            <div class="download-icon blue-theme">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                            </div>
+                            <div class="download-icon green-theme">✅</div>
                             <div class="download-info"><span class="download-name">Review your answers before submitting</span><span class="download-meta">You can go back and change answers anytime</span></div>
                         </div>
                     </section>
@@ -680,7 +668,7 @@
                     <div class="modules-container" id="quiz-card">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; gap:10px;">
                             <span class="section-label" id="quiz-q-label">Question 1 of 10</span>
-                            <span class="profile-badge timer-badge" id="quiz-timer-badge">0:30</span>
+                            <span class="profile-badge" id="quiz-timer-badge">⏱ 0:30</span>
                             <span class="profile-badge" id="quiz-score-badge">Score: 0</span>
                         </div>
                         <div style="background:var(--border); border-radius:99px; height:6px; margin-bottom:20px; overflow:hidden;">
@@ -696,7 +684,7 @@
 
                 <div id="quiz-result-screen" style="display:none; text-align:center;">
                     <section class="modules-container">
-                        <div id="quiz-result-emoji" class="result-badge"></div>
+                        <div id="quiz-result-emoji" style="font-size:56px; margin-bottom:12px;">🎉</div>
                         <div class="section-label" id="quiz-result-title">Test Complete!</div>
                         <div class="section-sub" id="quiz-result-sub">Here's how you did</div>
                         <div style="font-size:52px; font-weight:800; color:var(--blue); letter-spacing:-2px; margin:16px 0;" id="quiz-result-score">8/10</div>
@@ -745,7 +733,7 @@
     <button class="nav-item" data-page="feedback" style="position:relative">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         <span>Feedback</span>
-        <span id="feedback-unread-badge-mobile" class="nav-badge" style="display:none"></span>
+        <span id="feedback-unread-badge-mobile" style="display:none;position:absolute;top:2px;right:14px;background:#ef4444;color:#fff;font-size:9px;font-weight:700;border-radius:999px;min-width:14px;height:14px;line-height:14px;text-align:center;padding:0 3px;"></span>
         <div class="nav-dot"></div>
     </button>
     <button class="nav-item" data-page="profile">

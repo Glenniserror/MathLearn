@@ -2,21 +2,24 @@
    MATH PANEL — math-panel.css
    Tabs, calculator keypad, drag handle, and mobile bottom-sheet styling
    for the Math AI Assistant widget. Loads after chatbot.css (see
-   vite.config.js) so its overrides — mobile layout and the
-   reduced-motion opt-out — win the cascade without needing
+   vite.config.js) so its overrides — the header re-skin, mobile layout,
+   and reduced-motion opt-out — win the cascade without needing
    !important anywhere but the two deliberate override blocks.
 
    --calc-accent/--calc-accent-tint reuse the dashboard's existing
    --blue/--blue-light tokens (aliased locally so the calculator's
-   markup only has one variable name to reference). The header and the
-   mobile FAB keep chatbot.css / student_dashboard.css's blue gradients
-   so the widget matches the sidebar's "AI Chat" button.
+   markup only has one variable name to reference); the header gradient
+   is the one genuinely new value here, matching the design reference
+   and the original spec's stated blue-to-green gradient.
    ================================ */
 
 #ai-chat-window {
     --calc-accent: var(--blue);
     --calc-accent-tint: var(--blue-light);
 }
+
+/* ── Header re-skin (blue-to-green gradient, matching the design reference) ── */
+.chat-header { background: linear-gradient(135deg, #1D4ED8 0%, #0F9B6C 100%); }
 
 .chat-avatar svg { width: 19px; height: 19px; color: white; }
 
@@ -245,6 +248,10 @@
     cursor: pointer;
 }
 .chat-calc-hint:hover { text-decoration: underline; }
+
+/* ── FAB re-skin (matches the header gradient; icon sizing/color
+   already comes from student_dashboard.css's .fab-btn svg rule) ── */
+.fab-btn { background: linear-gradient(135deg, #1D4ED8 0%, #0F9B6C 100%); }
 
 /* ── Mobile: dragging disabled, panel stays a floating card (its
    normal sizing/position already comes from chatbot.css) ── */

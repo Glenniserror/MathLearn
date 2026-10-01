@@ -164,9 +164,7 @@
                     <div class="section-sub">Latest user registrations and system events</div>
                     <div id="home-activity-log">
                         <div class="empty-state">
-                            <div class="empty-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-                            </div>
+                            <div class="empty-icon">📋</div>
                             <h4>No activity yet</h4>
                             <p>Events will appear here as users interact with the platform.</p>
                         </div>
@@ -186,7 +184,7 @@
                         </div>
                     </div>
                     <div class="action-card">
-                        <div class="action-icon-wrap blue-theme">
+                        <div class="action-icon-wrap green-theme">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                         </div>
                         <div class="action-content">
@@ -196,7 +194,7 @@
                         </div>
                     </div>
                     <div class="action-card">
-                        <div class="action-icon-wrap blue-theme">
+                        <div class="action-icon-wrap orange-theme">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
                         </div>
                         <div class="action-content">
@@ -206,7 +204,7 @@
                         </div>
                     </div>
                     <div class="action-card">
-                        <div class="action-icon-wrap blue-theme">
+                        <div class="action-icon-wrap purple-theme">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
                         </div>
                         <div class="action-content">
@@ -216,7 +214,7 @@
                         </div>
                     </div>
                     <div class="action-card">
-                        <div class="action-icon-wrap blue-theme">
+                        <div class="action-icon-wrap green-theme">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
                         </div>
                         <div class="action-content">
@@ -226,7 +224,7 @@
                         </div>
                     </div>
                     <div class="action-card">
-                        <div class="action-icon-wrap blue-theme">
+                        <div class="action-icon-wrap orange-theme">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                         </div>
                         <div class="action-content">
@@ -253,38 +251,27 @@
                 </div>
                 <div class="modules-container">
                     @if ($pendingTeachers->count() > 0)
-                    <div class="approval-panel">
-                        <div class="approval-head">
-                            <div class="approval-head-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>
+                    <div class="section-label">⚠️ Pending Teacher Approvals</div>
+                    <div class="section-sub">{{ $pendingTeachers->count() }} teacher(s) awaiting approval &middot; <a href="{{ route('admin.teacher-approvals') }}" style="color:#1e88e5;font-weight:600;">Manage all &rarr;</a></div>
+                    <div class="pending-teachers-list" style="margin-bottom: 2rem;">
+                        @foreach ($pendingTeachers as $teacher)
+                        <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 1rem; margin-bottom: 0.75rem; border-radius: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-weight: 600; color: #78350f;">{{ $teacher->name }}</div>
+                                <div style="font-size: 0.875rem; color: #92400e;">{{ $teacher->email }}</div>
                             </div>
-                            <div class="approval-head-text">
-                                <div class="section-label">Pending Teacher Approvals</div>
-                                <div class="section-sub">{{ $pendingTeachers->count() }} teacher(s) awaiting approval</div>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <form method="POST" action="{{ route('admin.teacher.approve', $teacher->id) }}" style="display: inline;">
+                                    @csrf
+                                    <button type="submit" style="padding: 0.5rem 1rem; background: #10b981; color: white; border: none; border-radius: 0.375rem; cursor: pointer; font-size: 0.875rem; font-weight: 500;">Approve</button>
+                                </form>
+                                <form method="POST" action="{{ route('admin.teacher.reject', $teacher->id) }}" style="display: inline;">
+                                    @csrf
+                                    <button type="submit" style="padding: 0.5rem 1rem; background: #ef4444; color: white; border: none; border-radius: 0.375rem; cursor: pointer; font-size: 0.875rem; font-weight: 500;">Reject</button>
+                                </form>
                             </div>
-                            <a class="approval-link" href="{{ route('admin.teacher-approvals') }}">Manage all &rarr;</a>
                         </div>
-                        <div class="approval-list">
-                            @foreach ($pendingTeachers as $teacher)
-                            <div class="approval-item">
-                                <div class="approval-avatar">{{ mb_strtoupper(mb_substr($teacher->name, 0, 1)) }}</div>
-                                <div class="approval-info">
-                                    <div class="approval-name">{{ $teacher->name }}</div>
-                                    <div class="approval-email">{{ $teacher->email }}</div>
-                                </div>
-                                <div class="approval-actions">
-                                    <form method="POST" action="{{ route('admin.teacher.approve', $teacher->id) }}">
-                                        @csrf
-                                        <button type="submit" class="approval-btn approve">Approve</button>
-                                    </form>
-                                    <form method="POST" action="{{ route('admin.teacher.reject', $teacher->id) }}">
-                                        @csrf
-                                        <button type="submit" class="approval-btn reject">Reject</button>
-                                    </form>
-                                </div>
-                            </div>
-                            @endforeach
-                        </div>
+                        @endforeach
                     </div>
                     @endif
                     <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
@@ -292,15 +279,15 @@
                             <div class="section-label">All Users</div>
                             <div class="section-sub">Search, filter, and manage user accounts</div>
                         </div>
-                        <button class="secondary-btn" id="export-users-btn">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <button class="primary-btn" id="export-users-btn" style="display:flex;align-items:center;gap:6px;padding:10px 18px;width:auto">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
                             </svg>
                             Export
                         </button>
                     </div>
                     <div class="toolbar">
-                        <input type="text" class="search-input" id="user-search" placeholder="Search by name or email…" maxlength="100" autocomplete="off">
+                        <input type="text" class="search-input" id="user-search" placeholder="🔍  Search by name or email…" maxlength="100" autocomplete="off">
                         <select class="filter-select" id="user-role-filter">
                             <option value="">All Roles</option>
                             <option value="admin">Admin</option>
@@ -339,38 +326,29 @@
                             <div class="chart-title">Weekly User Registrations</div>
                             <div class="chart-sub">New signups per day over the last 7 days</div>
                         </div>
-                        <button class="secondary-btn" id="export-analytics-btn">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <button class="primary-btn" id="export-analytics-btn" style="display:flex;align-items:center;gap:6px;padding:10px 18px;width:auto">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
                             </svg>
                             Export
                         </button>
                     </div>
                     <div id="reg-chart">
-                        <div class="empty-state">
-                            <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
-                            <h4>No registration data yet</h4><p>Charts will populate as users join.</p>
-                        </div>
+                        <div class="empty-state"><div class="empty-icon">📊</div><h4>No registration data yet</h4><p>Charts will populate as users join.</p></div>
                     </div>
                 </div>
                 <div class="chart-container">
                     <div class="chart-title">Subject Completion Rates</div>
                     <div class="chart-sub">How far students have progressed in each subject</div>
                     <div id="subject-progress">
-                        <div class="empty-state">
-                            <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
-                            <h4>No progress data yet</h4><p>Data appears as students complete modules.</p>
-                        </div>
+                        <div class="empty-state"><div class="empty-icon">📈</div><h4>No progress data yet</h4><p>Data appears as students complete modules.</p></div>
                     </div>
                 </div>
                 <div class="chart-container">
                     <div class="chart-title">User Distribution</div>
                     <div class="chart-sub">Breakdown of platform roles</div>
                     <div id="donut-row">
-                        <div class="empty-state">
-                            <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg></div>
-                            <h4>No users yet</h4><p>Add users to see role distribution.</p>
-                        </div>
+                        <div class="empty-state"><div class="empty-icon">🍩</div><h4>No users yet</h4><p>Add users to see role distribution.</p></div>
                     </div>
                 </div>
                 <div class="chart-container">
@@ -432,7 +410,7 @@
                 <div class="modules-container">
                     <div class="toolbar" style="margin-bottom:14px;align-items:flex-start">
                         <div style="flex:1">
-                            <div class="section-label">Admin Validation Queue</div>
+                            <div class="section-label">🔍 Admin Validation Queue</div>
                             <div class="section-sub" style="margin-bottom:0">Review, approve, or reject submitted materials</div>
                         </div>
                         <select class="filter-select" id="content-status-filter">
@@ -504,8 +482,8 @@
                             <div class="section-label">All Modules</div>
                             <div class="section-sub">Browse, add, and manage learning modules — same library teachers upload to</div>
                         </div>
-                        <button class="secondary-btn" id="export-modules-btn">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <button class="primary-btn" id="export-modules-btn" style="display:flex;align-items:center;gap:6px;padding:10px 18px;width:auto">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
                             </svg>
                             Export
@@ -513,7 +491,7 @@
                     </div>
                     <div class="toolbar">
                         <input type="text" class="search-input" id="module-search"
-                               placeholder="Search modules…"
+                               placeholder="🔍  Search modules…"
                                maxlength="100" autocomplete="off">
                         <select class="filter-select" id="module-topic-filter">
                             <option value="">All Topics</option>
@@ -525,9 +503,7 @@
                     </div>
                     <div id="modules-grid" class="module-cards-grid">
                         <div class="empty-state">
-                            <div class="empty-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-                            </div>
+                            <div class="empty-icon">📦</div>
                             <h4>No modules yet</h4>
                             <p>Click "Add Module" to create your first learning module.</p>
                         </div>
@@ -555,20 +531,20 @@
                             <div class="section-sub">Search, filter, and manage the platform's activity log</div>
                         </div>
                         <div style="display:flex;gap:8px;flex-wrap:wrap">
-                            <button class="secondary-btn" id="open-archived-logs-btn">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <button class="primary-btn" id="open-archived-logs-btn" style="display:flex;align-items:center;gap:6px;padding:10px 18px;width:auto;background:#6b7280">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px">
                                     <path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/>
                                 </svg>
                                 Archived Logs
                             </button>
-                            <button class="secondary-btn" id="open-clear-old-logs-btn">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <button class="primary-btn" id="open-clear-old-logs-btn" style="display:flex;align-items:center;gap:6px;padding:10px 18px;width:auto;background:#f97316">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px">
                                     <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/>
                                 </svg>
                                 Clear Old Logs
                             </button>
-                            <button class="secondary-btn" id="export-activity-btn">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <button class="primary-btn" id="export-activity-btn" style="display:flex;align-items:center;gap:6px;padding:10px 18px;width:auto">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px">
                                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
                                 </svg>
                                 Export
@@ -576,7 +552,7 @@
                         </div>
                     </div>
                     <div class="toolbar">
-                        <input type="text" class="search-input" id="activity-search" placeholder="Search by name, email, or activity…" maxlength="255" autocomplete="off">
+                        <input type="text" class="search-input" id="activity-search" placeholder="🔍  Search by name, email, or activity…" maxlength="255" autocomplete="off">
                         <select class="filter-select" id="activity-type-filter">
                             <option value="">All Types</option>
                             <option value="registration">Account Created</option>
@@ -595,9 +571,7 @@
                     </div>
                     <div class="activity-timeline" id="activity-timeline">
                         <div class="empty-state">
-                            <div class="empty-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-                            </div>
+                            <div class="empty-icon">📋</div>
                             <h4>No events logged yet</h4>
                             <p>Activity will appear here as users interact with the platform.</p>
                         </div>
@@ -653,17 +627,13 @@
                     <div class="table-wrap">
                         <table>
                             <thead><tr><th>Permission</th><th>Admin</th><th>Teacher</th><th>Student</th></tr></thead>
-                            @php
-                                $allowed = '<span class="perm yes" role="img" aria-label="Allowed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>';
-                                $denied = '<span class="perm no" role="img" aria-label="Not allowed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg></span>';
-                            @endphp
                             <tbody>
-                                <tr><td>View Dashboard</td><td>{!! $allowed !!}</td><td>{!! $allowed !!}</td><td>{!! $allowed !!}</td></tr>
-                                <tr><td>Manage Users</td><td>{!! $allowed !!}</td><td>{!! $denied !!}</td><td>{!! $denied !!}</td></tr>
-                                <tr><td>Create Content</td><td>{!! $allowed !!}</td><td>{!! $allowed !!}</td><td>{!! $denied !!}</td></tr>
-                                <tr><td>View Analytics</td><td>{!! $allowed !!}</td><td>{!! $allowed !!}</td><td>{!! $denied !!}</td></tr>
-                                <tr><td>System Settings</td><td>{!! $allowed !!}</td><td>{!! $denied !!}</td><td>{!! $denied !!}</td></tr>
-                                <tr><td>Take Quizzes</td><td>{!! $allowed !!}</td><td>{!! $allowed !!}</td><td>{!! $allowed !!}</td></tr>
+                                <tr><td>View Dashboard</td><td>✅</td><td>✅</td><td>✅</td></tr>
+                                <tr><td>Manage Users</td><td>✅</td><td>❌</td><td>❌</td></tr>
+                                <tr><td>Create Content</td><td>✅</td><td>✅</td><td>❌</td></tr>
+                                <tr><td>View Analytics</td><td>✅</td><td>✅</td><td>❌</td></tr>
+                                <tr><td>System Settings</td><td>✅</td><td>❌</td><td>❌</td></tr>
+                                <tr><td>Take Quizzes</td><td>✅</td><td>✅</td><td>✅</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -676,9 +646,9 @@
                         <label class="toggle"><input type="checkbox" id="feat-maintenance"><span class="toggle-slider"></span></label>
                     </div>
                 </div>
-                <div class="settings-section danger-zone">
-                    <h3>Danger Zone</h3>
-                    <div class="desc">Irreversible actions — proceed with caution. To manage activity logs (delete individual entries, archive old ones, or export), see the <a href="javascript:void(0)" id="danger-zone-activity-link">Activity tab</a>.</div>
+                <div class="settings-section" style="border-color:#fca5a5">
+                    <h3 style="color:var(--red)">Danger Zone</h3>
+                    <div class="desc">Irreversible actions — proceed with caution. To manage activity logs (delete individual entries, archive old ones, or export), see the <a href="javascript:void(0)" id="danger-zone-activity-link" style="color:var(--blue);font-weight:600">Activity tab</a>.</div>
                     <div style="display:flex;gap:10px;flex-wrap:wrap">
                         <button class="danger-btn" id="reset-platform-btn" style="max-width:200px">Reset Platform</button>
                     </div>
@@ -731,9 +701,7 @@
         <p style="font-size:12.5px;color:var(--text-3);margin:-8px 0 14px">Logs archived via "Clear Old Logs" — restore them to the active timeline or delete them permanently.</p>
         <div class="activity-timeline" id="archived-timeline">
             <div class="empty-state">
-                <div class="empty-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
-                </div>
+                <div class="empty-icon">🗄️</div>
                 <h4>No archived logs</h4>
                 <p>Logs you archive will appear here.</p>
             </div>

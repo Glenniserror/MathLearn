@@ -11,11 +11,11 @@
 
    Self-contained (injects its own <style>) so one <script> include is
    enough per page — no separate CSS entry point to keep in sync
-   across the several Blade views this loads on. Colors are the
-   dashboards' --blue-mid / --blue (#60a5fa / #2563eb, the same pair as
-   the sidebar "AI Chat" button) — repeated as literals because a CSS
-   custom property isn't guaranteed to be in scope on every page this
-   runs on.
+   across the several Blade views this loads on. Colors are the same
+   #2563eb / #10b981 already used everywhere in this app for blue and
+   green (dashboard CSS --blue/--green, the auth pages' gradient) —
+   not a new palette, just the one value repeated where a CSS custom
+   property isn't guaranteed to be in scope on every page this runs on.
    ================================ */
 
 (function () {
@@ -32,7 +32,7 @@
                 left: 0;
                 height: 3px;
                 width: 0%;
-                background: linear-gradient(90deg, #60a5fa, #2563eb);
+                background: linear-gradient(90deg, #2563eb, #10b981);
                 z-index: 99999;
                 transition: width 0.3s ease, opacity 0.2s ease;
                 opacity: 0;

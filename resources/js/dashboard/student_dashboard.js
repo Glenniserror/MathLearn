@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Modules is a separate Blade view — use Laravel route
         if (page === 'modules') {
             if (moduleNum && !moduleUnlocked[moduleNum]) {
-                window.toast?.('warning', `Finish Module ${moduleNum - 1} first to unlock this module.`);
+                window.toast?.('warning', `🔒 Finish Module ${moduleNum - 1} first to unlock this module.`);
                 return;
             }
             // The route URL is injected by the Blade template via a meta tag
@@ -191,9 +191,9 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     const TOPIC_THEME = {
-        'Module 1: Sequences and Series': 'blue-theme',
-        'Module 2: Polynomials':          'blue-theme',
-        'Module 3: Advanced Equations':   'blue-theme',
+        'Module 1: Sequences and Series': 'green-theme',
+        'Module 2: Polynomials':          'orange-theme',
+        'Module 3: Advanced Equations':   'purple-theme',
     };
 
     const TOPIC_LABEL = {
@@ -268,7 +268,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return null;
         }
 
-        const THEME = { mod1: 'blue-theme', mod2: 'blue-theme', mod3: 'blue-theme' };
+        const THEME = { mod1: 'green-theme', mod2: 'orange-theme', mod3: 'purple-theme' };
 
         publishedModules.forEach(m => {
             const sectionKey = normalizeTopic(m.topic);
@@ -394,7 +394,7 @@ document.addEventListener('DOMContentLoaded', function () {
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#2563eb',
-            cancelButtonColor: '#6b7280',
+            cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, logout!',
             cancelButtonText: 'Cancel',
         }).then(result => {
@@ -618,7 +618,7 @@ Return ONLY a valid JSON array of ${items.length} strings (the rewritten version
     function updateTimerDisplay(seconds) {
         const el = document.getElementById('quiz-timer-badge');
         if (!el) return;
-        el.textContent = `0:${String(seconds).padStart(2, '0')}`;
+        el.textContent = `⏱ 0:${String(seconds).padStart(2, '0')}`;
         el.style.background = seconds <= 10 ? 'var(--red-light)' : '';
         el.style.color      = seconds <= 10 ? 'var(--red)'       : '';
     }
@@ -631,7 +631,7 @@ Return ONLY a valid JSON array of ${items.length} strings (the rewritten version
             secondsLeft--;
             if (secondsLeft <= 0) {
                 stopQuestionTimer();
-                window.toast('warning', "Time's up for this question!");
+                window.toast('warning', "⏱️ Time's up for this question!");
                 if (quizCurrent < quizQuestions.length - 1) {
                     quizCurrent++;
                     renderQuestion();
@@ -702,16 +702,6 @@ Return ONLY a valid JSON array of ${items.length} strings (the rewritten version
         }
     }
 
-    // Result badge per score tier — line icons in the dashboard's blue
-    // instead of a large multicolor emoji.
-    const svgIcon = paths => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`;
-    const RESULT_BADGE_ICONS = {
-        award:    svgIcon('<circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>'),
-        check:    svgIcon('<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>'),
-        trending: svgIcon('<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>'),
-        book:     svgIcon('<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>'),
-    };
-
     // Shared by a fresh submission and by re-displaying an already-taken
     // attempt's stored score (the summative test only allows one attempt).
     function renderResultScreen(score, total) {
@@ -723,14 +713,12 @@ Return ONLY a valid JSON array of ${items.length} strings (the rewritten version
         document.getElementById('quiz-result-screen').style.display   = 'block';
         document.getElementById('quiz-result-score').textContent      = `${score}/${total}`;
 
-        let badge = 'book', title = 'Keep Practicing!', msg = 'Review your modules and try again.';
-        if      (pct >= 90) { badge = 'award';    title = 'Outstanding!'; msg = 'Excellent work! You mastered the material.'; }
-        else if (pct >= 75) { badge = 'check';    title = 'Great Job!';   msg = 'You passed! Keep reviewing for mastery.';   }
-        else if (pct >= 50) { badge = 'trending'; title = 'Good Effort!'; msg = 'Almost there — review your weak areas.';    }
+        let emoji = '😢', title = 'Keep Practicing!', msg = 'Review your modules and try again.';
+        if      (pct >= 90) { emoji = '🏆'; title = 'Outstanding!'; msg = 'Excellent work! You mastered the material.'; }
+        else if (pct >= 75) { emoji = '🎉'; title = 'Great Job!';   msg = 'You passed! Keep reviewing for mastery.';   }
+        else if (pct >= 50) { emoji = '👍'; title = 'Good Effort!'; msg = 'Almost there — review your weak areas.';    }
 
-        const badgeEl = document.getElementById('quiz-result-emoji');
-        badgeEl.innerHTML = RESULT_BADGE_ICONS[badge];
-        badgeEl.classList.toggle('is-muted', badge === 'book');
+        document.getElementById('quiz-result-emoji').textContent = emoji;
         document.getElementById('quiz-result-title').textContent = title;
         document.getElementById('quiz-result-msg').textContent   = `${pct}% — ${msg}`;
     }
@@ -938,7 +926,7 @@ Return ONLY a valid JSON array of ${items.length} strings (the rewritten version
     document.addEventListener('visibilitychange', () => {
         const testInProgress = document.getElementById('quiz-question-screen')?.style.display === 'block';
         if (document.hidden && testInProgress) {
-            window.toast('warning', 'Test auto-submitted after leaving the tab.');
+            window.toast('warning', '⏱️ Test auto-submitted after leaving the tab.');
             window.submitQuiz();
         }
     });
@@ -952,8 +940,8 @@ Return ONLY a valid JSON array of ${items.length} strings (the rewritten version
 
         const setText = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text; };
         const setWidth = (id, pct) => { const el = document.getElementById(id); if (el) el.style.width = pct + '%'; };
-        // Module Progress bars: deep blue once complete, gray if not started, blue while in progress.
-        const pctColor = pct => pct >= 100 ? 'var(--blue-800)' : pct <= 0 ? 'var(--slate-400)' : 'var(--blue)';
+        // Module Progress bars: green once complete, red if not started, blue while in progress.
+        const pctColor = pct => pct >= 100 ? 'var(--green)' : pct <= 0 ? 'var(--red)' : 'var(--blue)';
         const setFillColor = (id, pct) => { const el = document.getElementById(id); if (el) el.style.background = pctColor(pct); };
         const setTextColor = (id, pct) => { const el = document.getElementById(id); if (el) el.style.color = pctColor(pct); };
 
@@ -978,7 +966,7 @@ Return ONLY a valid JSON array of ${items.length} strings (the rewritten version
             if (!btn) return;
             const unlocked = moduleUnlocked[n];
             // Left clickable so navigate() can explain why it's locked.
-            btn.textContent = unlocked ? 'View Topics' : 'Locked';
+            btn.textContent = unlocked ? 'View Topics' : '🔒 Locked';
             btn.setAttribute('aria-disabled', String(!unlocked));
             btn.closest('.module-item')?.classList.toggle('locked', !unlocked);
         });
@@ -1014,7 +1002,7 @@ Return ONLY a valid JSON array of ${items.length} strings (the rewritten version
                     const phase = r.phase === 'pre' ? 'Pre-Test' : 'Post-Test';
                     const passed = !!r.passed;
                     const badge  = passed ? 'badge-good' : 'badge-warn';
-                    const theme  = passed ? 'blue-theme' : 'slate-theme';
+                    const theme  = passed ? 'green-theme' : 'orange-theme';
                     const icon   = passed
                         ? '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>'
                         : '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>';
@@ -1040,7 +1028,7 @@ Return ONLY a valid JSON array of ${items.length} strings (the rewritten version
     /* ================================
        FEEDBACK — messages sent by the teacher
        ================================ */
-    const FEEDBACK_LABELS = { encouragement: 'Encouragement', improvement: 'Needs Improvement', praise: 'Praise', reminder: 'Reminder' };
+    const FEEDBACK_ICONS = { encouragement: '💪', improvement: '📈', praise: '🌟', reminder: '⏰' };
 
     // Last-known feedback list, reused when a poll comes back 304 (nothing
     // changed) so every call below has real data to work with regardless of
@@ -1082,15 +1070,15 @@ Return ONLY a valid JSON array of ${items.length} strings (the rewritten version
             listEl.innerHTML = items.map(f => `
                 <div class="module-item">
                     <div class="module-title-row">
-                        <span class="module-name">${escapeHtml(f.teacherName)}</span>
+                        <span class="module-name">${FEEDBACK_ICONS[f.type] || '💬'} ${f.teacherName}</span>
                         <span style="display:flex;align-items:center;gap:8px">
-                            <span class="feedback-type">${escapeHtml(FEEDBACK_LABELS[f.type] || 'Feedback')}</span>
-                            ${f.read ? '' : '<span class="status-badge badge-new">New</span>'}
-                            <button type="button" class="feedback-dismiss" data-action="delete-feedback" data-id="${f.id}" title="Remove this feedback">✕</button>
+                            ${f.read ? '' : '<span class="status-badge badge-warn">New</span>'}
+                            <button type="button" data-action="delete-feedback" data-id="${f.id}" title="Remove this feedback"
+                                style="background:none;border:none;color:#9ca3af;cursor:pointer;font-size:14px;line-height:1;padding:0">✕</button>
                         </span>
                     </div>
                     <p style="margin:6px 0 4px;font-size:14px;color:var(--text-2)">${escapeHtml(f.message)}</p>
-                    <div class="section-sub" style="margin:0">${escapeHtml(f.date)}</div>
+                    <div class="section-sub" style="margin:0">${f.date}</div>
                 </div>`).join('');
         }
 
@@ -1201,11 +1189,9 @@ Return ONLY a valid JSON array of ${items.length} strings (the rewritten version
         if (!unlocked) {
             const progress = await getCompletionProgress();
             const lockDisplay = `
-                <div class="notice-progress-label">
-                    <span>Topics completed</span>
-                    <span>${progress.completed}/${progress.total}</span>
+                <div style="margin-bottom: 12px;">
+                    <div style="font-size: 13px; color: #92400e;">Complete all learning module topics first to unlock the summative test (${progress.completed}/${progress.total} done).</div>
                 </div>
-                <div class="progress-bar-bg"><div class="progress-fill" style="width:${progress.percentage}%"></div></div>
             `;
 
             document.getElementById('lock-progress-display').innerHTML = lockDisplay;
@@ -1262,7 +1248,7 @@ Return ONLY a valid JSON array of ${items.length} strings (the rewritten version
     window.startQuiz = async function() {
         const unlocked = await isSummativeUnlocked();
         if (!unlocked) {
-            window.toast('warning', 'Complete all module topics first to unlock this test!');
+            window.toast('warning', '🔒 Complete all module topics first to unlock this test!');
             return;
         }
 

@@ -11,12 +11,6 @@
     --blue-dark:   #1d4ed8;
     --blue-light:  #eff6ff;
     --blue-mid:    #60a5fa;
-    --blue-100:    #dbeafe;
-    --blue-200:    #bfdbfe;
-    --blue-800:    #1e40af;
-    --slate-100:   #f1f5f9;
-    --slate-400:   #94a3b8;
-    --slate-500:   #64748b;
     --green:       #10b981;
     --green-light: #f0fdf4;
     --orange:      #f97316;
@@ -80,7 +74,7 @@ html, body {
     border-radius: 8px; font-family: inherit; font-weight: 600; font-size: 13px;
     color: var(--text-2); cursor: pointer; transition: all 0.2s;
 }
-.logout-btn:hover { background: var(--blue-light); border-color: var(--blue-200); color: var(--blue); }
+.logout-btn:hover { background: #fef2f2; border-color: #fca5a5; color: #ef4444; }
 .logout-btn:active { transform: scale(0.97); }
 
 /* ================================
@@ -141,18 +135,8 @@ html, body {
         color: var(--text-3); cursor: pointer; transition: all 0.2s;
     }
     .sidebar-logout-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
-    .sidebar-logout-btn:hover { background: var(--blue-light); border-color: var(--blue-200); color: var(--blue); }
+    .sidebar-logout-btn:hover { background: #fef2f2; border-color: #fca5a5; color: #ef4444; }
 }
-
-/* Unread count on the Feedback nav item (sidebar + bottom nav). */
-.nav-badge {
-    position: absolute; min-width: 16px; height: 16px; padding: 0 4px;
-    border-radius: 999px; background: var(--blue); color: #fff;
-    font-size: 10px; font-weight: 700; line-height: 16px; text-align: center;
-    box-shadow: 0 0 0 2px #fff;
-}
-.sidebar-item .nav-badge { top: 6px; left: 26px; }
-.nav-item .nav-badge { top: 2px; right: 14px; min-width: 14px; height: 14px; padding: 0 3px; font-size: 9px; line-height: 14px; }
 
 /* ================================
    MAIN CONTENT
@@ -231,7 +215,6 @@ html, body {
 .blue-theme   { background: var(--blue-light); color: var(--blue); }
 .purple-theme { background: var(--purple-light); color: var(--purple); }
 .red-theme    { background: var(--red-light); color: var(--red); }
-.slate-theme  { background: var(--slate-100); color: var(--slate-500); }
 
 .metric-value {
     font-size: 28px; font-weight: 800; color: var(--text);
@@ -296,33 +279,18 @@ html, body {
 /* Pass/fail and "new" pill badges — used on Recent Activity scores, the
    Offline Materials "Teacher" upload tag, and the Feedback "New" tag. */
 .status-badge { padding: 4px 10px; border-radius: 99px; font-size: 11px; font-weight: 700; flex-shrink: 0; letter-spacing: 0.2px; }
-.badge-good   { background: var(--blue-100); color: var(--blue-800); }
-.badge-warn   { background: #e2e8f0; color: #475569; }
-.badge-new    { background: var(--blue); color: #fff; }
-
-/* Feedback list: message type tag + per-item dismiss button. */
-.feedback-type {
-    flex-shrink: 0; padding: 3px 8px; border-radius: 99px;
-    background: var(--blue-light); color: var(--blue);
-    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px;
-}
-.feedback-dismiss {
-    background: none; border: none; border-radius: 6px; padding: 4px;
-    color: var(--text-4); cursor: pointer; font-size: 14px; line-height: 1;
-    transition: color 0.15s, background 0.15s;
-}
-.feedback-dismiss:hover { color: var(--red); background: var(--red-light); }
+.badge-good   { background: var(--green-light); color: var(--green); }
+.badge-warn   { background: var(--orange-light); color: var(--orange); }
 
 /* Recent Activity list rows: icon avatar + title/badge/time stack. */
 .activity-row { display: flex; align-items: flex-start; gap: 12px; }
-.activity-row .icon-container { background: #fff; border: 1px solid var(--border); }
 .activity-info { flex: 1; min-width: 0; }
 
-.percentage      { font-size: 12px; font-weight: 700; color: var(--blue); flex-shrink: 0; }
+.percentage      { font-size: 12px; font-weight: 700; color: var(--green); flex-shrink: 0; }
 .percentage.blue { color: var(--blue); }
 
 .progress-bar-bg { height: 5px; background: var(--border); border-radius: 99px; overflow: hidden; margin-bottom: 10px; }
-.progress-fill { height: 100%; background: var(--blue); border-radius: 99px; transition: width 0.6s ease; }
+.progress-fill { height: 100%; background: var(--green); border-radius: 99px; transition: width 0.6s ease; }
 .progress-fill.blue { background: var(--blue); }
 
 .view-topics-btn {
@@ -332,7 +300,8 @@ html, body {
     color: var(--text-2); transition: all 0.2s;
 }
 .view-topics-btn:hover {
-    background: var(--blue-light); border-color: var(--blue-200); color: var(--blue);
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    border-color: #d97706; color: white; box-shadow: 0 4px 12px rgba(251,191,36,0.3);
 }
 .view-topics-btn:active { transform: scale(0.98); }
 .view-topics-btn[aria-disabled="true"] {
@@ -342,11 +311,6 @@ html, body {
 .view-topics-btn[aria-disabled="true"]:hover {
     background: var(--bg); border-color: var(--border);
     color: var(--text-3); box-shadow: none;
-}
-.view-topics-btn[aria-disabled="true"]::before {
-    content: ''; display: inline-block; width: 12px; height: 12px;
-    margin-right: 6px; vertical-align: -1px;
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='11' width='18' height='11' rx='2' ry='2'/%3E%3Cpath d='M7 11V7a5 5 0 0 1 10 0v4'/%3E%3C/svg%3E") no-repeat center / contain;
 }
 .module-item.locked { opacity: 0.7; }
 .module-item.locked:hover { transform: none; border-color: var(--border); box-shadow: none; }
@@ -441,7 +405,7 @@ html, body {
     width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
     background: var(--border);
 }
-.topic-dot.done   { background: var(--blue-800); }
+.topic-dot.done   { background: var(--green); }
 .topic-dot.active { background: var(--blue); }
 
 .progress-row { margin-bottom: 14px; }
@@ -473,14 +437,6 @@ html, body {
     display: inline-block; padding: 5px 14px;
     background: var(--blue-light); color: var(--blue);
     border-radius: 99px; font-size: 12px; font-weight: 700;
-}
-/* Summative countdown — clock drawn as a mask so it follows the text
-   color (blue, then red for the last 10 seconds). */
-.timer-badge { display: inline-flex; align-items: center; gap: 5px; font-variant-numeric: tabular-nums; }
-.timer-badge::before {
-    content: ''; width: 12px; height: 12px; flex-shrink: 0; background-color: currentColor;
-    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpolyline points='12 6 12 12 16 14'/%3E%3C/svg%3E") no-repeat center / contain;
-            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpolyline points='12 6 12 12 16 14'/%3E%3C/svg%3E") no-repeat center / contain;
 }
 
 .settings-section {
@@ -564,23 +520,6 @@ html, body {
 .swal2-confirm:hover { transform: translateY(-2px) !important; box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important; }
 .swal2-cancel { border-radius: 8px !important; padding: 10px 24px !important; font-family: 'Plus Jakarta Sans', sans-serif !important; font-weight: 700 !important; font-size: 14px !important; }
 .swal2-timer-progress-bar { background: var(--blue) !important; }
-/* Blue buttons and icons instead of the library's purple/green/orange
-   defaults (error stays red). Set on the container rather than :root so
-   these win over sweetalert2's own :root values whichever loads last. */
-.swal2-container {
-    --swal2-confirm-button-background-color: var(--blue);
-    --swal2-deny-button-background-color: var(--blue-800);
-    --swal2-cancel-button-background-color: var(--text-3);
-    --swal2-outline: 0 0 0 3px rgba(37,99,235,0.35);
-    --swal2-input-focus-border: 1px solid var(--blue-mid);
-    --swal2-input-focus-box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
-}
-.swal2-icon.swal2-success,
-.swal2-icon.swal2-info,
-.swal2-icon.swal2-question,
-.swal2-icon.swal2-warning { border-color: var(--blue-200); color: var(--blue); }
-.swal2-icon.swal2-success .swal2-success-ring { border-color: rgba(37,99,235,0.25); }
-.swal2-icon.swal2-success [class^='swal2-success-line'] { background-color: var(--blue); }
 
 /* ================================
    ANIMATIONS
@@ -599,44 +538,8 @@ html, body {
 }
 
 /* Empty state */
-.empty-state { text-align: center; padding: 36px 20px; color: var(--text-3); }
-.empty-icon  {
-    width: 52px; height: 52px; border-radius: 50%; margin: 0 auto 12px;
-    display: flex; align-items: center; justify-content: center;
-    background: var(--blue-light); color: var(--blue); font-size: 22px;
-}
-.empty-icon svg { width: 24px; height: 24px; }
-
-/* Informational card (e.g. the locked Summative Test notice). */
-.notice-card {
-    display: flex; flex-direction: column; align-items: center; text-align: center;
-    background: var(--card); border: 1px solid var(--blue-200); border-radius: var(--radius);
-    padding: 28px 20px; box-shadow: var(--shadow);
-}
-.notice-icon {
-    width: 52px; height: 52px; border-radius: 50%; margin-bottom: 12px;
-    display: flex; align-items: center; justify-content: center;
-    background: var(--blue-light); color: var(--blue);
-}
-.notice-icon svg { width: 24px; height: 24px; }
-.notice-title { font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 4px; letter-spacing: -0.2px; }
-.notice-text  { font-size: 13px; color: var(--text-3); line-height: 1.5; max-width: 380px; }
-.notice-progress { width: 100%; max-width: 320px; margin-top: 18px; text-align: left; }
-.notice-progress-label {
-    display: flex; justify-content: space-between;
-    font-size: 12px; font-weight: 700; color: var(--text-2); margin-bottom: 6px;
-}
-.notice-progress .progress-bar-bg { height: 8px; margin-bottom: 0; }
-
-/* Summative result badge (icon set per score tier by renderResultScreen). */
-.result-badge {
-    width: 72px; height: 72px; border-radius: 50%; margin: 4px auto 14px;
-    display: flex; align-items: center; justify-content: center;
-    background: var(--blue-light); color: var(--blue);
-    box-shadow: 0 0 0 6px rgba(37,99,235,0.08);
-}
-.result-badge svg { width: 34px; height: 34px; }
-.result-badge.is-muted { background: var(--slate-100); color: var(--slate-500); box-shadow: 0 0 0 6px rgba(100,116,139,0.08); }
+.empty-state { text-align: center; padding: 40px 20px; color: var(--text-3); }
+.empty-icon  { font-size: 40px; margin-bottom: 10px; }
 .empty-state h4 { font-size: 15px; font-weight: 700; color: var(--text-2); margin-bottom: 4px; }
 .empty-state p  { font-size: 12px; }
 
@@ -699,9 +602,9 @@ html, body {
 }
 .quiz-choice:hover { border-color: var(--blue-mid); background: var(--blue-light); color: var(--blue); }
 .quiz-choice.selected { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
-.quiz-choice.correct  { border-color: var(--blue); background: var(--blue-light); color: var(--blue-800); pointer-events:none; }
+.quiz-choice.correct  { border-color: var(--green); background: var(--green-light); color: #065f46; pointer-events:none; }
 .quiz-choice.wrong    { border-color: var(--red);   background: var(--red-light);   color: #991b1b; pointer-events:none; }
-.quiz-choice.reveal-correct { border-color: var(--blue); background: var(--blue-light); color: var(--blue-800); pointer-events:none; }
+.quiz-choice.reveal-correct { border-color: var(--green); background: var(--green-light); color: #065f46; pointer-events:none; }
 
 .choice-letter {
     width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
@@ -710,9 +613,9 @@ html, body {
     transition: all 0.18s;
 }
 .quiz-choice.selected .choice-letter { background: var(--blue); color: white; }
-.quiz-choice.correct  .choice-letter { background: var(--blue); color: white; }
+.quiz-choice.correct  .choice-letter { background: var(--green); color: white; }
 .quiz-choice.wrong    .choice-letter { background: var(--red);   color: white; }
-.quiz-choice.reveal-correct .choice-letter { background: var(--blue); color: white; }
+.quiz-choice.reveal-correct .choice-letter { background: var(--green); color: white; }
 
 /* ================================
    SUMMATIVE TEST LOCK STATE
@@ -755,14 +658,14 @@ html, body {
     width: 28px;
     height: 28px;
     border-radius: 6px;
-    background: var(--blue-light);
-    color: var(--blue);
+    background: var(--red-light);
+    color: var(--red);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 14px;
     font-weight: 700;
-    box-shadow: 0 2px 8px rgba(37,99,235,0.15);
+    box-shadow: 0 2px 8px rgba(239,68,68,0.2);
 }
 
 /* Locked state progress bar animation */
@@ -790,8 +693,8 @@ html, body {
 
 /* Locked overlay message */
 .locked-message {
-    background: var(--blue-light);
-    border: 1px solid var(--blue-200);
+    background: linear-gradient(135deg, #fef2f2, #fff7ed);
+    border: 1px solid #fed7aa;
     border-radius: 10px;
     padding: 12px;
     margin-top: 12px;
@@ -801,7 +704,7 @@ html, body {
 .locked-message-text {
     font-size: 12px;
     font-weight: 600;
-    color: var(--blue-800);
+    color: #b45309;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -822,16 +725,16 @@ html, body {
 }
 
 .completion-badge.completed {
-    background: var(--blue-100);
-    color: var(--blue-800);
+    background: var(--green-light);
+    color: var(--green);
 }
 
 .completion-badge.pending {
-    background: var(--blue-light);
-    color: var(--blue);
+    background: var(--orange-light);
+    color: var(--orange);
 }
 
 .completion-badge.locked {
-    background: var(--slate-100);
-    color: var(--slate-500);
+    background: var(--red-light);
+    color: var(--red);
 }

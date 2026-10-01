@@ -40,30 +40,6 @@ const Security = {
 };
 
 /* ============================================================
-   ICONS — the same line-icon set the sidebar uses, for JS-rendered
-   empty states and tiles (keeps the UI blue instead of multicolor emoji)
-   ============================================================ */
-const ICON_PATHS = {
-    user:      '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
-    clipboard: '<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>',
-    clock:     '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
-    alert:     '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>',
-    folder:    '<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>',
-    file:      '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>',
-    image:     '<rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>',
-    film:      '<rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/>',
-    barChart:  '<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>',
-    trending:  '<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>',
-    pieChart:  '<path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/>',
-    award:     '<circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>',
-    package:   '<line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>',
-};
-
-function icon(name) {
-    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON_PATHS[name] || ''}</svg>`;
-}
-
-/* ============================================================
    STATE
    ============================================================ */
 let users      = [];
@@ -178,7 +154,7 @@ function renderUsers() {
 
     const tbody = document.getElementById('users-tbody');
     if (!users.length) {
-        tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="empty-icon">${icon('user')}</div><h4>No users found</h4><p>Try a different search or filter.</p></div></td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="empty-icon">👤</div><h4>No users found</h4><p>Try a different search or filter.</p></div></td></tr>`;
     } else {
         const startIndex = (userListState.meta.current_page - 1) * userListState.meta.per_page;
         tbody.innerHTML = users.map((u, i) => `
@@ -271,7 +247,7 @@ async function deleteUser(id) {
         title: 'Delete User?',
         html: `Remove <strong>${Security.escape(u.name)}</strong>? This cannot be undone.`,
         icon: 'warning', showCancelButton: true,
-        confirmButtonColor: '#ef4444', cancelButtonColor: '#6b7280',
+        confirmButtonColor: '#ef4444', cancelButtonColor: '#d1d5db',
         confirmButtonText: 'Yes, delete',
     }).then(async r => {
         if (!r.isConfirmed) return;
@@ -360,7 +336,7 @@ async function logEvent(type, title, sub, badge) {
    /admin/activity — the frontend anon key has no read/delete access to
    activity_logs, so this is the only path to view or manage it.
    ============================================================ */
-const ACTIVITY_DOT_COLOR = { registration: 'blue', login: 'light', content: 'navy', system: 'slate', error: 'red' };
+const ACTIVITY_DOT_COLOR = { registration: 'blue', login: 'green', content: 'green', system: 'orange', error: 'red' };
 
 let activityLogState = {
     data: [],
@@ -407,7 +383,7 @@ async function loadActivityLog(page = 1) {
 
 function renderTimelineRows(rows, { archived }) {
     if (!rows.length) {
-        return `<div class="empty-state"><div class="empty-icon">${icon('clipboard')}</div><h4>No events found</h4><p>${archived ? 'No archived logs to show yet.' : 'Try a different search or filter.'}</p></div>`;
+        return `<div class="empty-state"><div class="empty-icon">📋</div><h4>No events found</h4><p>${archived ? 'No archived logs to show yet.' : 'Try a different search or filter.'}</p></div>`;
     }
     return rows.map(a => `
         <div class="tl-item">
@@ -556,7 +532,7 @@ function openClearOldLogs() {
         inputOptions: { 30: 'Older than 30 days', 60: 'Older than 60 days', 90: 'Older than 90 days', 365: 'Older than 1 year' },
         inputPlaceholder: 'Select a retention period',
         showCancelButton: true,
-        confirmButtonColor: '#2563eb',
+        confirmButtonColor: '#f97316',
         cancelButtonColor: '#6b7280',
         confirmButtonText: 'Continue',
         cancelButtonText: 'Cancel',
@@ -569,7 +545,7 @@ function openClearOldLogs() {
             text: `This will remove all activity logs older than ${RETENTION_LABELS[days]} from the active timeline (archived, not deleted). This action cannot be undone.`,
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#2563eb',
+            confirmButtonColor: '#f97316',
             cancelButtonColor: '#6b7280',
             confirmButtonText: 'Archive Old Logs',
             cancelButtonText: 'Cancel',
@@ -759,7 +735,7 @@ async function confirmDanger(action, desc) {
     Swal.fire({
         title: Security.escape(action) + '?', text: desc,
         icon: 'warning', showCancelButton: true,
-        confirmButtonColor: '#ef4444', cancelButtonColor: '#6b7280',
+        confirmButtonColor: '#ef4444', cancelButtonColor: '#d1d5db',
         confirmButtonText: 'Yes, confirm',
     }).then(async r => {
         if (!r.isConfirmed) return;
@@ -804,9 +780,10 @@ function getFilteredContent() {
 }
 
 const FILE_ICONS = {
-    ppt: 'barChart', pptx: 'barChart',
-    xls: 'barChart', xlsx: 'barChart',
-    mp4: 'film', jpg: 'image', jpeg: 'image', png: 'image',
+    pdf:'📄', doc:'📝', docx:'📝',
+    ppt:'📊', pptx:'📊',
+    mp4:'🎬', jpg:'🖼️', jpeg:'🖼️', png:'🖼️',
+    xls:'📗', xlsx:'📗', txt:'📃',
 };
 
 function fileExt(name) { return (name.split('.').pop() || '').toLowerCase(); }
@@ -818,7 +795,7 @@ async function loadAndRenderContent() {
     const body = document.getElementById('content-queue-body');
     body.innerHTML = `
         <div class="empty-state">
-            <div class="empty-icon">${icon('clock')}</div>
+            <div class="empty-icon">⏳</div>
             <h4>Loading modules…</h4>
             <p>Fetching files from Supabase storage.</p>
         </div>`;
@@ -834,7 +811,7 @@ async function loadAndRenderContent() {
         console.error('Content load error:', err);
         body.innerHTML = `
             <div class="empty-state">
-                <div class="empty-icon is-error">${icon('alert')}</div>
+                <div class="empty-icon">⚠️</div>
                 <h4>Could not load modules</h4>
                 <p>${Security.escape(err.message)}</p>
                 <button class="primary-btn" style="margin-top:12px"
@@ -872,7 +849,7 @@ function renderContent() {
     if (!filtered.length) {
         body.innerHTML = `
             <div class="empty-state">
-                <div class="empty-icon">${icon('folder')}</div>
+                <div class="empty-icon">📁</div>
                 <h4>No uploads found</h4>
                 <p>Submitted materials from teachers will appear here for review.</p>
             </div>`;
@@ -881,6 +858,7 @@ function renderContent() {
 
     body.innerHTML = filtered.map(c => {
         const ext   = fileExt(c.name);
+        const icon  = FILE_ICONS[ext] || '📄';
         const badge =
             c.status === 'approved' ? 'badge-good'
           : c.status === 'rejected' ? 'badge-danger'
@@ -890,18 +868,18 @@ function renderContent() {
 
         const actionBtns = c.status === 'pending'
             ? `<div class="queue-actions">
-                   <button class="btn-approve" data-action="approve-content" data-id="${safeId}">Approve</button>
-                   <button class="btn-reject"  data-action="reject-content" data-id="${safeId}">Reject</button>
-                   <button class="btn-delete"  data-action="delete-content" data-id="${safeId}">Delete</button>
+                   <button class="btn-approve" data-action="approve-content" data-id="${safeId}">✓ Approve</button>
+                   <button class="btn-reject"  data-action="reject-content" data-id="${safeId}">✕ Reject</button>
+                   <button class="btn-delete"  data-action="delete-content" data-id="${safeId}">🗑 Delete</button>
                </div>`
             : `<div class="queue-actions">
-                   <button class="btn-reset"  data-action="reset-content" data-id="${safeId}">Reset</button>
-                   <button class="btn-delete" data-action="delete-content" data-id="${safeId}">Delete</button>
+                   <button class="btn-reset"  data-action="reset-content" data-id="${safeId}">↺ Reset</button>
+                   <button class="btn-delete" data-action="delete-content" data-id="${safeId}">🗑 Delete</button>
                </div>`;
 
         return `
         <div class="queue-item" id="queue-item-${safeId}">
-            <div class="queue-file-icon">${icon(FILE_ICONS[ext] || 'file')}</div>
+            <div class="queue-file-icon">${icon}</div>
             <div class="queue-info">
                 <div class="queue-name">
                     ${c.fileUrl
@@ -945,7 +923,7 @@ async function approveContent(id) {
         renderContent(); renderHome();
         toast('success', `"${Security.escape(c.name)}" approved!`);
     } catch (err) {
-        if (btn) { btn.disabled = false; btn.textContent = 'Approve'; }
+        if (btn) { btn.disabled = false; btn.textContent = '✓ Approve'; }
         warn('Update Failed', err.message || 'Could not update status.');
     }
 }
@@ -962,7 +940,7 @@ async function rejectContent(id) {
         renderContent(); renderHome();
         toast('error', `"${Security.escape(c.name)}" rejected.`);
     } catch (err) {
-        if (btn) { btn.disabled = false; btn.textContent = 'Reject'; }
+        if (btn) { btn.disabled = false; btn.textContent = '✕ Reject'; }
         warn('Update Failed', err.message || 'Could not update status.');
     }
 }
@@ -974,7 +952,7 @@ async function resetContentStatus(id) {
         title: 'Reset to Pending?',
         text: `"${c.name}" will be moved back to the review queue.`,
         icon: 'question', showCancelButton: true,
-        confirmButtonColor: '#2563eb', cancelButtonColor: '#6b7280',
+        confirmButtonColor: '#f97316', cancelButtonColor: '#d1d5db',
         confirmButtonText: 'Yes, reset',
     }).then(async r => {
         if (!r.isConfirmed) return;
@@ -997,7 +975,7 @@ async function deleteContent(id) {
         title: 'Delete Module?',
         html: `"<strong>${Security.escape(c.name)}</strong>" will be permanently deleted.`,
         icon: 'warning', showCancelButton: true,
-        confirmButtonColor: '#ef4444', cancelButtonColor: '#6b7280',
+        confirmButtonColor: '#ef4444', cancelButtonColor: '#d1d5db',
         confirmButtonText: 'Yes, delete permanently',
     }).then(async r => {
         if (!r.isConfirmed) return;
@@ -1024,10 +1002,10 @@ function renderHome() {
 
     const logEl = document.getElementById('home-activity-log');
     if (!activity.length) {
-        logEl.innerHTML = `<div class="empty-state"><div class="empty-icon">${icon('clipboard')}</div><h4>No activity yet</h4><p>Events will appear here as users interact with the platform.</p></div>`;
+        logEl.innerHTML = '<div class="empty-state"><div class="empty-icon">📋</div><h4>No activity yet</h4><p>Events will appear here as users interact with the platform.</p></div>';
         return;
     }
-    const colors = { registration:'blue-avatar', login:'blue-avatar', content:'navy-avatar', system:'slate-avatar', error:'red-avatar' };
+    const colors = { registration:'blue-avatar', login:'green-avatar', content:'purple-avatar', system:'orange-avatar', error:'red-avatar' };
     logEl.innerHTML = activity.slice(0, 3).map(a => `
         <div class="log-item">
             <div class="log-info">
@@ -1091,7 +1069,7 @@ async function renderAnalytics() {
 
     const chartEl = document.getElementById('reg-chart');
     if (!users.length) {
-        chartEl.innerHTML = `<div class="empty-state"><div class="empty-icon">${icon('barChart')}</div><h4>No registration data yet</h4><p>Charts will populate as users join.</p></div>`;
+        chartEl.innerHTML = '<div class="empty-state"><div class="empty-icon">📊</div><h4>No registration data yet</h4><p>Charts will populate as users join.</p></div>';
     } else {
         const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
         const counts = new Array(7).fill(0);
@@ -1110,7 +1088,7 @@ async function renderAnalytics() {
 
     const subjectEl = document.getElementById('subject-progress');
     if (!postRows.length) {
-        subjectEl.innerHTML = `<div class="empty-state"><div class="empty-icon">${icon('trending')}</div><h4>No progress data yet</h4><p>Data appears as students complete modules.</p></div>`;
+        subjectEl.innerHTML = '<div class="empty-state"><div class="empty-icon">📈</div><h4>No progress data yet</h4><p>Data appears as students complete modules.</p></div>';
     } else {
         const activeStudents = new Set(rows.map(r => r.session_id)).size;
         subjectEl.innerHTML = MODULE_GROUPS.map(group => {
@@ -1134,15 +1112,14 @@ async function renderAnalytics() {
 
     const donutEl = document.getElementById('donut-row');
     if (!users.length) {
-        donutEl.innerHTML = `<div class="empty-state"><div class="empty-icon">${icon('pieChart')}</div><h4>No users yet</h4><p>Add users to see role distribution.</p></div>`;
+        donutEl.innerHTML = '<div class="empty-state"><div class="empty-icon">🍩</div><h4>No users yet</h4><p>Add users to see role distribution.</p></div>';
     } else {
         const total = users.length;
-        // Same blue shades as the role badges (Admin darkest, Student lightest).
         const dist = [
-            { label:'Students', count:users.filter(u=>u.role==='student').length, color:'var(--blue)',      bg:'var(--blue-light)' },
-            { label:'Teachers', count:users.filter(u=>u.role==='teacher').length, color:'var(--blue-800)',  bg:'var(--blue-100)' },
-            { label:'Admins',   count:users.filter(u=>u.role==='admin').length,   color:'#fff',             bg:'var(--blue-800)' },
-            { label:'Inactive', count:users.filter(u=>u.status==='Inactive').length, color:'var(--slate-500)', bg:'var(--slate-100)' },
+            { label:'Students', count:users.filter(u=>u.role==='student').length, color:'var(--blue)',   bg:'var(--blue-light)' },
+            { label:'Teachers', count:users.filter(u=>u.role==='teacher').length, color:'var(--green)',  bg:'var(--green-light)' },
+            { label:'Admins',   count:users.filter(u=>u.role==='admin').length,   color:'var(--orange)', bg:'var(--orange-light)' },
+            { label:'Inactive', count:users.filter(u=>u.status==='Inactive').length, color:'var(--purple)', bg:'var(--purple-light)' },
         ];
         donutEl.innerHTML = `<div class="donut-row">` + dist.map(d => `
             <div class="donut-item">
@@ -1172,14 +1149,15 @@ async function renderAnalytics() {
         .sort((a, b) => b.avg - a.avg);
 
     if (!ranked.length) {
-        tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">${icon('award')}</div><h4>No completed quizzes yet</h4></div></td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">🏆</div><h4>No completed quizzes yet</h4></div></td></tr>`;
     } else {
+        const medals = ['🥇','🥈','🥉'];
         tbody.innerHTML = ranked.slice(0, 5).map((s, i) => `
             <tr>
-                <td><span class="rank-badge rank-${i + 1}">${i + 1}</span></td>
+                <td>${medals[i] || (i + 1)}</td>
                 <td><b>${Security.escape(s.name)}</b></td>
                 <td>${Security.escape(s.section || '—')}</td>
-                <td style="color:var(--blue);font-weight:700">${s.avg}%</td>
+                <td style="color:var(--green);font-weight:700">${s.avg}%</td>
                 <td>${s.modules}/${CURRICULUM_TOPICS.length}</td><td>—</td>
             </tr>`).join('');
     }
@@ -1488,7 +1466,7 @@ function showExportPicker(section) {
         denyButtonText: exporter.secondaryLabel,
         cancelButtonText: 'Cancel',
         confirmButtonColor: '#2563eb',
-        denyButtonColor: '#1e40af',
+        denyButtonColor: '#16a34a',
     }).then(r => {
         if (r.isConfirmed) exporter.pdf();
         else if (r.isDenied) exporter.secondary();
@@ -1532,7 +1510,7 @@ function confirmLogout() {
     Swal.fire({
         title: 'Are you sure?', text: 'You will be logged out of your account.',
         icon: 'warning', showCancelButton: true,
-        confirmButtonColor: '#2563eb', cancelButtonColor: '#6b7280',
+        confirmButtonColor: '#2563eb', cancelButtonColor: '#d33',
         confirmButtonText: 'Yes, logout!', cancelButtonText: 'Cancel',
     }).then(r => {
         if (r.isConfirmed) {
@@ -1571,8 +1549,8 @@ function makePgBtn(label, disabled, handler) {
 function warn(title, text)  { Swal.fire({ icon:'warning', title, text, confirmButtonColor:'#2563eb' }); }
 function toast(icon, title) { Swal.fire({ icon, title, timer:2000, timerProgressBar:true, showConfirmButton:false }); }
 function progressColor(pct) {
-    if (pct >= 100) return '#1e40af'; // deep blue — complete
-    if (pct <= 0) return '#94a3b8'; // gray — not started
+    if (pct >= 100) return '#10b981'; // green — complete
+    if (pct <= 0) return '#ef4444'; // red — not started
     return '#2563eb'; // blue — in progress
 }
 function formatFileSize(bytes) {
@@ -1581,6 +1559,12 @@ function formatFileSize(bytes) {
     const sizes = ['B', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+}
+function topicTheme(topic) {
+    if (topic.includes('Module 1') || topic.includes('Sequences')) return 'blue-theme';
+    if (topic.includes('Module 2') || topic.includes('Polynomials')) return 'green-theme';
+    if (topic.includes('Module 3') || topic.includes('Advanced')) return 'orange-theme';
+    return 'blue-theme';
 }
 
 /* ============================================================
@@ -1615,7 +1599,7 @@ async function loadAndRenderModules() {
     if (grid) {
         grid.innerHTML = `
             <div class="empty-state">
-                <div class="empty-icon">${icon('clock')}</div>
+                <div class="empty-icon">⏳</div>
                 <h4>Loading modules…</h4>
                 <p>Fetching latest status from Supabase.</p>
             </div>`;
@@ -1633,7 +1617,7 @@ async function loadAndRenderModules() {
         if (grid) {
             grid.innerHTML = `
                 <div class="empty-state">
-                    <div class="empty-icon is-error">${icon('alert')}</div>
+                    <div class="empty-icon">⚠️</div>
                     <h4>Could not load modules</h4>
                     <p>${Security.escape(err.message)}</p>
                     <button class="primary-btn" style="margin-top:12px" data-action="retry-modules">Retry</button>
@@ -1679,7 +1663,7 @@ function renderModules() {
     if (!filtered.length) {
         grid.innerHTML = `
             <div class="empty-state">
-                <div class="empty-icon">${icon('package')}</div>
+                <div class="empty-icon">📦</div>
                 <h4>${modulesData.length ? 'No modules match your search' : 'No modules uploaded yet'}</h4>
                 <p>${modulesData.length ? 'Try a different search or topic filter.' : 'Click "+ Add Module" to upload the first file.'}</p>
             </div>`;
@@ -1700,16 +1684,16 @@ function renderModules() {
             : '';
 
         const rejectedHint = m.status === 'Rejected'
-            ? `<div class="module-hint is-rejected">${icon('alert')}<span>Marked rejected — edit and re-save, or delete.</span></div>`
+            ? `<div style="margin-top:6px;padding:6px 10px;background:#fef2f2;border-radius:6px;font-size:11px;color:#dc2626;font-weight:600">⚠️ Marked rejected — edit and re-save, or delete.</div>`
             : '';
         const pendingHint = m.status === 'Pending Review'
-            ? `<div class="module-hint is-pending">${icon('clock')}<span>Awaiting approval in Content Management before students can access it.</span></div>`
+            ? `<div style="margin-top:6px;padding:6px 10px;background:#fff7ed;border-radius:6px;font-size:11px;color:#ea580c;font-weight:600">🕐 Awaiting approval in Content Management before students can access it.</div>`
             : '';
 
         return `
         <div class="module-card">
             <div class="module-card-header">
-                <div class="module-icon-wrap blue-theme">
+                <div class="module-icon-wrap ${topicTheme(m.topic)}">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px">
                         <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
                     </svg>
