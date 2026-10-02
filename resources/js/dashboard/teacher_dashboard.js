@@ -14,6 +14,7 @@ import {
     assembleOptions,
     rewritePreservesNumbers,
 } from './quiz-generators.js';
+import { hidePasswords } from './password-toggle.js';
 
 'use strict';
 
@@ -2209,6 +2210,7 @@ function clearPasswordForm() {
         const el = document.getElementById(id);
         if (el) el.value = '';
     });
+    hidePasswords();
 }
 
 async function updatePassword() {

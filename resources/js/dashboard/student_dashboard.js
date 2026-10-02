@@ -5,6 +5,7 @@
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import { generateDeterministicSet } from './quiz-generators.js';
+import { hidePasswords } from './password-toggle.js';
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -341,6 +342,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const el = document.getElementById(id);
             if (el) el.value = '';
         });
+        hidePasswords();
     };
 
     window.updatePassword = async function () {

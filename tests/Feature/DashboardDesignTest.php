@@ -206,6 +206,28 @@ it('marks only destructive teacher table actions in red', function () {
         ->toMatch('/\.tbl-btn\.feedback:hover\s*\{[^}]*color:\s*#9333ea;/');
 });
 
+it('lets students and teachers show their passwords while changing them', function (string $role) {
+    $user = $role === 'teacher'
+        ? User::factory()->teacher()->create()
+        : User::factory()->create(['section_id' => Section::factory()->create()->id]);
+
+    $html = $this->actingAs($user)->get(route("{$role}.dashboard"))->assertOk()->getContent();
+
+    foreach (['pw-current', 'pw-new', 'pw-confirm'] as $fieldId) {
+        expect($html)->toMatch(
+            '/<input type="password" id="'.$fieldId.'"[^>]*>\s*<button type="button" class="pw-toggle" data-action="toggle-password" aria-label="Show password" aria-pressed="false">/'
+        );
+    }
+
+    expect(file_get_contents(resource_path("js/dashboard/{$role}_dashboard.js")))
+        ->toContain("import { hidePasswords } from './password-toggle.js';")
+        ->toMatch('/clearPasswordForm[^}]*\}\);\s*hidePasswords\(\);/');
+
+    expect(file_get_contents(resource_path('js/dashboard/password-toggle.js')))
+        ->toContain("event.target.closest('[data-action=\"toggle-password\"]')")
+        ->toContain("input.type = visible ? 'text' : 'password';");
+})->with(['student', 'teacher']);
+
 it('shows the class record one section and score type at a time', function () {
     $js = file_get_contents(resource_path('js/dashboard/teacher_dashboard.js'));
 
