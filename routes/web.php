@@ -248,6 +248,9 @@ Route::prefix('admin')->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
         Route::post('/logout', [AuthController::class, 'logout'])->name('admin.logout');
 
+        // Account
+        Route::post('/account/password', [AccountController::class, 'updatePassword'])->name('admin.account.password');
+
         // Teacher Approvals
         Route::prefix('teachers')->group(function () {
             Route::get('/approvals', [TeacherApprovalController::class, 'index'])->name('admin.teacher-approvals');

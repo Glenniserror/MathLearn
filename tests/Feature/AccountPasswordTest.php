@@ -92,6 +92,43 @@ it('rejects a password shorter than 8 characters', function () {
     $response->assertJsonValidationErrors('password');
 });
 
+it('lets an admin change their password with the correct current password', function () {
+    $admin = User::factory()->admin()->create(['password' => Hash::make('old-password')]);
+
+    $this->actingAs($admin)->postJson(route('admin.account.password'), [
+        'current_password' => 'old-password',
+        'password' => 'new-password-123',
+        'password_confirmation' => 'new-password-123',
+    ])->assertOk();
+
+    expect(Hash::check('new-password-123', $admin->refresh()->password))->toBeTrue();
+});
+
+it('rejects an admin password change with the wrong current password', function () {
+    $admin = User::factory()->admin()->create(['password' => Hash::make('old-password')]);
+
+    $this->actingAs($admin)->postJson(route('admin.account.password'), [
+        'current_password' => 'totally-wrong',
+        'password' => 'new-password-123',
+        'password_confirmation' => 'new-password-123',
+    ])->assertUnprocessable()->assertJsonValidationErrors('current_password');
+
+    expect(Hash::check('old-password', $admin->refresh()->password))->toBeTrue();
+});
+
+it('keeps the admin password route admin-only', function () {
+    $teacher = User::factory()->teacher()->create(['password' => Hash::make('old-password')]);
+
+    // RoleMiddleware turns non-admins away to the homepage, like every admin route.
+    $this->actingAs($teacher)->postJson(route('admin.account.password'), [
+        'current_password' => 'old-password',
+        'password' => 'new-password-123',
+        'password_confirmation' => 'new-password-123',
+    ])->assertRedirect(route('homepage'));
+
+    expect(Hash::check('old-password', $teacher->refresh()->password))->toBeTrue();
+});
+
 it('blocks guests from changing a password', function () {
     $response = $this->postJson(route('teacher.account.password'), [
         'current_password' => 'whatever',

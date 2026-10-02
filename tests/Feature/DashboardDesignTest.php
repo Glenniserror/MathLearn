@@ -206,10 +206,12 @@ it('marks only destructive teacher table actions in red', function () {
         ->toMatch('/\.tbl-btn\.feedback:hover\s*\{[^}]*color:\s*#9333ea;/');
 });
 
-it('lets students and teachers show their passwords while changing them', function (string $role) {
-    $user = $role === 'teacher'
-        ? User::factory()->teacher()->create()
-        : User::factory()->create(['section_id' => Section::factory()->create()->id]);
+it('lets every role show their passwords while changing them', function (string $role) {
+    $user = match ($role) {
+        'teacher' => User::factory()->teacher()->create(),
+        'admin' => User::factory()->admin()->create(),
+        default => User::factory()->create(['section_id' => Section::factory()->create()->id]),
+    };
 
     $html = $this->actingAs($user)->get(route("{$role}.dashboard"))->assertOk()->getContent();
 
@@ -219,6 +221,11 @@ it('lets students and teachers show their passwords while changing them', functi
         );
     }
 
+    // A username field lets the browser's password manager fill the saved current password.
+    expect($html)
+        ->toContain('<input type="email" autocomplete="username" value="'.e($user->email).'" hidden>')
+        ->toContain('id="save-password-btn"');
+
     expect(file_get_contents(resource_path("js/dashboard/{$role}_dashboard.js")))
         ->toContain("import { hidePasswords } from './password-toggle.js';")
         ->toMatch('/clearPasswordForm[^}]*\}\);\s*hidePasswords\(\);/');
@@ -226,7 +233,7 @@ it('lets students and teachers show their passwords while changing them', functi
     expect(file_get_contents(resource_path('js/dashboard/password-toggle.js')))
         ->toContain("event.target.closest('[data-action=\"toggle-password\"]')")
         ->toContain("input.type = visible ? 'text' : 'password';");
-})->with(['student', 'teacher']);
+})->with(['student', 'teacher', 'admin']);
 
 it('shows the class record one section and score type at a time', function () {
     $js = file_get_contents(resource_path('js/dashboard/teacher_dashboard.js'));

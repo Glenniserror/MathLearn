@@ -12,6 +12,7 @@
 
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
+import { hidePasswords } from './password-toggle.js';
 
 'use strict';
 
@@ -1548,6 +1549,49 @@ function makePgBtn(label, disabled, handler) {
 }
 function warn(title, text)  { Swal.fire({ icon:'warning', title, text, confirmButtonColor:'#2563eb' }); }
 function toast(icon, title) { Swal.fire({ icon, title, timer:2000, timerProgressBar:true, showConfirmButton:false }); }
+
+/* ============================================================
+   CHANGE PASSWORD (Settings) — same flow as the teacher and
+   student profile pages, against the shared AccountController.
+   ============================================================ */
+function clearPasswordForm() {
+    ['pw-current', 'pw-new', 'pw-confirm'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+    });
+    hidePasswords();
+}
+
+async function updatePassword() {
+    const res = await fetch('/admin/account/password', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content ?? '',
+        },
+        body: JSON.stringify({
+            current_password: document.getElementById('pw-current')?.value || '',
+            password: document.getElementById('pw-new')?.value || '',
+            password_confirmation: document.getElementById('pw-confirm')?.value || '',
+        }),
+    });
+    if (res.status === 419) {
+        return warn('Could not update password', 'Your session has expired. Please refresh the page and try again.');
+    }
+
+    const data = await res.json().catch(() => ({}));
+
+    if (!res.ok) {
+        const firstError = data.errors ? Object.values(data.errors)[0]?.[0] : null;
+        return warn('Could not update password', firstError || data.message || 'Please check your input and try again.');
+    }
+
+    toast('success', 'Password updated successfully!');
+    clearPasswordForm();
+}
+
 function progressColor(pct) {
     if (pct >= 100) return '#10b981'; // green — complete
     if (pct <= 0) return '#ef4444'; // red — not started
@@ -1973,6 +2017,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('open-archived-logs-btn')?.addEventListener('click', () => openArchivedLogs());
     document.getElementById('open-clear-old-logs-btn')?.addEventListener('click', () => openClearOldLogs());
     document.getElementById('save-platform-info-btn')?.addEventListener('click', () => savePlatformInfo());
+    document.getElementById('cancel-password-btn')?.addEventListener('click', () => clearPasswordForm());
+    document.getElementById('save-password-btn')?.addEventListener('click', () => updatePassword());
     document.getElementById('save-notifications-btn')?.addEventListener('click', () => saveSettings('Notification'));
     document.getElementById('danger-zone-activity-link')?.addEventListener('click', () => navigate('activity'));
     document.getElementById('reset-platform-btn')?.addEventListener('click', () => confirmDanger('Reset Platform', 'This will reset all settings to factory defaults.'));

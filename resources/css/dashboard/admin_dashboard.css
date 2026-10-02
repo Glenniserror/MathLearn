@@ -813,6 +813,20 @@ td:has(> .tbl-btn) { white-space: nowrap; }
 .field-row select:focus,
 .field-row textarea:focus { border-color: var(--blue-mid); background: white; }
 
+/* Password field with a show/hide button (resources/js/dashboard/password-toggle.js). */
+.pw-field { position: relative; }
+.pw-field input { width: 100%; padding-right: 44px; }
+.pw-toggle {
+    position: absolute; top: 50%; right: 6px; transform: translateY(-50%);
+    display: grid; place-items: center; width: 32px; height: 32px;
+    border: 0; border-radius: 8px; background: none;
+    color: var(--text-3); cursor: pointer;
+    transition: color 0.15s, background 0.15s;
+}
+.pw-toggle:hover { color: var(--blue); background: var(--blue-light); }
+.pw-toggle:focus-visible { outline: 2px solid var(--blue-mid); outline-offset: 1px; }
+.pw-toggle svg { width: 18px; height: 18px; }
+
 .toggle-row {
     display: flex; align-items: center; justify-content: space-between;
     padding: 10px 0; border-bottom: 1px solid var(--border);
