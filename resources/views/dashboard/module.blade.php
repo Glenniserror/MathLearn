@@ -507,10 +507,9 @@ const POST_TIMER_SECS = 30;
 const CIRCUMFERENCE   = 2 * Math.PI * 17;
 const TOPIC_ORDER = ['ari','geo','har','fib','fin','div','rem','poly','rat','rad','exp','log'];
 
-// `activity` means the one activity attempt was PASSED (unlocks the
-// Post-Test, as before); `activityDone` means an attempt was submitted at
-// all, pass or fail — the Activity is one-time only, so once true it can
-// never be retaken.
+// `activity` means the Activity was PASSED, on the recorded first attempt or
+// a practice run (unlocks the Post-Test); `activityDone` means the first
+// attempt was submitted, pass or fail — after that, runs are practice.
 const stateFlags = {};
 TOPIC_ORDER.forEach(k => { stateFlags[k] = { pre:false, activity:false, activityDone:false, post:false }; });
 
@@ -991,7 +990,9 @@ function injectCustomTopicsIntoPage() {
     });
 }
 
-const mqState = { topicKey:null, phase:'pre', questions:[], current:0, score:0, answered:false, completed:{}, answersLog:[] };
+// practice: true while replaying a phase that already has a recorded
+// attempt — only the first attempt counts, so a practice round saves nothing.
+const mqState = { topicKey:null, phase:'pre', questions:[], current:0, score:0, answered:false, completed:{}, answersLog:[], practice:false };
 let mqTimerInterval=null, mqTimeLeft=POST_TIMER_SECS;
 
 /* ════════════════════════════════════════════════════════════
@@ -1049,12 +1050,12 @@ async function mqLoadProgress() {
 
 /**
  * Every pre-test/post-test/activity attempt this student has already
- * submitted, keyed by topic then phase. Pre-test/Post-Test/Activity are
- * one-time attempts — this is how the UI knows to resume past a completed
- * phase instead of letting the student redo it, and it's also the source
- * for the "Already Submitted" review screen. The server enforces the same
- * rule independently (StudentQuizAnswerController::store), so this is a
- * convenience for the UI, not the actual security boundary.
+ * submitted, keyed by topic then phase. Only the first attempt of each
+ * counts: this is how the UI knows a phase is now a practice round (played
+ * again, never saved), and it's the source for the "Review My Answers"
+ * screen. The server keeps the first attempt independently (a resubmit gets
+ * a 409, never an overwrite), so this is a convenience for the UI, not the
+ * actual security boundary.
  */
 const mqAttempts = {};
 
@@ -1162,7 +1163,7 @@ function mqUpdateTimerUI() {
   else if(mqTimeLeft<=10)wrap.classList.add('mq-timer--warn');
 }
 
-function openTopic(key) {
+async function openTopic(key) {
     if (!MQ_TOPICS[key]) return;
 
     const el = document.querySelector('.topic-item[data-topic="' + key + '"]');
@@ -1193,11 +1194,10 @@ function openTopic(key) {
         return;  // ← STOP here, don't open quiz modal
     }
 
-    // One-time attempt: a topic whose Post-Test is already submitted is
-    // finished — show what was already recorded instead of letting the
-    // student restart the whole sequence from the Pre-Test.
-    if (mqState.completed[key]) {
-        showTopicAlreadySubmitted(key);
+    // A finished topic still opens, as practice: the student can go through
+    // it again, but only the first attempt is recorded.
+    const practiceRun = !!mqState.completed[key];
+    if (practiceRun && !(await confirmPracticeRun(key))) {
         return;
     }
 
@@ -1208,15 +1208,17 @@ function openTopic(key) {
     mqState.answered   = false;
     mqState.answersLog = [];
 
-    // Resume: if the Pre-Test for this topic was already submitted (e.g.
-    // the student left mid-topic and came back), skip straight past it
-    // instead of letting them retake it.
-    if (mqHasAttempt(key, 'pre')) {
+    // Resume: if the Pre-Test for this topic was already submitted (e.g. the
+    // student left mid-topic and came back), continue from the lesson. A
+    // practice run starts over from the Pre-Test instead.
+    if (mqHasAttempt(key, 'pre') && !practiceRun) {
         stateFlags[key].pre = true;
-        mqState.phase = 'lesson';
+        mqState.phase    = 'lesson';
+        mqState.practice = false;
     } else {
         mqState.phase     = 'pre';
         mqState.questions = [...MQ_TOPICS[key].pre];
+        mqState.practice  = mqHasAttempt(key, 'pre');
     }
 
     mqRender();
@@ -1224,59 +1226,44 @@ function openTopic(key) {
 }
 
 /**
- * "Already Submitted" prompt for a topic that's already fully finished
- * (Post-Test recorded) — offers a view-only review instead of a retake.
+ * Prompt for a topic that's already finished (Post-Test recorded): practice
+ * it again (nothing saved, the first attempt stays the one that counts) or
+ * review the recorded answers. Resolves true when the student picks practice.
  */
-async function showTopicAlreadySubmitted(key) {
+async function confirmPracticeRun(key) {
     const topic = MQ_TOPICS[key];
     const post = mqAttempts[key]?.post;
     const pct = post && post.total ? Math.round((post.score / post.total) * 100) : null;
 
     const result = await Swal.fire({
         icon: 'info',
-        title: 'Already Submitted',
+        title: 'Already Completed',
         html: `<p style="font-size:13px;color:#6b7280;font-family:'Plus Jakarta Sans',sans-serif">
                  You've already completed <strong style="color:#111827">${mqEscapeHtml(topic?.name || key)}</strong>.
-                 ${pct !== null ? `Your Post-Test score was <strong>${post.score}/${post.total} (${pct}%)</strong>.` : ''}<br><br>
-                 Retakes aren't allowed, but you can review what you answered.
+                 ${pct !== null ? `Your recorded Post-Test score is <strong>${post.score}/${post.total} (${pct}%)</strong>.` : ''}<br><br>
+                 You can go through it again for practice. Only your first attempt counts.
                </p>`,
         showDenyButton: true,
-        confirmButtonText: 'Review My Answers',
-        denyButtonText: 'Close',
+        showCloseButton: true,
+        confirmButtonText: 'Practice Again',
+        denyButtonText: 'Review My Answers',
         confirmButtonColor: '#2563eb',
+        denyButtonColor: '#64748b',
     });
 
-    if (result.isConfirmed) {
+    if (result.isDenied) {
         showAttemptReview(key);
     }
+
+    return result.isConfirmed;
 }
 
-/**
- * "Already Submitted" prompt for a single phase (Pre-Test/Activity/Post-Test)
- * reached directly (e.g. a stale button click) rather than through the
- * topic-level gate above.
- */
-async function showPhaseAlreadySubmitted(topicKey, phase) {
-    const attempt = mqAttempts[topicKey]?.[phase];
-    const pct = attempt && attempt.total ? Math.round((attempt.score / attempt.total) * 100) : null;
-    const label = { pre: 'Pre-Test', activity: 'Activity', post: 'Post-Test' }[phase] || phase;
+/** Line shown under a phase's title while it's a practice round. */
+function mqPracticeNote(phase) {
+    const attempt = mqAttempts[mqState.topicKey]?.[phase];
+    const recorded = attempt && attempt.total ? ` (${attempt.score}/${attempt.total})` : '';
 
-    const result = await Swal.fire({
-        icon: 'info',
-        title: 'Already Submitted',
-        html: `<p style="font-size:13px;color:#6b7280;font-family:'Plus Jakarta Sans',sans-serif">
-                 You've already submitted the <strong style="color:#111827">${label}</strong> for this topic${pct !== null ? ` — you scored <strong>${attempt.score}/${attempt.total} (${pct}%)</strong>` : ''}.<br><br>
-                 It's a one-time attempt and can't be retaken, but you can review your answers.
-               </p>`,
-        showDenyButton: true,
-        confirmButtonText: 'Review My Answers',
-        denyButtonText: 'Close',
-        confirmButtonColor: '#2563eb',
-    });
-
-    if (result.isConfirmed) {
-        showAttemptReview(topicKey, phase);
-    }
+    return `🔁 Practice round. Nothing here is saved; your first attempt${recorded} is the one that counts.`;
 }
 
 /**
@@ -1374,13 +1361,13 @@ function mqRender() {
     pill('📖 '+readPct+'% Read',readPct>=100?'mq-status-pill--done':(readPct>0?'mq-status-pill--pending':'mq-status-pill--locked'));
     const activityLabel = stateFlags[key].activity
         ? '✅ Activity done'
-        : (stateFlags[key].activityDone ? '⚠️ Activity submitted (not passed)' : '🔒 Activity pending');
+        : (stateFlags[key].activityDone ? '⚠️ Activity not passed: practice it to unlock the Post-Test' : '🔒 Activity pending');
     pill(activityLabel, stateFlags[key].activity ? 'mq-status-pill--done' : 'mq-status-pill--pending');
     pill(stateFlags[key].post?'✅ Post-Test done':'🔒 Post-Test locked',stateFlags[key].post?'mq-status-pill--done':'mq-status-pill--locked');
-    // The Activity is a one-time attempt — once submitted (pass or fail)
-    // it can't be reopened, same as the Pre-Test/Post-Test.
-    document.getElementById('mq-activity-btn').disabled=stateFlags[key].activityDone;
-    document.getElementById('mq-activity-btn').style.opacity=stateFlags[key].activityDone?'0.4':'1';
+    // The Activity always opens: once its first attempt is recorded, any
+    // later run is practice (and passing one still unlocks the Post-Test).
+    document.getElementById('mq-activity-btn').disabled=false;
+    document.getElementById('mq-activity-btn').style.opacity='1';
     document.getElementById('mq-posttest-btn').disabled=!stateFlags[key].activity;
     document.getElementById('mq-posttest-btn').style.opacity=stateFlags[key].activity?'1':'0.4';
     document.getElementById('mq-lesson-area').style.display='block';
@@ -1406,6 +1393,10 @@ function mqRender() {
     timerWrap.classList.remove('mq-timer--visible'); mqStopTimer();
     mqRenderResult();
     document.getElementById('mq-result-area').style.display='block';
+  }
+
+  if (mqState.practice && ['pre','activity','post'].includes(mqState.phase)) {
+    desc.textContent = mqPracticeNote(mqState.phase) + ' ' + desc.textContent;
   }
 }
 
@@ -1461,24 +1452,30 @@ function mqSelectChoice(idx) {
  * answers and moves to the next phase. Shared by mqNext() (reaching
  * the last question normally) and mqAutoSubmitDueToTabSwitch() (the
  * student left the tab mid-quiz), so both paths save/transition the
- * same way.
+ * same way. A practice round only moves on: the first attempt, already
+ * recorded, is the one that counts.
  */
 function mqFinishAssessment() {
   const key = mqState.topicKey;
   mqAttempts[key] = mqAttempts[key] || {};
 
   if(mqState.phase==='pre'){
-    stateFlags[key].pre=true;
-    const total=mqState.questions.length;
-    mqSaveProgress(key,'pre',mqState.score,total,mqState.score>=Math.ceil(total*0.6));
-    mqSaveQuizAnswers(key,'pre',mqState.answersLog,mqState.score,total);
-    mqAttempts[key].pre = { topic_key: key, phase: 'pre', answers: mqState.answersLog, score: mqState.score, total };
+    if (!mqState.practice) {
+      stateFlags[key].pre=true;
+      const total=mqState.questions.length;
+      mqSaveProgress(key,'pre',mqState.score,total,mqState.score>=Math.ceil(total*0.6));
+      mqSaveQuizAnswers(key,'pre',mqState.answersLog,mqState.score,total);
+      mqAttempts[key].pre = { topic_key: key, phase: 'pre', answers: mqState.answersLog, score: mqState.score, total };
+    }
     mqState.phase='lesson';
   }
   else{
-    mqSaveQuizAnswers(key,'post',mqState.answersLog,mqState.score,mqState.questions.length);
-    mqAttempts[key].post = { topic_key: key, phase: 'post', answers: mqState.answersLog, score: mqState.score, total: mqState.questions.length };
-    mqState.phase='result';mqMarkDone();
+    if (!mqState.practice) {
+      mqSaveQuizAnswers(key,'post',mqState.answersLog,mqState.score,mqState.questions.length);
+      mqAttempts[key].post = { topic_key: key, phase: 'post', answers: mqState.answersLog, score: mqState.score, total: mqState.questions.length };
+      mqMarkDone();
+    }
+    mqState.phase='result';
   }
   mqRender();
 }
@@ -1522,6 +1519,7 @@ function mqAutoSubmitDueToTabSwitch() {
  * meaningful focus changes (e.g. opening devtools).
  */
 let mqAutoSubmitNoticePending = false;
+let mqAutoSubmittedPractice = false;
 
 function mqHandleVisibilityChange() {
   const overlay = document.getElementById('mq-overlay');
@@ -1529,11 +1527,13 @@ function mqHandleVisibilityChange() {
 
   if (document.hidden) {
     if ((mqState.phase === 'pre' || mqState.phase === 'post') && mqState.current < mqState.questions.length) {
+      mqAutoSubmittedPractice = mqState.practice;
       mqAutoSubmitDueToTabSwitch();
       mqAutoSubmitNoticePending = true;
     } else if (mqState.phase === 'activity') {
       const submitBtn = document.getElementById('mq-act-submit-btn');
       if (submitBtn && submitBtn.style.display !== 'none') {
+        mqAutoSubmittedPractice = mqState.practice;
         mqSubmitActivity();
         mqAutoSubmitNoticePending = true;
       }
@@ -1545,7 +1545,9 @@ function mqHandleVisibilityChange() {
       title:              'Quiz Auto-Submitted',
       html:               `<p style="font-size:13px;color:#6b7280;font-family:'Plus Jakarta Sans',sans-serif">
                               Switching tabs or leaving the page during a Pre-Test, Activity, or Post-Test
-                              automatically submits your answers so far — this counts as your attempt.
+                              automatically submits your answers so far — ${mqAutoSubmittedPractice
+                                ? 'since this was a practice round, nothing was saved.'
+                                : 'this counts as your attempt.'}
                             </p>`,
       confirmButtonColor: '#2563eb',
       confirmButtonText:  'Got it',
@@ -1556,24 +1558,20 @@ function mqHandleVisibilityChange() {
 document.addEventListener('visibilitychange', mqHandleVisibilityChange);
 
 function mqStartActivity() {
-  // The Activity is a one-time attempt, pass or fail.
-  if (mqHasAttempt(mqState.topicKey, 'activity')) {
-    showPhaseAlreadySubmitted(mqState.topicKey, 'activity');
-    return;
-  }
+  // Once the Activity's first attempt is recorded, running it again is practice.
   mqStopTimer();
+  mqState.practice = mqHasAttempt(mqState.topicKey, 'activity');
   mqState.phase='activity';
   mqRender();
 }
 function mqStartPost() {
-  if(!stateFlags[mqState.topicKey].activity)return;
-  if (mqHasAttempt(mqState.topicKey, 'post')) {
-    showPhaseAlreadySubmitted(mqState.topicKey, 'post');
-    return;
-  }
+  const key = mqState.topicKey;
+  if(!stateFlags[key].activity)return;
   mqStopTimer();
+  // Once the Post-Test's first attempt is recorded, running it again is practice.
+  mqState.practice = mqHasAttempt(key, 'post') || !!mqState.completed[key];
   mqState.phase='post'; mqState.current=0; mqState.score=0; mqState.answered=false; mqState.answersLog=[];
-  mqState.questions=[...MQ_TOPICS[mqState.topicKey].post];
+  mqState.questions=[...MQ_TOPICS[key].post];
   mqRender();
 }
 
@@ -1793,27 +1791,32 @@ function mqSubmitActivity() {
   const threshold = Math.max(1, Math.ceil(act.items.length * 0.6));
   const pass = correct >= threshold;
 
-  // One-time attempt: this is recorded as final whether it passes or not —
-  // there is no retry, so this Activity can never be resubmitted (the
-  // server enforces the same rule independently on save).
-  stateFlags[key].activityDone = true;
-  mqAttempts[key] = mqAttempts[key] || {};
-  mqAttempts[key].activity = { topic_key: key, phase: 'activity', answers: activityAnswers, score: correct, total: act.items.length };
-  mqSaveQuizAnswers(key, 'activity', activityAnswers, correct, act.items.length);
+  // Only the first attempt is recorded, pass or fail (the server keeps it
+  // and turns down any resubmit). A practice run saves nothing.
+  if (!mqState.practice) {
+    stateFlags[key].activityDone = true;
+    mqAttempts[key] = mqAttempts[key] || {};
+    mqAttempts[key].activity = { topic_key: key, phase: 'activity', answers: activityAnswers, score: correct, total: act.items.length };
+    mqSaveQuizAnswers(key, 'activity', activityAnswers, correct, act.items.length);
 
-  if (referenceQueue.length) {
-    attachActivityReferenceAnswers(key, activityAnswers, referenceQueue, act.items.length);
+    if (referenceQueue.length) {
+      attachActivityReferenceAnswers(key, activityAnswers, referenceQueue, act.items.length);
+    }
   }
 
   if (pass) {
+    // Passing a practice run unlocks the Post-Test too, so a failed first
+    // attempt never leaves the student stuck on this topic.
     stateFlags[key].activity = true;
-    document.getElementById('mq-act-score-banner').textContent =
-      '🎉 Activity submitted — Post-Test is now unlocked.';
+    document.getElementById('mq-act-score-banner').textContent = mqState.practice
+      ? `🎉 Practice passed (${correct}/${act.items.length}): the Post-Test is unlocked. Your first attempt stays on record.`
+      : '🎉 Activity submitted — Post-Test is now unlocked.';
     document.getElementById('mq-act-score-banner').classList.add('mq-show');
     document.getElementById('mq-act-proceed-btn').style.display = '';
   } else {
-    document.getElementById('mq-act-fail-banner').textContent =
-      `You got ${correct}/${act.items.length}. You needed at least ${threshold} to pass. The Activity is a one-time attempt, so this result is final — review your answers above, then head back to the lesson.`;
+    document.getElementById('mq-act-fail-banner').textContent = mqState.practice
+      ? `Practice result: ${correct}/${act.items.length} (you needed ${threshold}). Nothing was saved, so your first attempt stays on record. Review your answers above, then try again from the lesson.`
+      : `You got ${correct}/${act.items.length}. You needed at least ${threshold} to pass. This first attempt is recorded. Review your answers above, then practice the Activity again from the lesson: passing it unlocks the Post-Test.`;
     document.getElementById('mq-act-fail-banner').classList.add('mq-show');
   }
 }
@@ -1825,8 +1828,18 @@ function mqRenderResult() {
   circle.className='mq-score-circle '+(pass?'mq-score-circle--pass':'mq-score-circle--fail');
   document.getElementById('mq-score-num').textContent=score;
   document.getElementById('mq-score-den').textContent='/ '+total;
-  document.getElementById('mq-result-msg').textContent=pass?'🎉 Excellent Work!':'📚 Keep Practicing!';
-  document.getElementById('mq-result-sub').textContent=pass?`You scored ${score}/${total}. Topic marked complete!`:`You scored ${score}/${total}. Review and try again.`;
+  const recorded=mqAttempts[mqState.topicKey]?.post;
+  if(mqState.practice){
+    document.getElementById('mq-result-msg').textContent=pass?'🎉 Nice practice!':'📚 Keep Practicing!';
+    document.getElementById('mq-result-sub').textContent=`Practice score: ${score}/${total}. `+(recorded
+      ?`Your recorded Post-Test score stays ${recorded.score}/${recorded.total}: only your first attempt counts.`
+      :'Only your first attempt counts.');
+  } else {
+    document.getElementById('mq-result-msg').textContent=pass?'🎉 Excellent Work!':'📚 Keep Practicing!';
+    document.getElementById('mq-result-sub').textContent=pass
+      ?`You scored ${score}/${total}. Topic marked complete!`
+      :`You scored ${score}/${total}. This first attempt is your recorded score; you can practice the topic again anytime.`;
+  }
   const btns=document.getElementById('mq-result-btns');
   btns.innerHTML='';
   if(!pass){
@@ -1835,6 +1848,11 @@ function mqRenderResult() {
     retry.addEventListener('click',()=>{mqState.phase='lesson';mqRender();});
     btns.appendChild(retry);
   }
+  // Another go at the Post-Test is always practice once one is recorded.
+  const again=document.createElement('button');
+  again.className='mq-btn mq-btn--ghost'; again.textContent='🔁 Practice Again';
+  again.addEventListener('click',mqStartPost);
+  btns.appendChild(again);
   const done=document.createElement('button');
   done.className='mq-btn mq-btn--primary'; done.textContent='✓ Done';
   done.addEventListener('click',mqClose);
