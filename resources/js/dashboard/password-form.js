@@ -1,8 +1,11 @@
 /* =====================================================================
-   password-toggle.js
-   Show/hide button for password fields on the dashboards' Change
-   Password forms. Same data-action, icons, and labels as the sign-in
-   page's <x-input type="password"> toggle, so it behaves the same way.
+   password-form.js
+   The dashboards' Change Password card (dashboard/change-password.blade.php):
+   - Show/hide buttons on its fields. Same data-action, icons, and labels
+     as the sign-in page's <x-input type="password"> toggle, so it behaves
+     the same way.
+   - Its "Set a Password" mode for Google sign-up accounts, which never
+     knew the random password they were given.
 
    Markup: <div class="pw-field"><input type="password" …><button
    type="button" class="pw-toggle" data-action="toggle-password" …></div>
@@ -27,6 +30,13 @@ function setPasswordVisible(button, visible) {
 /** Hide every password in a form again, e.g. after Cancel or a successful update. */
 export function hidePasswords(root = document) {
     root.querySelectorAll('[data-action="toggle-password"]').forEach((button) => setPasswordVisible(button, false));
+}
+
+/** Once a Google sign-up account has set its own password, switch to the regular form, which asks for it. */
+export function showChangePasswordForm(root = document) {
+    root.querySelectorAll('[data-password-form]').forEach((form) => {
+        form.dataset.passwordForm = 'change';
+    });
 }
 
 document.addEventListener('click', (event) => {

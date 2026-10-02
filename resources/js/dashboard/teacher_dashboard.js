@@ -14,7 +14,7 @@ import {
     assembleOptions,
     rewritePreservesNumbers,
 } from './quiz-generators.js';
-import { hidePasswords } from './password-toggle.js';
+import { hidePasswords, showChangePasswordForm } from './password-form.js';
 
 'use strict';
 
@@ -2243,8 +2243,9 @@ async function updatePassword() {
         return warn('Could not update password', firstError || data.message || 'Please check your input and try again.');
     }
 
-    toast('success', 'Password updated successfully!');
+    toast('success', data.message || 'Password updated successfully!');
     clearPasswordForm();
+    showChangePasswordForm();
 }
 
 /* ============================================================

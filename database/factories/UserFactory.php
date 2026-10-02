@@ -55,6 +55,18 @@ class UserFactory extends Factory
     }
 
     /**
+     * Indicate that the user signed up through Google, so their password is
+     * a random one they never saw.
+     */
+    public function googleSignup(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'google_id' => fake()->unique()->numerify('google-#########'),
+            'password_automatically_set' => true,
+        ]);
+    }
+
+    /**
      * Indicate that the model's email address should be unverified.
      */
     public function unverified(): static

@@ -419,27 +419,7 @@
                     </div>
                 </div>
 
-                <div class="settings-section">
-                    <h3>Change Password</h3>
-                    <p class="desc">Keep your account secure</p>
-                    {{-- Lets the browser's password manager match this account, so it can fill the saved current password and update it afterwards. --}}
-                    <input type="email" autocomplete="username" value="{{ auth()->user()->email }}" hidden>
-                    @foreach (['pw-current' => ['Current Password', 'current-password'], 'pw-new' => ['New Password', 'new-password'], 'pw-confirm' => ['Confirm New Password', 'new-password']] as $fieldId => [$fieldLabel, $autocomplete])
-                    <div class="field-row">
-                        <label for="{{ $fieldId }}">{{ $fieldLabel }}</label>
-                        <div class="pw-field">
-                            <input type="password" id="{{ $fieldId }}" placeholder="••••••••" autocomplete="{{ $autocomplete }}">
-                            <button type="button" class="pw-toggle" data-action="toggle-password" aria-label="Show password" aria-pressed="false">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                            </button>
-                        </div>
-                    </div>
-                    @endforeach
-                    <div class="save-row">
-                        <button class="btn-cancel" id="cancel-password-btn">Cancel</button>
-                        <button class="btn-save" id="save-password-btn">Update Password</button>
-                    </div>
-                </div>
+                @include('dashboard.change-password')
             </div>
 
             <!-- ===== DOWNLOADS PAGE ===== -->

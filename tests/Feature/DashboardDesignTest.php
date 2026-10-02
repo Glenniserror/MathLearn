@@ -224,16 +224,38 @@ it('lets every role show their passwords while changing them', function (string 
     // A username field lets the browser's password manager fill the saved current password.
     expect($html)
         ->toContain('<input type="email" autocomplete="username" value="'.e($user->email).'" hidden>')
-        ->toContain('id="save-password-btn"');
+        ->toContain('id="save-password-btn"')
+        ->toContain('data-password-form="change"');
 
     expect(file_get_contents(resource_path("js/dashboard/{$role}_dashboard.js")))
-        ->toContain("import { hidePasswords } from './password-toggle.js';")
-        ->toMatch('/clearPasswordForm[^}]*\}\);\s*hidePasswords\(\);/');
+        ->toContain("import { hidePasswords, showChangePasswordForm } from './password-form.js';")
+        ->toMatch('/clearPasswordForm[^}]*\}\);\s*hidePasswords\(\);/')
+        ->toMatch('/clearPasswordForm\(\);\s*showChangePasswordForm\(\);/');
 
-    expect(file_get_contents(resource_path('js/dashboard/password-toggle.js')))
+    // The card shows only its "Change Password" parts, or only its "Set a Password" ones.
+    expect(file_get_contents(resource_path("css/dashboard/{$role}_dashboard.css")))
+        ->toMatch('/\[data-password-form="set"\] \[data-password-mode="change"\],\s*\[data-password-form="change"\] \[data-password-mode="set"\]\s*\{\s*display: none;\s*\}/');
+
+    expect(file_get_contents(resource_path('js/dashboard/password-form.js')))
         ->toContain("event.target.closest('[data-action=\"toggle-password\"]')")
-        ->toContain("input.type = visible ? 'text' : 'password';");
+        ->toContain("input.type = visible ? 'text' : 'password';")
+        ->toContain("form.dataset.passwordForm = 'change';");
 })->with(['student', 'teacher', 'admin']);
+
+it('lets a Google sign-up account set a password without asking for the one it never knew', function (string $role) {
+    $user = match ($role) {
+        'teacher' => User::factory()->teacher()->googleSignup()->create(),
+        default => User::factory()->googleSignup()->create(['section_id' => Section::factory()->create()->id]),
+    };
+
+    $html = $this->actingAs($user)->get(route("{$role}.dashboard"))->assertOk()->getContent();
+
+    expect($html)
+        ->toContain('data-password-form="set"')
+        ->toContain('<h3>Set a Password</h3>')
+        ->toContain('<span data-password-mode="set">Set Password</span>')
+        ->toMatch('/<div class="field-row"\s+data-password-mode="change"\s*>\s*<label for="pw-current">/');
+})->with(['student', 'teacher']);
 
 it('shows the class record one section and score type at a time', function () {
     $js = file_get_contents(resource_path('js/dashboard/teacher_dashboard.js'));

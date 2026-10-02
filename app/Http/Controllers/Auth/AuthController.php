@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
@@ -355,7 +356,8 @@ class AuthController extends Controller
                 'google_id' => $googleUser->getId(),
                 'name' => $googleUser->getName() ?? 'Google User',
                 'email' => $googleUser->getEmail(),
-                'password' => Hash::make(uniqid()),
+                'password' => Hash::make(Str::password()),
+                'password_automatically_set' => true,
                 'role' => $role,
                 'approval_status' => $role !== 'admin' ? 'pending' : 'approved',
             ]);

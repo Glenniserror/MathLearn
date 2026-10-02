@@ -129,6 +129,56 @@ it('keeps the admin password route admin-only', function () {
     expect(Hash::check('old-password', $teacher->refresh()->password))->toBeTrue();
 });
 
+it('lets a Google sign-up account set a password without the random one it was given', function () {
+    $student = User::factory()->googleSignup()->create(['section_id' => Section::factory()->create()->id]);
+
+    $this->actingAs($student)->postJson(route('student.account.password'), [
+        'password' => 'my-own-password',
+        'password_confirmation' => 'my-own-password',
+    ])->assertOk()->assertJson(['message' => 'Password set. You can now sign in with your email too.']);
+
+    $student->refresh();
+    expect(Hash::check('my-own-password', $student->password))->toBeTrue()
+        ->and($student->hasOwnPassword())->toBeTrue();
+
+    $this->post(route('student.logout'));
+    $this->post(route('student.login.submit'), [
+        'email' => $student->email,
+        'password' => 'my-own-password',
+    ])->assertRedirect(route('student.dashboard'));
+});
+
+it('asks a Google sign-up account for its current password once it has set one', function () {
+    $teacher = User::factory()->teacher()->googleSignup()->create();
+
+    $this->actingAs($teacher)->postJson(route('teacher.account.password'), [
+        'password' => 'first-password',
+        'password_confirmation' => 'first-password',
+    ])->assertOk();
+
+    $this->actingAs($teacher->fresh())->postJson(route('teacher.account.password'), [
+        'password' => 'second-password',
+        'password_confirmation' => 'second-password',
+    ])->assertUnprocessable()->assertJsonValidationErrors('current_password');
+
+    expect(Hash::check('first-password', $teacher->fresh()->password))->toBeTrue();
+});
+
+it('still asks an account that only linked Google later for its current password', function () {
+    $student = User::factory()->create([
+        'section_id' => Section::factory()->create()->id,
+        'google_id' => 'google-linked-later',
+        'password' => Hash::make('old-password'),
+    ]);
+
+    $this->actingAs($student)->postJson(route('student.account.password'), [
+        'password' => 'new-password-123',
+        'password_confirmation' => 'new-password-123',
+    ])->assertUnprocessable()->assertJsonValidationErrors('current_password');
+
+    expect(Hash::check('old-password', $student->fresh()->password))->toBeTrue();
+});
+
 it('blocks guests from changing a password', function () {
     $response = $this->postJson(route('teacher.account.password'), [
         'current_password' => 'whatever',

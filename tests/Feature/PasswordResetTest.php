@@ -68,6 +68,20 @@ it('lets a student actually reset their password with a valid token', function (
     $loginResponse->assertRedirect(route('student.dashboard'));
 });
 
+it('treats a reset password as the account\'s own, even for a Google sign-up', function () {
+    $student = User::factory()->googleSignup()->create(['role' => 'student']);
+    $token = app('auth.password.broker')->createToken($student);
+
+    $this->post(route('student.password.update'), [
+        'token' => $token,
+        'email' => $student->email,
+        'password' => 'new-password-123',
+        'password_confirmation' => 'new-password-123',
+    ])->assertRedirect(route('student.login'));
+
+    expect($student->fresh()->hasOwnPassword())->toBeTrue();
+});
+
 it('rejects a password reset with an invalid token', function () {
     $teacher = User::factory()->teacher()->create(['password' => Hash::make('old-password')]);
 

@@ -15,6 +15,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'password_automatically_set',
         'role',
         'google_id',
         'approval_status',
@@ -29,6 +30,7 @@ class User extends Authenticatable
 
     protected $casts = [
         'password' => 'hashed',
+        'password_automatically_set' => 'boolean',
     ];
 
     public function section(): BelongsTo
@@ -60,5 +62,14 @@ class User extends Authenticatable
     public function isPending(): bool
     {
         return $this->approval_status === 'pending';
+    }
+
+    /**
+     * Whether the user chose their own password. Accounts created through
+     * Google sign-in start with a random one they never saw.
+     */
+    public function hasOwnPassword(): bool
+    {
+        return ! $this->password_automatically_set;
     }
 }

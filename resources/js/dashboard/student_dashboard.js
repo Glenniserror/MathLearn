@@ -5,7 +5,7 @@
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import { generateDeterministicSet } from './quiz-generators.js';
-import { hidePasswords } from './password-toggle.js';
+import { hidePasswords, showChangePasswordForm } from './password-form.js';
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -377,8 +377,9 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        window.toast('success', 'Password updated successfully!');
+        window.toast('success', data.message || 'Password updated successfully!');
         window.clearPasswordForm();
+        showChangePasswordForm();
     };
 
     /* ================================

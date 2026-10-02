@@ -12,7 +12,7 @@
 
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
-import { hidePasswords } from './password-toggle.js';
+import { hidePasswords, showChangePasswordForm } from './password-form.js';
 
 'use strict';
 
@@ -1588,8 +1588,9 @@ async function updatePassword() {
         return warn('Could not update password', firstError || data.message || 'Please check your input and try again.');
     }
 
-    toast('success', 'Password updated successfully!');
+    toast('success', data.message || 'Password updated successfully!');
     clearPasswordForm();
+    showChangePasswordForm();
 }
 
 function progressColor(pct) {

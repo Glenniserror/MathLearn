@@ -1337,7 +1337,7 @@ tr:hover td {
     border-color: var(--blue-mid);
     background: white;
 }
-/* Password field with a show/hide button (resources/js/dashboard/password-toggle.js). */
+/* Password field with a show/hide button (resources/js/dashboard/password-form.js). */
 .pw-field {
     position: relative;
 }
@@ -1372,6 +1372,11 @@ tr:hover td {
 .pw-toggle svg {
     width: 18px;
     height: 18px;
+}
+/* A Google sign-up account's "Set a Password" card leaves out the Change Password parts, and vice versa. */
+[data-password-form="set"] [data-password-mode="change"],
+[data-password-form="change"] [data-password-mode="set"] {
+    display: none;
 }
 .save-row {
     display: flex;

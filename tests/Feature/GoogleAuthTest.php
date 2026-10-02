@@ -33,6 +33,9 @@ it('links Google to an existing password-based account instead of crashing', fun
     expect($existing->google_id)->toBe('google-id-1');
     // Linking must not touch the account's existing approval — it was already approved.
     expect($existing->approval_status)->toBe('approved');
+    // Nor its password, which the owner chose and still has to confirm to change.
+    expect($existing->hasOwnPassword())->toBeTrue();
+    expect(Hash::check('password123', $existing->password))->toBeTrue();
 });
 
 it('does not silently re-approve an account a teacher/admin has since rejected', function () {
@@ -79,6 +82,8 @@ it('sends a brand-new Google student signup to section selection', function () {
     $user = User::where('email', 'new-google-student@example.com')->first();
     expect($user)->not->toBeNull();
     expect($user->section_id)->toBeNull();
+    // Its password is a random one the student never sees, so they may set their own without it.
+    expect($user->hasOwnPassword())->toBeFalse();
 });
 
 it('sends an existing student missing a section to section selection too', function () {
