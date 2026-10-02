@@ -561,7 +561,7 @@
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
                         <div>
                             <div class="section-label">Student Scores by Section</div>
-                            <div class="section-sub">Average score per category, grouped by section</div>
+                            <div class="section-sub">Pick a section and a score type. Export still includes every section.</div>
                         </div>
                         <button class="primary-btn" id="class-record-export-btn" style="display:flex;align-items:center;gap:6px;padding:10px 18px;width:auto">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px">

@@ -1041,49 +1041,74 @@ function scoreOrDash(cell) {
     return cell ? `${cell.score}/${cell.total}` : '—';
 }
 
+/**
+ * Which section and which score type the Class Record shows. One table at
+ * a time keeps the page short; the choice survives a data reload.
+ */
+const classRecordView = { sectionId: null, category: 'pretest' };
+
+const CLASS_RECORD_CATEGORIES = [
+    { key: 'pretest', label: 'Pretest' },
+    { key: 'posttest', label: 'Posttest' },
+    { key: 'activity', label: 'Activity' },
+    { key: 'summative', label: 'Summative' },
+];
+
+/** Average of the scored cells as a percentage, or a dash when nobody has a score yet. */
+function classAverage(cells) {
+    const scored = cells.filter(c => c && c.total > 0);
+    if (!scored.length) return '—';
+    return Math.round(scored.reduce((sum, c) => sum + (c.score / c.total) * 100, 0) / scored.length) + '%';
+}
+
 /** One <table> of raw scores for a single category (pretest/posttest/activity), one column per lesson. */
-function classRecordCategoryTable(title, sectionStudents, categoryKey) {
+function classRecordCategoryTable(sectionStudents, categoryKey) {
     const topics = classRecordData.topics;
     return `
-        <div>
-            <div class="record-title">${Security.escape(title)}</div>
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            ${topics.map(t => `<th title="${Security.escape(t.name)}">${Security.escape(t.key.toUpperCase())}</th>`).join('')}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${sectionStudents.length
-                            ? sectionStudents.map(s => `
-                                <tr>
-                                    <td><b>${Security.escape(s.name)}</b></td>
-                                    ${topics.map(t => `<td>${scoreOrDash(s[categoryKey]?.[t.key])}</td>`).join('')}
-                                </tr>`).join('')
-                            : `<tr><td colspan="${topics.length + 1}"><div class="empty-state"><div class="empty-icon">👥</div><h4>No students in this section yet</h4></div></td></tr>`}
-                    </tbody>
-                </table>
-            </div>
+        <div class="table-wrap">
+            <table class="record-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        ${topics.map(t => `<th title="${Security.escape(t.name)}">${Security.escape(t.key.toUpperCase())}</th>`).join('')}
+                    </tr>
+                </thead>
+                <tbody>
+                    ${sectionStudents.length
+                        ? sectionStudents.map(s => `
+                            <tr>
+                                <td><b>${Security.escape(s.name)}</b></td>
+                                ${topics.map(t => `<td>${scoreOrDash(s[categoryKey]?.[t.key])}</td>`).join('')}
+                            </tr>`).join('')
+                        : `<tr><td colspan="${topics.length + 1}"><div class="empty-state"><div class="empty-icon">👥</div><h4>No students in this section yet</h4></div></td></tr>`}
+                </tbody>
+                ${sectionStudents.length ? `
+                <tfoot>
+                    <tr>
+                        <td>Class average</td>
+                        ${topics.map(t => `<td>${classAverage(sectionStudents.map(s => s[categoryKey]?.[t.key]))}</td>`).join('')}
+                    </tr>
+                </tfoot>` : ''}
+            </table>
         </div>`;
 }
 
 /** The Summative table: one score per student, not per lesson (it's a single review test). */
 function classRecordSummativeTable(sectionStudents) {
     return `
-        <div>
-            <div class="record-title">Summative</div>
-            <div class="table-wrap">
-                <table>
-                    <thead><tr><th>Name</th><th>Score</th></tr></thead>
-                    <tbody>
-                        ${sectionStudents.length
-                            ? sectionStudents.map(s => `<tr><td><b>${Security.escape(s.name)}</b></td><td>${scoreOrDash(s.summative)}</td></tr>`).join('')
-                            : `<tr><td colspan="2"><div class="empty-state"><div class="empty-icon">👥</div><h4>No students in this section yet</h4></div></td></tr>`}
-                    </tbody>
-                </table>
-            </div>
+        <div class="table-wrap">
+            <table class="record-table">
+                <thead><tr><th>Name</th><th>Score</th></tr></thead>
+                <tbody>
+                    ${sectionStudents.length
+                        ? sectionStudents.map(s => `<tr><td><b>${Security.escape(s.name)}</b></td><td>${scoreOrDash(s.summative)}</td></tr>`).join('')
+                        : `<tr><td colspan="2"><div class="empty-state"><div class="empty-icon">👥</div><h4>No students in this section yet</h4></div></td></tr>`}
+                </tbody>
+                ${sectionStudents.length ? `
+                <tfoot>
+                    <tr><td>Class average</td><td>${classAverage(sectionStudents.map(s => s.summative))}</td></tr>
+                </tfoot>` : ''}
+            </table>
         </div>`;
 }
 
@@ -1102,26 +1127,46 @@ function renderClassRecord() {
         return;
     }
 
-    container.innerHTML = reportSections.map((sec, idx) => {
-        const sectionStudents = classRecordData.students.filter(s => s.section_id === sec.id);
+    // Keep the section the teacher picked; fall back to the first one.
+    let idx = reportSections.findIndex(s => String(s.id) === String(classRecordView.sectionId));
+    if (idx === -1) {
+        idx = 0;
+        classRecordView.sectionId = reportSections[0].id;
+    }
+    const sec = reportSections[idx];
+    const sectionStudents = classRecordData.students.filter(s => s.section_id === sec.id);
+    const category = CLASS_RECORD_CATEGORIES.find(c => c.key === classRecordView.category) || CLASS_RECORD_CATEGORIES[0];
 
-        return `
-            <div class="section-card is-record" style="--section-color:${sectionColor(idx)}">
-                <div class="section-top">
-                    <div class="section-left">
-                        <span class="section-dot"></span>
-                        <div class="sec-name">${Security.escape(sec.name)}</div>
-                    </div>
-                    <div class="sec-meta">${sectionStudents.length} student(s)</div>
+    container.innerHTML = `
+        <div class="record-toolbar">
+            ${reportSections.length > 1 ? `
+            <div class="record-sections" role="tablist" aria-label="Section">
+                ${reportSections.map((s, i) => `
+                    <button type="button" class="record-chip${i === idx ? ' is-active' : ''}" style="--section-color:${sectionColor(i)}"
+                            role="tab" aria-selected="${i === idx}" data-record-section="${s.id}">
+                        <span class="section-dot"></span>${Security.escape(s.name)}
+                    </button>`).join('')}
+            </div>` : ''}
+            <div class="record-segments" role="tablist" aria-label="Score type">
+                ${CLASS_RECORD_CATEGORIES.map(c => `
+                    <button type="button" class="record-seg${c.key === category.key ? ' is-active' : ''}"
+                            role="tab" aria-selected="${c.key === category.key}" data-record-category="${c.key}">${c.label}</button>`).join('')}
+            </div>
+        </div>
+        <div class="section-card is-record" style="--section-color:${sectionColor(idx)}">
+            <div class="section-top">
+                <div class="section-left">
+                    <span class="section-dot"></span>
+                    <div class="sec-name">${Security.escape(sec.name)} · ${category.label}</div>
                 </div>
-                <div class="record-body">
-                    ${classRecordCategoryTable('Pretest', sectionStudents, 'pretest')}
-                    ${classRecordCategoryTable('Posttest', sectionStudents, 'posttest')}
-                    ${classRecordCategoryTable('Activity', sectionStudents, 'activity')}
-                    ${classRecordSummativeTable(sectionStudents)}
-                </div>
-            </div>`;
-    }).join('');
+                <div class="sec-meta">${sectionStudents.length} student(s)</div>
+            </div>
+            <div class="record-body">
+                ${category.key === 'summative'
+                    ? classRecordSummativeTable(sectionStudents)
+                    : classRecordCategoryTable(sectionStudents, category.key)}
+            </div>
+        </div>`;
 }
 
 /** Single "Export" button entry point — lets the teacher pick PDF or Excel. */
@@ -4564,6 +4609,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         const btn = e.target.closest('[data-action="delete-feedback"]');
         if (!btn) return;
         deleteFeedback(Number(btn.dataset.id));
+    });
+
+    document.getElementById('class-record-container')?.addEventListener('click', e => {
+        const sectionBtn = e.target.closest('[data-record-section]');
+        const categoryBtn = e.target.closest('[data-record-category]');
+        if (sectionBtn) {
+            classRecordView.sectionId = sectionBtn.dataset.recordSection;
+        } else if (categoryBtn) {
+            classRecordView.category = categoryBtn.dataset.recordCategory;
+        } else {
+            return;
+        }
+        renderClassRecord();
     });
 
     document.getElementById('sections-container')?.addEventListener('click', e => {

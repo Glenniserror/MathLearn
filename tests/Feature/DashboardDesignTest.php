@@ -206,6 +206,22 @@ it('marks only destructive teacher table actions in red', function () {
         ->toMatch('/\.tbl-btn\.feedback:hover\s*\{[^}]*color:\s*#9333ea;/');
 });
 
+it('shows the class record one section and score type at a time', function () {
+    $js = file_get_contents(resource_path('js/dashboard/teacher_dashboard.js'));
+
+    expect($js)
+        ->toContain("const classRecordView = { sectionId: null, category: 'pretest' };")
+        ->toContain('data-record-section="${s.id}"')
+        ->toContain('data-record-category="${c.key}"')
+        ->toContain('<td>Class average</td>')
+        ->not->toContain("classRecordCategoryTable('Pretest'")
+        ->not->toContain('record-title');
+
+    expect(file_get_contents(resource_path('css/dashboard/teacher_dashboard.css')))
+        ->toMatch('/\.record-table td:first-child\s*\{[^}]*position: sticky;/')
+        ->not->toContain('.record-title');
+});
+
 it('keeps each section on its original accent color across reports and class record', function () {
     $js = file_get_contents(resource_path('js/dashboard/teacher_dashboard.js'));
 
